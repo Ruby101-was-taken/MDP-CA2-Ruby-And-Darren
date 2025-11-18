@@ -1,7 +1,7 @@
 #include "attachable_behaviour.hpp"
 
 AttachableBehaviour::AttachableBehaviour() {
-	// I don't think this runs idk why it is here oopsies
+	// this is used
 }
 
 AttachableBehaviour::~AttachableBehaviour() {

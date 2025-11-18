@@ -167,6 +167,7 @@
     <ClCompile Include="sprite_node.cpp" />
     <ClCompile Include="state.cpp" />
     <ClCompile Include="state_stack.cpp" />
+    <ClCompile Include="test_attachable_behaviour.cpp" />
     <ClCompile Include="text_node.cpp" />
     <ClCompile Include="texture_holder.cpp" />
     <ClCompile Include="title_state.cpp" />
@@ -226,6 +227,7 @@
     <ClInclude Include="state.hpp" />
     <ClInclude Include="state_id.hpp" />
     <ClInclude Include="state_stack.hpp" />
+    <ClInclude Include="test_attachable_behaviour.hpp" />
     <ClInclude Include="text_node.hpp" />
     <ClInclude Include="TextureHolder.hpp" />
     <ClInclude Include="texture_id.hpp" />

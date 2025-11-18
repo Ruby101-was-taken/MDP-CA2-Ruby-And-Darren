@@ -1,8 +1,10 @@
 #include "entity.hpp"
+#include "test_attachable_behaviour.hpp"
 
 Entity::Entity(int hitpoints)
     :hitpoints_(hitpoints)
 {
+    AddBehaviour(new TestAttachableBehaviour());
 }
 
 void Entity::SetVelocity(sf::Vector2f velocity)
