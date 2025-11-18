@@ -1,6 +1,6 @@
 #pragma once
 #include <SFML/Window/Event.hpp>
-#include "Action.hpp"
+#include "action.hpp"
 #include "command_queue.hpp"
 #include "mission_status.hpp"
 #include <map>

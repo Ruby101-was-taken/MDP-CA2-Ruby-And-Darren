@@ -1,5 +1,5 @@
 #pragma once
-#include "Command.hpp"
+#include "command.hpp"
 #include <queue>
 
 class CommandQueue

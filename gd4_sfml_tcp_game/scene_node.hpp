@@ -4,9 +4,10 @@
 #include "receiver_categories.hpp"
 #include "command_queue.hpp"
 #include "command.hpp"
+#include "attachable_behaviour.hpp"
 
 #include <set>
-
+#include <vector>
 
 
 class SceneNode : public sf::Transformable, public sf::Drawable
@@ -20,6 +21,7 @@ public:
 	void AttachChild(Ptr child);
 	Ptr DetachChild(const SceneNode& node);
 
+	void Start();
 	void Update(sf::Time dt, CommandQueue& commands);
 
 	sf::Vector2f GetWorldPosition() const;
@@ -35,8 +37,14 @@ public:
 	virtual unsigned int GetCategory() const;
 
 private:
+	void StartAttachables();
+	virtual void StartCurrent();
+	void StartChildren();
+
+	void UpdateAttachables(sf::Time dt, CommandQueue& commands);
 	virtual void UpdateCurrent(sf::Time dt, CommandQueue& commands);
 	void UpdateChildren(sf::Time dt, CommandQueue& commands);
+
 
 	//Note draw() is from sf::Drawable and hence the name
 	//Do not be tempted to call this method Draw()
@@ -53,6 +61,11 @@ private:
 	std::vector<Ptr> children_;
 	SceneNode* parent_;
 	ReceiverCategories default_category_;
+
+	std::vector<AttachableBehaviour*> behaviours_;
+
+protected:
+	void AddBehaviour(AttachableBehaviour* behaviour);
 };
 float Distance(const SceneNode& lhs, const SceneNode& rhs);
 bool Collision(const SceneNode& lhs, const SceneNode& rhs);

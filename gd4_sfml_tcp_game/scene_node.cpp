@@ -24,12 +24,6 @@ SceneNode::Ptr SceneNode::DetachChild(const SceneNode& node)
     return Ptr();
 }
 
-void SceneNode::Update(sf::Time dt, CommandQueue& commands)
-{
-    UpdateCurrent(dt, commands);
-    UpdateChildren(dt, commands);
-}
-
 sf::Vector2f SceneNode::GetWorldPosition() const
 {
     return GetWorldTransform() * sf::Vector2f();
@@ -98,9 +92,45 @@ void SceneNode::RemoveWrecks()
     std::for_each(children_.begin(), children_.end(), std::mem_fn(&SceneNode::RemoveWrecks));
 }
 
+#pragma region StartAndUpdate
+
+void SceneNode::Start() {
+    StartCurrent();
+    StartAttachables();
+    StartChildren();
+}
+
+void SceneNode::StartAttachables() {
+    for (AttachableBehaviour* behaviour : behaviours_) {
+        behaviour->Start();
+    }
+}
+
+void SceneNode::StartCurrent() {
+    //Do nothing
+}
+
+void SceneNode::StartChildren() {
+    for (Ptr& child : children_) {
+        child->Start();
+    }
+}
+
+void SceneNode::Update(sf::Time dt, CommandQueue& commands) {
+    UpdateCurrent(dt, commands);
+    UpdateAttachables(dt, commands);
+    UpdateChildren(dt, commands);
+}
+
 void SceneNode::UpdateCurrent(sf::Time dt, CommandQueue& commands)
 {
-    //Do nothing here
+    //Do nothing
+}
+
+void SceneNode::UpdateAttachables(sf::Time dt, CommandQueue& commands) {
+    for (AttachableBehaviour* behaviour : behaviours_) {
+        behaviour->Update(dt, commands);
+    }
 }
 
 void SceneNode::UpdateChildren(sf::Time dt, CommandQueue& commands)
@@ -110,6 +140,8 @@ void SceneNode::UpdateChildren(sf::Time dt, CommandQueue& commands)
         child->Update(dt, commands);
     }
 }
+
+#pragma endregion
 
 void SceneNode::draw(sf::RenderTarget& target, sf::RenderStates states) const
 {
@@ -160,6 +192,12 @@ bool SceneNode::IsDestroyed() const
 bool SceneNode::IsMarkedForRemoval() const
 {
     return IsDestroyed();
+}
+
+void SceneNode::AddBehaviour(AttachableBehaviour* behaviour) {
+    behaviour->SetupBehaviour(this);
+    behaviours_.emplace_back(behaviour);
+
 }
 
 float Distance(const SceneNode& lhs, const SceneNode& rhs)
