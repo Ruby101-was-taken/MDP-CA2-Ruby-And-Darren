@@ -7,6 +7,7 @@
 #include "pickup_type.hpp"
 #include "pickup.hpp"
 #include "sound_node.hpp"
+#include "health_behaviour.hpp"
 
 namespace
 {
@@ -51,6 +52,7 @@ Aircraft::Aircraft(AircraftType type, const TextureHolder& textures, const FontH
 	, played_explosion_sound_(false)
 
 {
+
 	explosion_.SetFrameSize(sf::Vector2i(256, 256));
 	explosion_.SetNumFrames(16);
 	explosion_.SetDuration(sf::seconds(1));
@@ -86,6 +88,7 @@ Aircraft::Aircraft(AircraftType type, const TextureHolder& textures, const FontH
 		std::unique_ptr<TextNode> missile_display(new TextNode(fonts, *missile_ammo));
 		missile_display_ = missile_display.get();
 		AttachChild(std::move(missile_display));
+		//AddBehaviour(new HealthBehaviour());
 	}
 
 	UpdateTexts();

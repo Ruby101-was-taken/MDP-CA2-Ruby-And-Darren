@@ -36,6 +36,9 @@ public:
 	void RemoveWrecks();
 	virtual unsigned int GetCategory() const;
 
+	void DeleteNode();
+
+	bool IsDestroyed() const;
 private:
 	void StartAttachables();
 	virtual void StartCurrent();
@@ -54,8 +57,8 @@ private:
 	
 
 	void CheckNodeCollision(SceneNode& node, std::set<Pair>& collison_pairs);
-	virtual bool IsDestroyed() const;
 	virtual bool IsMarkedForRemoval() const;
+
 
 private:
 	std::vector<Ptr> children_;
@@ -63,9 +66,14 @@ private:
 	ReceiverCategories default_category_;
 
 	std::vector<AttachableBehaviour*> behaviours_;
+	
+	bool isDeleted_ = false;
 
 protected:
 	void AddBehaviour(AttachableBehaviour* behaviour);
+
+public:
+	std::string name_;
 };
 float Distance(const SceneNode& lhs, const SceneNode& rhs);
 bool Collision(const SceneNode& lhs, const SceneNode& rhs);

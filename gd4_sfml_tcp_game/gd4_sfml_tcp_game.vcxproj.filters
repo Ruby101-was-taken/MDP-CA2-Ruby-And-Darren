@@ -138,6 +138,9 @@
     <ClCompile Include="test_attachable_behaviour.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="health_behaviour.cpp">
+      <Filter>Source Files\Attachables</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="game.hpp">
@@ -316,6 +319,9 @@
     </ClInclude>
     <ClInclude Include="test_attachable_behaviour.hpp">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="health_behaviour.hpp">
+      <Filter>Header Files\Attachables</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

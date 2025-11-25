@@ -57,11 +57,6 @@ void Entity::Destroy()
     hitpoints_ = 0;
 }
 
-bool Entity::IsDestroyed() const
-{
-    return hitpoints_ <= 0;
-}
-
 void Entity::UpdateCurrent(sf::Time dt, CommandQueue& commands)
 {
     move(velocity_ * dt.asSeconds());

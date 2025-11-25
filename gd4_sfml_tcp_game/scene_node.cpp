@@ -1,6 +1,7 @@
 #include "scene_node.hpp"
 #include "utility.hpp"
 #include <cassert>
+#include <iostream>
 
 SceneNode::SceneNode(ReceiverCategories category):children_(), parent_(nullptr), default_category_(category)
 {
@@ -9,7 +10,6 @@ SceneNode::SceneNode(ReceiverCategories category):children_(), parent_(nullptr),
 void SceneNode::AttachChild(Ptr child)
 {
     child->parent_ = this;
-    //Homework: Understand this -> Cherno
     children_.emplace_back(std::move(child));
 }
 
@@ -119,7 +119,8 @@ void SceneNode::StartChildren() {
 void SceneNode::Update(sf::Time dt, CommandQueue& commands) {
     UpdateCurrent(dt, commands);
     UpdateAttachables(dt, commands);
-    UpdateChildren(dt, commands);
+    if (!isDeleted_)
+        UpdateChildren(dt, commands);
 }
 
 void SceneNode::UpdateCurrent(sf::Time dt, CommandQueue& commands)
@@ -135,6 +136,7 @@ void SceneNode::UpdateAttachables(sf::Time dt, CommandQueue& commands) {
 
 void SceneNode::UpdateChildren(sf::Time dt, CommandQueue& commands)
 {
+    std::cout << children_.size() << std::endl;
     for (Ptr& child : children_)
     {
         child->Update(dt, commands);
@@ -172,6 +174,14 @@ unsigned int SceneNode::GetCategory() const
     return static_cast<unsigned int>(default_category_);
 }
 
+void SceneNode::DeleteNode() {
+    children_.clear();
+    behaviours_.clear();
+    // removes this element from the parent
+    parent_ = nullptr;
+    isDeleted_ = true;
+}
+
 void SceneNode::CheckNodeCollision(SceneNode& node, std::set<Pair>& collision_pairs)
 {
     if (this != &node && Collision(*this, node) && !IsDestroyed() && !node.IsDestroyed())
@@ -186,7 +196,7 @@ void SceneNode::CheckNodeCollision(SceneNode& node, std::set<Pair>& collision_pa
 
 bool SceneNode::IsDestroyed() const
 {
-    return false;
+    return isDeleted_;
 }
 
 bool SceneNode::IsMarkedForRemoval() const
