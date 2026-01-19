@@ -13,3 +13,4 @@ private:
 	sf::Sprite sprite_;
 };
 
+

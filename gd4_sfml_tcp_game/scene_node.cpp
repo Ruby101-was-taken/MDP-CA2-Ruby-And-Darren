@@ -3,8 +3,9 @@
 #include <cassert>
 #include <iostream>
 
-SceneNode::SceneNode(ReceiverCategories category):children_(), parent_(nullptr), default_category_(category)
+SceneNode::SceneNode(float x, float y, ReceiverCategories category):children_(), parent_(nullptr), default_category_(category)
 {
+    this->setPosition({ x, y });
 }
 
 void SceneNode::AttachChild(Ptr child)
@@ -136,7 +137,6 @@ void SceneNode::UpdateAttachables(sf::Time dt, CommandQueue& commands) {
 
 void SceneNode::UpdateChildren(sf::Time dt, CommandQueue& commands)
 {
-    std::cout << children_.size() << std::endl;
     for (Ptr& child : children_)
     {
         child->Update(dt, commands);

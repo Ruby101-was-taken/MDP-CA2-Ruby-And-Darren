@@ -17,7 +17,7 @@ public:
 	virtual ~AttachableBehaviour();
 
 	void SetupBehaviour(SceneNode* node);
-	void Start();
+	virtual void Start();
 
 	virtual void Update(sf::Time dt, CommandQueue& commands) =0;
 };

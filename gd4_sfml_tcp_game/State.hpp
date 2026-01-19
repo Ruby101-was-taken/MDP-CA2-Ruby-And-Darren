@@ -12,7 +12,6 @@ namespace sf
 	class RenderWindow;
 }
 
-class Player;
 class StateStack;
 
 class State
@@ -26,7 +25,6 @@ public:
 		sf::RenderWindow* window;
 		TextureHolder* textures;
 		FontHolder* fonts;
-		Player* player;
 		MusicPlayer* music;
 		SoundPlayer* sounds;
 	};

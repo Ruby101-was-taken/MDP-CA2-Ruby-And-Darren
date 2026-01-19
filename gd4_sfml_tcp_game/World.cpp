@@ -8,7 +8,7 @@ World::World(sf::RenderTarget& output_target, FontHolder& font, SoundPlayer& sou
 	,textures_()
 	,fonts_(font)
 	,sounds_(sounds)
-	,scenegraph_(ReceiverCategories::kNone)
+	,root_node_(0, 0,ReceiverCategories::kNone)
 	,scene_layers_()
 	,world_bounds_({ 0.f,0.f }, { camera_.getSize().x, 3000.f })
 	,spawn_position_(camera_.getSize().x/2.f, world_bounds_.size.y - camera_.getSize().y/2.f)
@@ -16,19 +16,20 @@ World::World(sf::RenderTarget& output_target, FontHolder& font, SoundPlayer& sou
 	,scene_texture_({ target_.getSize().x, target_.getSize().y })
 {
 	LoadTextures();
-	BuildScene();
+	StartBuildScene();
 	camera_.setCenter(spawn_position_);
 }
+
 
 void World::Update(sf::Time dt)
 {
 	//Forward commands to the scenegraph
 	while (!command_queue_.IsEmpty())
 	{
-		scenegraph_.OnCommand(command_queue_.Pop(), dt);
+		root_node_.OnCommand(command_queue_.Pop(), dt);
 	}
 
-	scenegraph_.Update(dt, command_queue_);
+	root_node_.Update(dt, command_queue_);
 }
 
 void World::Draw()
@@ -37,20 +38,25 @@ void World::Draw()
 	{
 		scene_texture_.clear();
 		scene_texture_.setView(camera_);
-		scene_texture_.draw(scenegraph_);
+		scene_texture_.draw(root_node_);
 		scene_texture_.display();
 		bloom_effect_.Apply(scene_texture_, target_);
 	}
 	else
 	{
 		target_.setView(camera_);
-		target_.draw(scenegraph_);
+		target_.draw(root_node_);
 	}
 }
 
 CommandQueue& World::GetCommandQueue()
 {
 	return command_queue_;
+}
+
+typedef std::unique_ptr<SceneNode> Ptr;
+void World::AddNode(Ptr scene_node) {
+	root_node_.AttachChild(std::move(scene_node));
 }
 
 
@@ -77,17 +83,23 @@ void World::LoadTextures()
 
 }
 
-void World::BuildScene()
+void World::StartBuildScene()
 {
 	//Initialize the different layers
 	for (std::size_t i = 0; i < static_cast<int>(SceneLayers::kLayerCount); ++i)
 	{
 		ReceiverCategories category = (i == static_cast<int>(SceneLayers::kLowerAir)) ? ReceiverCategories::kScene : ReceiverCategories::kNone;
-		SceneNode::Ptr layer(new SceneNode(category));
+		SceneNode::Ptr layer(new SceneNode(0,0,category));
 		scene_layers_[i] = layer.get();
-		scenegraph_.AttachChild(std::move(layer));
+		root_node_.AttachChild(std::move(layer));
 	}
 
+	root_node_ = SceneNode();
+	std::printf("start build!!!!");
+	BuildScene();
+}
+void World::BuildScene() {
+	std::printf("wrong build scene function");
 }
 
 

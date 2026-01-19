@@ -1,6 +1,7 @@
 #include "application.hpp"
 #include "game_state.hpp"
 #include "game_over_state.hpp"
+#include "game_world.hpp"
 
 const sf::Time Application::kTimePerFrame = sf::seconds(1.f/60.f);
 
@@ -66,7 +67,6 @@ void Application::Render()
 
 void Application::RegisterStates()
 {
-	stack_.RegisterState<GameState>(StateID::kGame);
-	stack_.RegisterState<GameOverState>(StateID::kGameOver);
+	stack_.RegisterState<GameState<GameWorld>>(StateID::kGame);
 
 }

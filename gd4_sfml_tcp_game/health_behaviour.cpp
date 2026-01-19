@@ -11,7 +11,7 @@ void HealthBehaviour::ChangeHealthBy(float health) {
 	if (hit_points_ <= 0) {
 		node_->DeleteNode();
 	}
-	std::cout << hit_points_ << std::endl;
+	std::cout << "Hit Points: " << hit_points_ << std::endl;
 }
 
 void HealthBehaviour::Update(sf::Time dt, CommandQueue& commands) {

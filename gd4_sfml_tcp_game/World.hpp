@@ -15,16 +15,19 @@
 class World 
 {
 public:
+	typedef std::unique_ptr<SceneNode> Ptr;
+
 	explicit World(sf::RenderTarget& target, FontHolder& font, SoundPlayer& sounds);
 	void Update(sf::Time dt);
 	void Draw();
 
 	CommandQueue& GetCommandQueue();
 
+	void AddNode(Ptr scene_node);
 
-private:
+
+protected:
 	void LoadTextures();
-	void BuildScene();
 	
 	sf::FloatRect GetViewBounds() const;
 	sf::FloatRect GetBattleFieldBounds() const;
@@ -35,17 +38,17 @@ private:
 	void HandleCollisions();
 	void UpdateSounds();
 
+	void StartBuildScene();
+	virtual void BuildScene();
 
-private:
-
-private:
-	sf::RenderTarget& target_;
-	sf::RenderTexture scene_texture_;
-	sf::View camera_;
+protected:
+	SceneNode root_node_;
 	TextureHolder textures_;
 	FontHolder& fonts_;
 	SoundPlayer& sounds_;
-	SceneNode scenegraph_;
+	sf::RenderTarget& target_;
+	sf::RenderTexture scene_texture_;
+	sf::View camera_;
 	std::array<SceneNode*, static_cast<int>(SceneLayers::kLayerCount)> scene_layers_;
 	sf::FloatRect world_bounds_;
 	sf::Vector2f spawn_position_;
@@ -55,5 +58,6 @@ private:
 
 
 	BloomEffect bloom_effect_;
+
 };
 

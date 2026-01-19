@@ -15,6 +15,5 @@ void AttachableBehaviour::SetupBehaviour(SceneNode* node) {
 void AttachableBehaviour::Start() {
 }
 
-
 void AttachableBehaviour::Update(sf::Time dt, CommandQueue& commands) {
 }
