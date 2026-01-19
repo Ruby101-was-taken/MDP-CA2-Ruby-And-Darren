@@ -134,7 +134,6 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="aircraft.cpp" />
     <ClCompile Include="animation.cpp" />
     <ClCompile Include="application.cpp" />
     <ClCompile Include="attachable_behaviour.cpp" />
@@ -158,7 +157,6 @@
     <ClCompile Include="particle_node.cpp" />
     <ClCompile Include="PauseState.cpp" />
     <ClCompile Include="pickup.cpp" />
-    <ClCompile Include="player.cpp" />
     <ClCompile Include="post_effect.cpp" />
     <ClCompile Include="projectile.cpp" />
     <ClCompile Include="scene_node.cpp" />
@@ -177,8 +175,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="action.hpp" />
-    <ClInclude Include="aircraft.hpp" />
-    <ClInclude Include="aircraft_type.hpp" />
     <ClInclude Include="animation.hpp" />
     <ClInclude Include="application.hpp" />
     <ClInclude Include="attachable_behaviour.hpp" />
@@ -210,7 +206,6 @@
     <ClInclude Include="pause_state.hpp" />
     <ClInclude Include="pickup.hpp" />
     <ClInclude Include="pickup_type.hpp" />
-    <ClInclude Include="player.hpp" />
     <ClInclude Include="post_effect.hpp" />
     <ClInclude Include="projectile.hpp" />
     <ClInclude Include="projectile_type.hpp" />

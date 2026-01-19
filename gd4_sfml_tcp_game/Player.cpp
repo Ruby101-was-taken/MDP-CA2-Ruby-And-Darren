@@ -1,17 +1,8 @@
 #include "player.hpp"
 #include "receiver_categories.hpp"
-#include "aircraft.hpp"
 
 struct AircraftMover
 {
-    AircraftMover(float vx, float vy) :velocity(vx, vy)
-    {}
-    void operator()(Aircraft& aircraft, sf::Time) const
-    {
-        aircraft.Accelerate(velocity);
-    }
-
-    sf::Vector2f velocity;
 };
 
 Player::Player(): current_mission_status_(MissionStatus::kMissionRunning)

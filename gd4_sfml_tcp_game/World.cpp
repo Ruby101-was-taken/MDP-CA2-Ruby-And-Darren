@@ -72,15 +72,6 @@ CommandQueue& World::GetCommandQueue()
 	return command_queue_;
 }
 
-bool World::HasAlivePlayer() const
-{
-	return !player_aircraft_->IsMarkedForRemoval();
-}
-
-bool World::HasPlayerReachedEnd() const
-{
-	return !world_bounds_.contains(player_aircraft_->getPosition());
-}
 
 void World::LoadTextures()
 {
@@ -116,115 +107,8 @@ void World::BuildScene()
 		scenegraph_.AttachChild(std::move(layer));
 	}
 
-	//Prepare the background
-	sf::Texture& texture = textures_.Get(TextureID::kJungle);
-	sf::IntRect textureRect(world_bounds_);
-	texture.setRepeated(true);
-
-	//Add the background sprite to the world
-	std::unique_ptr<SpriteNode> background_sprite(new SpriteNode(texture, textureRect));
-	background_sprite->setPosition({ world_bounds_.position.x, world_bounds_.position.y });
-	scene_layers_[static_cast<int>(SceneLayers::kBackground)]->AttachChild(std::move(background_sprite));
-
-	//Add the finish line
-	sf::Texture& finish_texture = textures_.Get(TextureID::kFinishLine);
-	std::unique_ptr<SpriteNode> finish_sprite(new SpriteNode(finish_texture));
-	finish_sprite->setPosition({ 0.f, -76.f });
-	scene_layers_[static_cast<int>(SceneLayers::kBackground)]->AttachChild(std::move(finish_sprite));
-
-	//Add the player's aircraft
-	std::unique_ptr<Aircraft> leader(new Aircraft(AircraftType::kEagle, textures_, fonts_));
-	player_aircraft_ = leader.get();
-	player_aircraft_->setPosition(spawn_position_);
-	player_aircraft_->SetVelocity(40.f, scrollspeed_);
-	scene_layers_[static_cast<int>(SceneLayers::kUpperAir)]->AttachChild(std::move(leader));
-
-	//Add the particle nodes to the scene
-	std::unique_ptr<ParticleNode> smokeNode(new ParticleNode(ParticleType::kSmoke, textures_));
-	scene_layers_[static_cast<int>(SceneLayers::kLowerAir)]->AttachChild(std::move(smokeNode));
-
-	std::unique_ptr<ParticleNode> propellantNode(new ParticleNode(ParticleType::kPropellant, textures_));
-	scene_layers_[static_cast<int>(SceneLayers::kLowerAir)]->AttachChild(std::move(propellantNode));
-
-	// Add sound effect node
-	std::unique_ptr<SoundNode> soundNode(new SoundNode(sounds_));
-	scenegraph_.AttachChild(std::move(soundNode));
-
-	AddEnemies();
-
-	/*std::unique_ptr<Aircraft> left_escort(new Aircraft(AircraftType::kRaptor, textures_, fonts_));
-	left_escort->setPosition(-80.f, 50.f);
-	player_aircraft_->AttachChild(std::move(left_escort));
-
-	std::unique_ptr<Aircraft> right_escort(new Aircraft(AircraftType::kRaptor, textures_, fonts_));
-	right_escort->setPosition(80.f, 50.f);
-	player_aircraft_->AttachChild(std::move(right_escort));*/
 }
 
-void World::AdaptPlayerPosition()
-{
-	//keep the player on the screen
-	sf::FloatRect view_bounds(camera_.getCenter() - camera_.getSize() / 2.f, camera_.getSize());
-	const float border_distance = 40.f;
-
-	sf::Vector2f position = player_aircraft_->getPosition();
-	position.x = std::max(position.x, view_bounds.position.x + border_distance);
-	position.x = std::min(position.x, view_bounds.position.x + view_bounds.size.x - border_distance);
-	position.y = std::max(position.y, view_bounds.position.y + border_distance);
-	position.y = std::min(position.y, view_bounds.position.y + view_bounds.size.y -border_distance);
-	player_aircraft_->setPosition(position);
-}
-
-void World::AdaptPlayerVelocity()
-{
-	sf::Vector2f velocity = player_aircraft_->GetVelocity();
-
-	//If they are moving diagonally divide by sqrt 2
-	if (velocity.x != 0.f && velocity.y != 0.f)
-	{
-		player_aircraft_->SetVelocity(velocity / std::sqrt(2.f));
-	}
-	//Add scrolling velocity
-	player_aircraft_->Accelerate(0.f, scrollspeed_);
-}
-
-void World::SpawnEnemies()
-{
-	//Spawn an enemy when it is relevant i.e when it is in the Battlefieldboudns
-	while (!enemy_spawn_points_.empty() && enemy_spawn_points_.back().y > GetBattleFieldBounds().position.y)
-	{
-		SpawnPoint spawn = enemy_spawn_points_.back();
-		std::unique_ptr<Aircraft> enemy(new Aircraft(spawn.type, textures_, fonts_));
-		enemy->setPosition({ spawn.x, spawn.y });
-		enemy->setRotation(sf::degrees(180.f));
-		scene_layers_[static_cast<int>(SceneLayers::kUpperAir)]->AttachChild(std::move(enemy));
-		enemy_spawn_points_.pop_back();
-	}
-}
-
-void World::AddEnemies()
-{
-	AddEnemy(AircraftType::kRaptor, 0.f, 500.f);
-	AddEnemy(AircraftType::kRaptor, 0.f, 1000.f);
-	AddEnemy(AircraftType::kRaptor, 100.f, 1100.f);
-	AddEnemy(AircraftType::kRaptor, -100.f, 1100.f);
-	AddEnemy(AircraftType::kAvenger, -70.f, 1400.f);
-	AddEnemy(AircraftType::kAvenger, 70.f, 1400.f);
-	AddEnemy(AircraftType::kAvenger, 70.f, 1600.f);
-
-	//Sort the enemies according to y-value so that enemies are checked first
-	std::sort(enemy_spawn_points_.begin(), enemy_spawn_points_.end(), [](SpawnPoint lhs, SpawnPoint rhs)
-	{
-		return lhs.y < rhs.y;
-	});
-
-}
-
-void World::AddEnemy(AircraftType type, float relx, float rely)
-{
-	SpawnPoint spawn(type, spawn_position_.x + relx, spawn_position_.y - rely);
-	enemy_spawn_points_.emplace_back(spawn);
-}
 
 sf::FloatRect World::GetViewBounds() const
 {
