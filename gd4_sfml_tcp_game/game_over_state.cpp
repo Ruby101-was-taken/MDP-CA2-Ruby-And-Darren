@@ -1,7 +1,6 @@
 #include "game_over_state.hpp"
 #include "resource_holder.hpp"
 #include <SFML/Graphics/RenderWindow.hpp>
-#include "player.hpp"
 #include "utility.hpp"
 
 
@@ -14,14 +13,7 @@ GameOverState::GameOverState(StateStack& stack, Context context)
     sf::Vector2f window_size(context.window->getSize());
 
     //game_over_text_.setFont(font);
-    if (context.player->GetMissionStatus() == MissionStatus::kMissionSuccess)
-    {
-        game_over_text_.setString("Mission Success");
-    }
-    else
-    {
-        game_over_text_.setString("Mission Failure");
-    }
+    
 
     game_over_text_.setCharacterSize(70);
     Utility::CentreOrigin(game_over_text_);

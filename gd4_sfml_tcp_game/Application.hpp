@@ -1,6 +1,5 @@
 #pragma once
 #include <SFML/Graphics/RenderWindow.hpp>
-#include "player.hpp"
 #include "resource_holder.hpp"
 #include "resource_identifiers.hpp"
 #include "state_stack.hpp"
@@ -21,7 +20,6 @@ private:
 
 private:
 	sf::RenderWindow window_;
-	Player player_;
 
 	TextureHolder textures_;
 	FontHolder fonts_;

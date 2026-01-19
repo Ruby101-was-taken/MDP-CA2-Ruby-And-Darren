@@ -3,6 +3,7 @@
 #include <SFML/System/Time.hpp>
 #include <SFML/Window/Event.hpp>
 #include <cassert>
+#include <iostream>
 
 StateStack::StateStack(State::Context context) : context_(context)
 {

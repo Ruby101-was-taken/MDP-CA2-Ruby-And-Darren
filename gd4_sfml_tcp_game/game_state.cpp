@@ -1,5 +1,4 @@
 #include "game_state.hpp"
-#include "player.hpp"
 #include "mission_status.hpp"
 
 GameState::GameState(StateStack& stack, Context context) : State(stack, context), world_(*context.window, *context.fonts, *context.sounds), player_(*context.player)
@@ -17,25 +16,21 @@ bool GameState::Update(sf::Time dt)
 {
 
 	world_.Update(dt);
-	if (!world_.HasAlivePlayer())
+	/*if (!world_.HasAlivePlayer())
 	{
-		player_.SetMissionStatus(MissionStatus::kMissionFailure);
 		RequestStackPush(StateID::kGameOver);
 	}
 	else if(world_.HasPlayerReachedEnd())
 	{ 
-		player_.SetMissionStatus(MissionStatus::kMissionSuccess);
 		RequestStackPush(StateID::kGameOver);
-	}
+	}*/
 	CommandQueue& commands = world_.GetCommandQueue();
-	player_.HandleRealTimeInput(commands);
 	return true;
 }
 
 bool GameState::HandleEvent(const sf::Event& event)
 {
 	CommandQueue& commands = world_.GetCommandQueue();
-	player_.HandleEvent(event, commands);
 
 	//Escape should bring up the pause menu
 	

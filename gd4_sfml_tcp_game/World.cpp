@@ -1,7 +1,5 @@
 #include "world.hpp"
 #include "pickup.hpp"
-#include "projectile.hpp"
-#include "particle_node.hpp"
 #include "sound_node.hpp"
 
 World::World(sf::RenderTarget& output_target, FontHolder& font, SoundPlayer& sounds)
@@ -15,7 +13,6 @@ World::World(sf::RenderTarget& output_target, FontHolder& font, SoundPlayer& sou
 	,world_bounds_({ 0.f,0.f }, { camera_.getSize().x, 3000.f })
 	,spawn_position_(camera_.getSize().x/2.f, world_bounds_.size.y - camera_.getSize().y/2.f)
 	,scrollspeed_(-50.f)
-	,player_aircraft_(nullptr)
 	,scene_texture_({ target_.getSize().x, target_.getSize().y })
 {
 	LoadTextures();
@@ -25,29 +22,13 @@ World::World(sf::RenderTarget& output_target, FontHolder& font, SoundPlayer& sou
 
 void World::Update(sf::Time dt)
 {
-	//Scroll the world
-	camera_.move({ 0, scrollspeed_ * dt.asSeconds() });
-	
-	player_aircraft_->SetVelocity(0.f, 0.f);
-
-	DestroyEntitiesOutsideView();
-	GuideMissiles();
-
 	//Forward commands to the scenegraph
 	while (!command_queue_.IsEmpty())
 	{
 		scenegraph_.OnCommand(command_queue_.Pop(), dt);
 	}
-	AdaptPlayerVelocity();
-
-	HandleCollisions();
-
-	scenegraph_.RemoveWrecks();
-
-	SpawnEnemies();
 
 	scenegraph_.Update(dt, command_queue_);
-	AdaptPlayerPosition();
 }
 
 void World::Draw()
@@ -75,23 +56,23 @@ CommandQueue& World::GetCommandQueue()
 
 void World::LoadTextures()
 {
-	textures_.Load(TextureID::kEagle, "Media/Textures/Eagle.png");
-	textures_.Load(TextureID::kRaptor, "Media/Textures/Raptor.png");
-	textures_.Load(TextureID::kAvenger, "Media/Textures/Avenger.png");
-	textures_.Load(TextureID::kLandscape, "Media/Textures/Desert.png");
-	textures_.Load(TextureID::kBullet, "Media/Textures/Bullet.png");
-	textures_.Load(TextureID::kMissile, "Media/Textures/Missile.png");
+	//textures_.Load(TextureID::kEagle, "Media/Textures/Eagle.png");
+	//textures_.Load(TextureID::kRaptor, "Media/Textures/Raptor.png");
+	//textures_.Load(TextureID::kAvenger, "Media/Textures/Avenger.png");
+	//textures_.Load(TextureID::kLandscape, "Media/Textures/Desert.png");
+	//textures_.Load(TextureID::kBullet, "Media/Textures/Bullet.png");
+	//textures_.Load(TextureID::kMissile, "Media/Textures/Missile.png");
 
-	textures_.Load(TextureID::kHealthRefill, "Media/Textures/HealthRefill.png");
-	textures_.Load(TextureID::kMissileRefill, "Media/Textures/MissileRefill.png");
-	textures_.Load(TextureID::kFireSpread, "Media/Textures/FireSpread.png");
-	textures_.Load(TextureID::kFireRate, "Media/Textures/FireRate.png");
-	textures_.Load(TextureID::kFinishLine, "Media/Textures/FinishLine.png");
+	//textures_.Load(TextureID::kHealthRefill, "Media/Textures/HealthRefill.png");
+	//textures_.Load(TextureID::kMissileRefill, "Media/Textures/MissileRefill.png");
+	//textures_.Load(TextureID::kFireSpread, "Media/Textures/FireSpread.png");
+	//textures_.Load(TextureID::kFireRate, "Media/Textures/FireRate.png");
+	//textures_.Load(TextureID::kFinishLine, "Media/Textures/FinishLine.png");
 
-	textures_.Load(TextureID::kEntities, "Media/Textures/Entities.png");
-	textures_.Load(TextureID::kJungle, "Media/Textures/Jungle.png");
-	textures_.Load(TextureID::kExplosion, "Media/Textures/Explosion.png");
-	textures_.Load(TextureID::kParticle, "Media/Textures/Particle.png");
+	//textures_.Load(TextureID::kEntities, "Media/Textures/Entities.png");
+	//textures_.Load(TextureID::kJungle, "Media/Textures/Jungle.png");
+	//textures_.Load(TextureID::kExplosion, "Media/Textures/Explosion.png");
+	//textures_.Load(TextureID::kParticle, "Media/Textures/Particle.png");
 
 
 }
@@ -143,48 +124,6 @@ void World::DestroyEntitiesOutsideView()
 
 void World::GuideMissiles()
 {
-	//Target the closest enemy in the world
-	Command enemyCollector;
-	enemyCollector.category = static_cast<int>(ReceiverCategories::kEnemyAircraft);
-	enemyCollector.action = DerivedAction<Aircraft>([this](Aircraft& enemy, sf::Time)
-		{
-			if (!enemy.IsDestroyed())
-			{
-				active_enemies_.emplace_back(&enemy);
-			}
-		});
-
-	Command missileGuider;
-	missileGuider.category = static_cast<int>(ReceiverCategories::kAlliedProjectile);
-	missileGuider.action = DerivedAction<Projectile>([this](Projectile& missile, sf::Time dt)
-		{
-			if (!missile.IsGuided())
-			{
-				return;
-			}
-
-			float min_distance = std::numeric_limits<float>::max();
-			Aircraft* closest_enemy = nullptr;
-
-			for (Aircraft* enemy : active_enemies_)
-			{
-				float enemy_distance = Distance(missile, *enemy);
-				if (enemy_distance < min_distance)
-				{
-					closest_enemy = enemy;
-					min_distance = enemy_distance;
-				}
-			}
-
-			if (closest_enemy)
-			{
-				missile.GuideTowards(closest_enemy->GetWorldPosition());
-			}
-		});
-
-	command_queue_.Push(enemyCollector);
-	command_queue_.Push(missileGuider);
-	active_enemies_.clear();
 }
 
 bool MatchesCategories(SceneNode::Pair& colliders, ReceiverCategories type1, ReceiverCategories type2)
@@ -209,43 +148,43 @@ bool MatchesCategories(SceneNode::Pair& colliders, ReceiverCategories type1, Rec
 
 void World::HandleCollisions()
 {
-	std::set<SceneNode::Pair> collision_pairs;
-	scenegraph_.CheckSceneCollision(scenegraph_, collision_pairs);
-	for (SceneNode::Pair pair : collision_pairs)
-	{
-		if (MatchesCategories(pair, ReceiverCategories::kPlayerAircraft, ReceiverCategories::kEnemyAircraft))
-		{
-			auto& player = static_cast<Aircraft&>(*pair.first);
-			auto& enemy = static_cast<Aircraft&>(*pair.second);
-			//Collision response
-			player.Damage(enemy.GetHitPoints());
-			enemy.Destroy();
-		}
+	//std::set<SceneNode::Pair> collision_pairs;
+	//scenegraph_.CheckSceneCollision(scenegraph_, collision_pairs);
+	//for (SceneNode::Pair pair : collision_pairs)
+	//{
+	//	if (MatchesCategories(pair, ReceiverCategories::kPlayerAircraft, ReceiverCategories::kEnemyAircraft))
+	//	{
+	//		auto& player = static_cast<Aircraft&>(*pair.first);
+	//		auto& enemy = static_cast<Aircraft&>(*pair.second);
+	//		//Collision response
+	//		player.Damage(enemy.GetHitPoints());
+	//		enemy.Destroy();
+	//	}
 
-		else if (MatchesCategories(pair, ReceiverCategories::kPlayerAircraft, ReceiverCategories::kPickup))
-		{
-			auto& player = static_cast<Aircraft&>(*pair.first);
-			auto& pickup = static_cast<Pickup&>(*pair.second);
-			//Collision response
-			pickup.Apply(player);
-			pickup.Destroy();
-			player.PlayLocalSound(command_queue_, SoundEffect::kCollectPickup);
-		}
-		else if (MatchesCategories(pair, ReceiverCategories::kPlayerAircraft, ReceiverCategories::kEnemyProjectile) || MatchesCategories(pair, ReceiverCategories::kEnemyAircraft, ReceiverCategories::kAlliedProjectile))
-		{
-			auto& aircraft = static_cast<Aircraft&>(*pair.first);
-			auto& projectile = static_cast<Projectile&>(*pair.second);
-			//Collision response
-			aircraft.Damage(projectile.GetDamage());
-			projectile.Destroy();
-		}
-	}
+	//	else if (MatchesCategories(pair, ReceiverCategories::kPlayerAircraft, ReceiverCategories::kPickup))
+	//	{
+	//		auto& player = static_cast<Aircraft&>(*pair.first);
+	//		auto& pickup = static_cast<Pickup&>(*pair.second);
+	//		//Collision response
+	//		pickup.Apply(player);
+	//		pickup.Destroy();
+	//		player.PlayLocalSound(command_queue_, SoundEffect::kCollectPickup);
+	//	}
+	//	else if (MatchesCategories(pair, ReceiverCategories::kPlayerAircraft, ReceiverCategories::kEnemyProjectile) || MatchesCategories(pair, ReceiverCategories::kEnemyAircraft, ReceiverCategories::kAlliedProjectile))
+	//	{
+	//		auto& aircraft = static_cast<Aircraft&>(*pair.first);
+	//		auto& projectile = static_cast<Projectile&>(*pair.second);
+	//		//Collision response
+	//		aircraft.Damage(projectile.GetDamage());
+	//		projectile.Destroy();
+	//	}
+	//}
 }
 
 void World::UpdateSounds()
 {
 	// Set listener's position to player position
-	sounds_.SetListenerPosition(player_aircraft_->GetWorldPosition());
+	sounds_.SetListenerPosition({0,0}); //basic position for right now we need to change this when we do a dynamic camera but for rn we are all cool with a static camera and a static sound listener ok thank you for listening
 
 	// Remove unused sounds
 	sounds_.RemoveStoppedSounds();

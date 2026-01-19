@@ -1,15 +1,11 @@
 #include "application.hpp"
 #include "game_state.hpp"
-#include "title_state.hpp"
-#include "menu_state.hpp"
-#include "pause_state.hpp"
-#include "settings_state.hpp"
 #include "game_over_state.hpp"
 
 const sf::Time Application::kTimePerFrame = sf::seconds(1.f/60.f);
 
 Application::Application() : window_(sf::VideoMode({ 1024, 768 }), "States", sf::Style::Close)
-	, stack_(State::Context(window_, textures_, fonts_, player_, music_, sound_))
+	, stack_(State::Context(window_, textures_, fonts_, music_, sound_))
 {
 	window_.setKeyRepeatEnabled(false);
 	fonts_.Load(Font::kMain, "Media/Fonts/Sansation.ttf");
@@ -20,7 +16,7 @@ Application::Application() : window_(sf::VideoMode({ 1024, 768 }), "States", sf:
 	textures_.Load(TextureID::kButtons, "Media/Textures/Buttons.png");
 
 	RegisterStates();
-	stack_.PushState(StateID::kTitle);
+	stack_.PushState(StateID::kGame);
 }
 
 void Application::Run()
@@ -70,10 +66,7 @@ void Application::Render()
 
 void Application::RegisterStates()
 {
-	stack_.RegisterState<TitleState>(StateID::kTitle);
-	stack_.RegisterState<MenuState>(StateID::kMenu);
 	stack_.RegisterState<GameState>(StateID::kGame);
-	stack_.RegisterState<PauseState>(StateID::kPause);
-	stack_.RegisterState<SettingsState>(StateID::kSettings);
 	stack_.RegisterState<GameOverState>(StateID::kGameOver);
+
 }

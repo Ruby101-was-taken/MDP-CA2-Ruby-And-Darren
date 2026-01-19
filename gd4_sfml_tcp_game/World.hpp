@@ -21,17 +21,11 @@ public:
 
 	CommandQueue& GetCommandQueue();
 
-	bool HasAlivePlayer() const;
-	bool HasPlayerReachedEnd() const;
 
 private:
 	void LoadTextures();
 	void BuildScene();
-	void AdaptPlayerPosition();
-	void AdaptPlayerVelocity();
-
-	void SpawnEnemies();
-	void AddEnemies();
+	
 	sf::FloatRect GetViewBounds() const;
 	sf::FloatRect GetBattleFieldBounds() const;
 

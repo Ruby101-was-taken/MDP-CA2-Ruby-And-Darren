@@ -2,7 +2,7 @@
 enum class StateID
 {
 	kNone,
-	kTitle,
+	kTitle, 
 	kMenu,
 	kGame,
 	kPause,
