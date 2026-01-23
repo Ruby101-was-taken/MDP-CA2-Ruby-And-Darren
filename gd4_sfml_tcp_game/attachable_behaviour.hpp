@@ -1,5 +1,7 @@
 #pragma once
 #include <SFML/System/Time.hpp>
+#include <SFML/Graphics/RenderTarget.hpp>
+#include <SFML/Graphics/RenderStates.hpp>
 #include "command_queue.hpp"
 
 /*
@@ -20,5 +22,6 @@ public:
 	virtual void Start();
 
 	virtual void Update(sf::Time dt, CommandQueue& commands) =0;
-};
 
+	virtual void Draw(sf::RenderTarget& target, sf::RenderStates states) const {}
+};

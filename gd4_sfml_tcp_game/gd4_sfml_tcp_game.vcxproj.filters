@@ -117,6 +117,9 @@
     <ClCompile Include="game_world.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="sprite_behaviour.cpp">
+      <Filter>Source Files\Attachables</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="game.hpp">
@@ -253,6 +256,9 @@
     </ClInclude>
     <ClInclude Include="game_world.hpp">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="sprite_behaviour.hpp">
+      <Filter>Header Files\Attachables</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

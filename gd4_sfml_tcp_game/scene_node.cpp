@@ -3,7 +3,8 @@
 #include <cassert>
 #include <iostream>
 
-SceneNode::SceneNode(float x, float y, ReceiverCategories category):children_(), parent_(nullptr), default_category_(category)
+SceneNode::SceneNode(float x, float y, ReceiverCategories category) 
+    : children_(), parent_(nullptr), default_category_(category)
 {
     this->setPosition({ x, y });
 }
@@ -158,7 +159,9 @@ void SceneNode::draw(sf::RenderTarget& target, sf::RenderStates states) const
 
 void SceneNode::DrawCurrent(sf::RenderTarget& target, sf::RenderStates states) const
 {
-    //Do nothing
+    for (AttachableBehaviour* behaviour : behaviours_) {
+        behaviour->Draw(target, states);
+    }
 }
 
 void SceneNode::DrawChildren(sf::RenderTarget& target, sf::RenderStates states) const
