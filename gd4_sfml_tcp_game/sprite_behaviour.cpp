@@ -1,5 +1,6 @@
 #include "sprite_behaviour.hpp"
 #include "scene_node.hpp"
+#include <iostream>
 
 SpriteBehaviour::SpriteBehaviour(const sf::Texture& texture)
     : sprite_(texture)
@@ -10,6 +11,6 @@ SpriteBehaviour::SpriteBehaviour(const sf::Texture& texture)
 
 void SpriteBehaviour::Draw(sf::RenderTarget& target, sf::RenderStates states) const
 {
-    states.transform *= node_->getTransform();
+    //states.transform *= node_->getTransform();
     target.draw(sprite_, states);
 }

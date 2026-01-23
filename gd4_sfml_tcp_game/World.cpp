@@ -11,7 +11,7 @@ World::World(sf::RenderTarget& output_target, FontHolder& font, SoundPlayer& sou
 	,root_node_(0, 0,ReceiverCategories::kNone)
 	,scene_layers_()
 	,world_bounds_({ 0.f,0.f }, { camera_.getSize().x, 3000.f })
-	,spawn_position_(camera_.getSize().x/2.f, world_bounds_.size.y - camera_.getSize().y/2.f)
+	,spawn_position_(0,0)
 	,scrollspeed_(-50.f)
 	,scene_texture_({ target_.getSize().x, target_.getSize().y })
 {
@@ -95,11 +95,9 @@ void World::StartBuildScene()
 	}
 
 	root_node_ = SceneNode();
-	std::printf("start build!!!!");
 	BuildScene();
 }
 void World::BuildScene() {
-	std::printf("wrong build scene function");
 }
 
 
