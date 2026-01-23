@@ -7,6 +7,7 @@ Player::Player(const TextureHolder& textures, float x, float y)
 	, sprite_(textures.Get(TextureID::kEagle))
 {
 	sprite_.setOrigin({ sprite_.getLocalBounds().size.x / 2.f, sprite_.getLocalBounds().size.y / 2.f });
+	sprite_.setScale({ 0.5f, 0.5f });
 	
 	AddBehaviour(new HealthBehaviour(20));
 }

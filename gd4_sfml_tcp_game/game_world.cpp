@@ -7,6 +7,7 @@ GameWorld::GameWorld(sf::RenderTarget& output_target, FontHolder& font, SoundPla
 
 void GameWorld::BuildScene() {
 	std::unique_ptr<Player> player(new Player(textures_));
+	player->setPosition(spawn_position_);
 	root_node_.AttachChild(std::move(player));
 	std::printf("build!!!!");
 }
