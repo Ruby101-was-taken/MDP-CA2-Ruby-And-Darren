@@ -62,7 +62,7 @@ void World::AddNode(Ptr scene_node) {
 
 void World::LoadTextures()
 {
-	//textures_.Load(TextureID::kEagle, "Media/Textures/Eagle.png");
+	textures_.Load(TextureID::kEagle, "Media/Textures/Eagle.png");
 	//textures_.Load(TextureID::kRaptor, "Media/Textures/Raptor.png");
 	//textures_.Load(TextureID::kAvenger, "Media/Textures/Avenger.png");
 	//textures_.Load(TextureID::kLandscape, "Media/Textures/Desert.png");
