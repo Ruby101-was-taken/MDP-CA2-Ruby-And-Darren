@@ -7,7 +7,7 @@
 const sf::Time Application::kTimePerFrame = sf::seconds(1.f/60.f);
 
 Application::Application() : 
-	window_(sf::VideoMode({WINDOW_WIDTH, WINDOW_HEIGHT }), "States", sf::Style::Close)
+	window_(sf::VideoMode({WINDOW_WIDTH, WINDOW_HEIGHT }),(std::string)WINDOW_TITLE, sf::Style::Close)
 	, stack_(State::Context(window_, textures_, fonts_, music_, sound_))
 {
 	window_.setKeyRepeatEnabled(false);
@@ -20,6 +20,10 @@ Application::Application() :
 
 	RegisterStates();
 	stack_.PushState(StateID::kGame);
+
+	//set icon
+	sf::Image icon("Media/Textures/Interface/Window_Icon.png");
+	window_.setIcon(icon);
 }
 
 void Application::Run()

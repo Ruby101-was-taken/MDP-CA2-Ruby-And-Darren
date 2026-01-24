@@ -4,10 +4,21 @@
 #include "sprite_behaviour.hpp"
 #include <iostream>
 
-Player::Player(const TextureHolder& textures, float x, float y) 
-	: SceneNode(x, y) 
+Player::Player(const TextureHolder& textures, float x, float y, PlayerType type) 
+	: SceneNode(x, y) ,
+	type_(type)
 {
-	AddBehaviour(new SpriteBehaviour(textures.Get(TextureID::kEagle)));
+	switch (type) {
+	case PlayerType::kPlayerOne:
+		AddBehaviour(new SpriteBehaviour(textures.Get(TextureID::kPlayerOne)));
+		break;
+	case PlayerType::kPlayerTwo:
+		AddBehaviour(new SpriteBehaviour(textures.Get(TextureID::kPlayerTwo)));
+		break;
+	default:
+		AddBehaviour(new SpriteBehaviour(textures.Get(TextureID::kPlayerOne)));
+		break;
+	}
 	AddBehaviour(new HealthBehaviour(20));
 }
 
@@ -15,5 +26,4 @@ void Player::UpdateCurrent(sf::Time dt, CommandQueue& commands) {
 	int speed = 20;
 	sf::Vector2f newPos = { this->getPosition().x - speed * dt.asSeconds(), this->getPosition().y - speed * dt.asSeconds() };
 	this->setPosition(newPos);
-	std::cout << newPos.x << ", " << newPos.y << std::endl;
 }
