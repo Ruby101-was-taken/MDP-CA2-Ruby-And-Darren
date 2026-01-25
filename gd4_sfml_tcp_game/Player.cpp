@@ -19,11 +19,18 @@ Player::Player(const TextureHolder& textures, float x, float y, PlayerType type)
 		AddBehaviour(new SpriteBehaviour(textures.Get(TextureID::kPlayerOne)));
 		break;
 	}
-	AddBehaviour(new HealthBehaviour(20));
+	//AddBehaviour(new HealthBehaviour(20));
 }
 
 void Player::UpdateCurrent(sf::Time dt, CommandQueue& commands) {
-	int speed = 20;
-	sf::Vector2f newPos = { this->getPosition().x - speed * dt.asSeconds(), this->getPosition().y - speed * dt.asSeconds() };
-	this->setPosition(newPos);
+	move(velocity_ * dt.asSeconds());
 }
+
+void Player::SetVelocity(sf::Vector2f v) {
+	velocity_ = v;
+}
+
+sf::Vector2f Player::GetVelocity() const {
+	return velocity_;
+}
+

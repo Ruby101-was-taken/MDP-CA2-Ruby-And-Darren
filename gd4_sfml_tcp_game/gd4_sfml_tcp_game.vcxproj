@@ -161,6 +161,7 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="music_player.cpp" />
     <ClCompile Include="player.cpp" />
+    <ClCompile Include="player_controller.cpp" />
     <ClCompile Include="player_type.cpp" />
     <ClCompile Include="post_effect.cpp" />
     <ClCompile Include="scene_node.cpp" />
@@ -201,6 +202,7 @@
     <ClInclude Include="music_player.hpp" />
     <ClInclude Include="music_themes.hpp" />
     <ClInclude Include="player.hpp" />
+    <ClInclude Include="player_controller.hpp" />
     <ClInclude Include="player_type.hpp" />
     <ClInclude Include="post_effect.hpp" />
     <ClInclude Include="receiver_categories.hpp" />

@@ -120,6 +120,12 @@
     <ClCompile Include="sprite_behaviour.cpp">
       <Filter>Source Files\Attachables</Filter>
     </ClCompile>
+    <ClCompile Include="player_type.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="player_controller.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="game.hpp">
@@ -259,6 +265,12 @@
     </ClInclude>
     <ClInclude Include="sprite_behaviour.hpp">
       <Filter>Header Files\Attachables</Filter>
+    </ClInclude>
+    <ClInclude Include="player_type.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="player_controller.hpp">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
