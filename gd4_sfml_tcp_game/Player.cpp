@@ -3,6 +3,7 @@
 #include "health_behaviour.hpp"
 #include "sprite_behaviour.hpp"
 #include "player_movement_behaviour.hpp"
+#include "box_collider_behaviour.hpp"
 #include <iostream>
 
 Player::Player(const TextureHolder& textures, float x, float y, PlayerType type) 
@@ -22,6 +23,7 @@ Player::Player(const TextureHolder& textures, float x, float y, PlayerType type)
 	}
 	AddBehaviour(new HealthBehaviour(20));
 	AddBehaviour(new PlayerMovementBehaviour(200.f, type_));
+	AddBehaviour(new BoxColliderBehaviour({32.f, 32.f}, CollisionLayer::kPlayer, CollisionLayer::kWorld));
 }
 
 void Player::UpdateCurrent(sf::Time dt, CommandQueue& commands) {
