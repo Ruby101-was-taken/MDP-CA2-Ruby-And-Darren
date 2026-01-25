@@ -9,11 +9,8 @@ public:
 
 	void UpdateCurrent(sf::Time dt, CommandQueue& commands) override;
 
-	void SetVelocity(sf::Vector2f v);
-	sf::Vector2f GetVelocity() const;
 private:
 	PlayerType type_;
-	sf::Vector2f velocity_;
 };
 
 

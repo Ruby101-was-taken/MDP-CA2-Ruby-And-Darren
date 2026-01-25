@@ -123,7 +123,7 @@
     <ClCompile Include="player_type.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="player_controller.cpp">
+    <ClCompile Include="player_movement_behaviour.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -269,8 +269,8 @@
     <ClInclude Include="player_type.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="player_controller.hpp">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="player_movement_behaviour.hpp">
+      <Filter>Header Files\Attachables</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

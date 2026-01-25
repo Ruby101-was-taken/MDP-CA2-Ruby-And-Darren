@@ -18,7 +18,7 @@ public:
 	typedef std::unique_ptr<SceneNode> Ptr;
 
 	explicit World(sf::RenderTarget& target, FontHolder& font, SoundPlayer& sounds);
-	virtual void Update(sf::Time dt);
+	void Update(sf::Time dt);
 	void Draw();
 
 	CommandQueue& GetCommandQueue();

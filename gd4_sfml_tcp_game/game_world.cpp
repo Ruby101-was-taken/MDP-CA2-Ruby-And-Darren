@@ -13,7 +13,6 @@ void GameWorld::BuildScene() {
         PLAYER_ONE_START_POSITION_Y,
         PlayerType::kPlayerOne
     );
-    player_one_ = player_one.get();
     root_node_.AttachChild(std::move(player_one));
 
     auto player_two = std::make_unique<Player>(
@@ -22,13 +21,6 @@ void GameWorld::BuildScene() {
         PLAYER_TWO_START_POSITION_Y,
         PlayerType::kPlayerTwo
     );
-    player_two_ = player_two.get();
     root_node_.AttachChild(std::move(player_two));
-}
-void GameWorld::Update(sf::Time dt) {
-    player_one_controller_.HandleRealtimeInput(*player_one_);
-    //player_two_controller_.HandleRealtimeInput(*player_two_);
-
-    World::Update(dt);
 }
 

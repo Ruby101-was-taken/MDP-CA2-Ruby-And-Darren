@@ -202,6 +202,15 @@ bool SceneNode::IsDestroyed() const
     return isDeleted_;
 }
 
+
+void SceneNode::SetVelocity(sf::Vector2f v) {
+    velocity_ = v;
+}
+
+sf::Vector2f SceneNode::GetVelocity() const {
+    return velocity_;
+}
+
 bool SceneNode::IsMarkedForRemoval() const
 {
     return IsDestroyed();

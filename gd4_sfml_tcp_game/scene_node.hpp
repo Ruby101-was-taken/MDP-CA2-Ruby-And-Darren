@@ -39,6 +39,9 @@ public:
 	void DeleteNode();
 
 	bool IsDestroyed() const;
+
+	void SetVelocity(sf::Vector2f v);
+	sf::Vector2f GetVelocity() const;
 private:
 	void StartAttachables();
 	virtual void StartCurrent();
@@ -59,7 +62,6 @@ private:
 	void CheckNodeCollision(SceneNode& node, std::set<Pair>& collison_pairs);
 	virtual bool IsMarkedForRemoval() const;
 
-
 private:
 	std::vector<Ptr> children_;
 	SceneNode* parent_;
@@ -69,6 +71,7 @@ private:
 	
 	bool isDeleted_ = false;
 
+	sf::Vector2f velocity_;
 protected:
 	void AddBehaviour(AttachableBehaviour* behaviour);
 
