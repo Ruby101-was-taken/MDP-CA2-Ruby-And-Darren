@@ -157,6 +157,7 @@
     <ClCompile Include="game_state.cpp" />
     <ClCompile Include="game_world.cpp" />
     <ClCompile Include="health_behaviour.cpp" />
+    <ClCompile Include="input_manager.cpp" />
     <ClCompile Include="label.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="music_player.cpp" />
@@ -196,6 +197,8 @@
     <ClInclude Include="game_state.hpp" />
     <ClInclude Include="game_world.hpp" />
     <ClInclude Include="health_behaviour.hpp" />
+    <ClInclude Include="input_manager.hpp" />
+    <ClInclude Include="input_types.hpp" />
     <ClInclude Include="label.hpp" />
     <ClInclude Include="menu_options.hpp" />
     <ClInclude Include="mission_status.hpp" />

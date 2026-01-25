@@ -3,6 +3,7 @@
 #include "game_over_state.hpp"
 #include "game_world.hpp"
 #include "constants.hpp"
+#include "input_manager.hpp"
 
 const sf::Time Application::kTimePerFrame = sf::seconds(1.f/60.f);
 
@@ -24,6 +25,8 @@ Application::Application() :
 	//set icon
 	sf::Image icon("Media/Textures/Interface/Window_Icon.png");
 	window_.setIcon(icon);
+
+	InputManager::SetUpInputs();
 }
 
 void Application::Run()

@@ -21,7 +21,7 @@ Player::Player(const TextureHolder& textures, float x, float y, PlayerType type)
 		break;
 	}
 	AddBehaviour(new HealthBehaviour(20));
-	AddBehaviour(new PlayerMovementBehaviour());
+	AddBehaviour(new PlayerMovementBehaviour(200.f, type_));
 }
 
 void Player::UpdateCurrent(sf::Time dt, CommandQueue& commands) {
