@@ -15,6 +15,6 @@ void HealthBehaviour::ChangeHealthBy(float health) {
 }
 
 void HealthBehaviour::Update(sf::Time dt, CommandQueue& commands) {
-	ChangeHealthBy(-dt.asSeconds());
+	//ChangeHealthBy(-dt.asSeconds());
 }
 

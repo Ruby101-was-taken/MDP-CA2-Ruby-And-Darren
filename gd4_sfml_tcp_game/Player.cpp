@@ -19,7 +19,7 @@ Player::Player(const TextureHolder& textures, float x, float y, PlayerType type)
 		AddBehaviour(new SpriteBehaviour(textures.Get(TextureID::kPlayerOne)));
 		break;
 	}
-	//AddBehaviour(new HealthBehaviour(20));
+	AddBehaviour(new HealthBehaviour(20));
 }
 
 void Player::UpdateCurrent(sf::Time dt, CommandQueue& commands) {
