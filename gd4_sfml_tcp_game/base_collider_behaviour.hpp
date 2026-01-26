@@ -5,12 +5,12 @@
 
 class BaseColliderBehaviour : public AttachableBehaviour {
 public:
-    CollisionLayer layer;
-    bool is_trigger;
+    CollisionLayer layer_;
+    bool is_trigger_;
 
     BaseColliderBehaviour(
-        CollisionLayer layer_,
-        bool is_trigger_ = false
+        CollisionLayer layer,
+        bool is_trigger = false
     );
 
     void Update(sf::Time, CommandQueue&) override {}
