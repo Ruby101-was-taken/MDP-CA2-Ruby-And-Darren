@@ -221,6 +221,16 @@ void SceneNode::AddBehaviour(AttachableBehaviour* behaviour) {
     behaviours_.emplace_back(behaviour);
 
 }
+void SceneNode::CollectColliders(std::vector<BaseColliderBehaviour*>& colliders) {
+    for (AttachableBehaviour* behaviour : behaviours_) {
+        if (auto* collider = dynamic_cast<BaseColliderBehaviour*>(behaviour))
+            colliders.push_back(collider);
+    }
+
+    for (const auto& child : children_) {
+        child->CollectColliders(colliders);
+    }
+}
 
 float Distance(const SceneNode& lhs, const SceneNode& rhs)
 {

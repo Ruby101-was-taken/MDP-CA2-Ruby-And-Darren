@@ -130,10 +130,10 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="base_collider_behaviour.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\Attachables</Filter>
     </ClCompile>
     <ClCompile Include="box_collider_behaviour.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\Attachables</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -288,10 +288,10 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="base_collider_behaviour.hpp">
-      <Filter>Header Files</Filter>
+      <Filter>Header Files\Attachables</Filter>
     </ClInclude>
     <ClInclude Include="box_collider_behaviour.hpp">
-      <Filter>Header Files</Filter>
+      <Filter>Header Files\Attachables</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

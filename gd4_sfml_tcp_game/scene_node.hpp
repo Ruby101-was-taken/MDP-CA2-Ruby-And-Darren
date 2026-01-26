@@ -5,6 +5,7 @@
 #include "command_queue.hpp"
 #include "command.hpp"
 #include "attachable_behaviour.hpp"
+#include "base_collider_behaviour.hpp"
 
 #include <set>
 #include <vector>
@@ -42,6 +43,8 @@ public:
 
 	void SetVelocity(sf::Vector2f v);
 	sf::Vector2f GetVelocity() const;
+
+	void CollectColliders(std::vector<BaseColliderBehaviour*>& colliders);
 private:
 	void StartAttachables();
 	virtual void StartCurrent();
@@ -74,7 +77,6 @@ private:
 	sf::Vector2f velocity_;
 protected:
 	void AddBehaviour(AttachableBehaviour* behaviour);
-
 public:
 	std::string name_;
 };

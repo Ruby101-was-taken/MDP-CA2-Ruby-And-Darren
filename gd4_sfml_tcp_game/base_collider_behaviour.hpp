@@ -15,5 +15,6 @@ public:
         bool is_trigger_ = false
     );
 
+    void Update(sf::Time, CommandQueue&) override {}
     virtual sf::FloatRect GetWorldBounds() const = 0;
 };

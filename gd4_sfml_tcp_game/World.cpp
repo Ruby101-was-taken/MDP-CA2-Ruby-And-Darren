@@ -1,6 +1,7 @@
 #include "world.hpp"
 #include "pickup.hpp"
 #include "sound_node.hpp"
+#include <iostream>
 
 World::World(sf::RenderTarget& output_target, FontHolder& font, SoundPlayer& sounds)
 	:target_(output_target)
@@ -29,7 +30,9 @@ void World::Update(sf::Time dt)
 		root_node_.OnCommand(command_queue_.Pop(), dt);
 	}
 
-	root_node_.Update(dt, command_queue_);
+	HandleCollisions();
+
+	root_node_.Update(dt, command_queue_);	
 }
 
 void World::Draw()
@@ -158,37 +161,31 @@ bool MatchesCategories(SceneNode::Pair& colliders, ReceiverCategories type1, Rec
 
 void World::HandleCollisions()
 {
-	//std::set<SceneNode::Pair> collision_pairs;
-	//scenegraph_.CheckSceneCollision(scenegraph_, collision_pairs);
-	//for (SceneNode::Pair pair : collision_pairs)
-	//{
-	//	if (MatchesCategories(pair, ReceiverCategories::kPlayerAircraft, ReceiverCategories::kEnemyAircraft))
-	//	{
-	//		auto& player = static_cast<Aircraft&>(*pair.first);
-	//		auto& enemy = static_cast<Aircraft&>(*pair.second);
-	//		//Collision response
-	//		player.Damage(enemy.GetHitPoints());
-	//		enemy.Destroy();
-	//	}
+	std::vector<BaseColliderBehaviour*> colliders;
+	root_node_.CollectColliders(colliders);
 
-	//	else if (MatchesCategories(pair, ReceiverCategories::kPlayerAircraft, ReceiverCategories::kPickup))
-	//	{
-	//		auto& player = static_cast<Aircraft&>(*pair.first);
-	//		auto& pickup = static_cast<Pickup&>(*pair.second);
-	//		//Collision response
-	//		pickup.Apply(player);
-	//		pickup.Destroy();
-	//		player.PlayLocalSound(command_queue_, SoundEffect::kCollectPickup);
-	//	}
-	//	else if (MatchesCategories(pair, ReceiverCategories::kPlayerAircraft, ReceiverCategories::kEnemyProjectile) || MatchesCategories(pair, ReceiverCategories::kEnemyAircraft, ReceiverCategories::kAlliedProjectile))
-	//	{
-	//		auto& aircraft = static_cast<Aircraft&>(*pair.first);
-	//		auto& projectile = static_cast<Projectile&>(*pair.second);
-	//		//Collision response
-	//		aircraft.Damage(projectile.GetDamage());
-	//		projectile.Destroy();
-	//	}
-	//}
+	const size_t count = colliders.size();
+	for (size_t i = 0; i < count; ++i) {
+		for (size_t j = i + 1; j < count; ++j) {
+			
+			auto* a = colliders[i];
+			auto* b = colliders[j];
+
+			//// Layer / mask filtering
+			//if ((a->mask & b->layer) == CollisionLayer::kNone || (b->mask & a->layer) == CollisionLayer::kNone) {
+			//	continue;
+			//}		
+
+			auto intersection = a->GetWorldBounds().findIntersection(b->GetWorldBounds());
+			if (intersection) {
+				// do response
+				std::cout << "COLLIDING...\n";
+			}
+			else {
+				std::cout << "NOT COLLIDING...\n";
+			}
+		}
+	}
 }
 
 void World::UpdateSounds()
