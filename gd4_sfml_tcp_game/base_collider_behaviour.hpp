@@ -6,12 +6,10 @@
 class BaseColliderBehaviour : public AttachableBehaviour {
 public:
     CollisionLayer layer;
-    CollisionLayer mask;
     bool is_trigger;
 
     BaseColliderBehaviour(
         CollisionLayer layer_,
-        CollisionLayer mask_ = CollisionLayer::kAll,
         bool is_trigger_ = false
     );
 

@@ -1,6 +1,7 @@
 #include "world.hpp"
 #include "pickup.hpp"
 #include "sound_node.hpp"
+#include "Utility.hpp"
 #include <iostream>
 
 World::World(sf::RenderTarget& output_target, FontHolder& font, SoundPlayer& sounds)
@@ -171,18 +172,17 @@ void World::HandleCollisions()
 			auto* a = colliders[i];
 			auto* b = colliders[j];
 
-			//// Layer / mask filtering
-			//if ((a->mask & b->layer) == CollisionLayer::kNone || (b->mask & a->layer) == CollisionLayer::kNone) {
+			
+			//if (!Utility::CanCollide(a->layer, b->layer)) // Layer / mask filtering
 			//	continue;
-			//}		
-
+			
 			auto intersection = a->GetWorldBounds().findIntersection(b->GetWorldBounds());
 			if (intersection) {
 				// do response
-				std::cout << "COLLIDING...\n";
+				std::cout << "PLAYER COLLIDING...\n";
 			}
 			else {
-				std::cout << "NOT COLLIDING...\n";
+				std::cout << "PLAYER NOT COLLIDING...\n";
 			}
 		}
 	}

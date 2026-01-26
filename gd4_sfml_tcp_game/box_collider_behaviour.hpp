@@ -4,7 +4,7 @@
 
 class BoxColliderBehaviour : public BaseColliderBehaviour {
 public:
-    BoxColliderBehaviour(sf::Vector2f size_, CollisionLayer layer_, CollisionLayer mask_ = CollisionLayer::kAll, bool is_trigger_ = false);
+    BoxColliderBehaviour(sf::Vector2f size_, CollisionLayer layer_, bool is_trigger_ = false);
 
     sf::FloatRect GetWorldBounds() const override;
 
