@@ -9,6 +9,7 @@ Player::Player(const TextureHolder& textures, float x, float y, PlayerType type)
 	: SceneNode(x, y) ,
 	type_(type)
 {
+	// should be changed to be a map or dict when we add more players, might get a little verbose otherwise
 	switch (type) {
 	case PlayerType::kPlayerOne:
 		AddBehaviour(new SpriteBehaviour(textures.Get(TextureID::kPlayerOne)));
