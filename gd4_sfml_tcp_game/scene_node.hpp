@@ -24,6 +24,7 @@ public:
 
 	void Start();
 	void Update(sf::Time dt, CommandQueue& commands);
+	void OnCollision(SceneNode* other);
 
 	sf::Vector2f GetWorldPosition() const;
 	sf::Transform GetWorldTransform() const;
@@ -53,6 +54,9 @@ private:
 	void UpdateAttachables(sf::Time dt, CommandQueue& commands);
 	virtual void UpdateCurrent(sf::Time dt, CommandQueue& commands);
 	void UpdateChildren(sf::Time dt, CommandQueue& commands);
+
+	virtual void OnCollisionCurrent(SceneNode* other);
+	void OnCollisionAttachables(SceneNode* other);
 
 
 	//Note draw() is from sf::Drawable and hence the name

@@ -40,3 +40,7 @@ void PlayerMovementBehaviour::Update(sf::Time dt, CommandQueue& commands) {
         velocity = velocity.normalized()*speed_;
     node_->SetVelocity(velocity);
 }
+
+void PlayerMovementBehaviour::OnCollision(SceneNode* other) {
+    printf("player %d\n", type_);
+}

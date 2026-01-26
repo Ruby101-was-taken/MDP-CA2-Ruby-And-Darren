@@ -17,3 +17,10 @@ void AttachableBehaviour::Start() {
 
 void AttachableBehaviour::Update(sf::Time dt, CommandQueue& commands) {
 }
+
+void AttachableBehaviour::OnCollision(SceneNode* other) {
+}
+
+SceneNode* AttachableBehaviour::GetNode() {
+	return node_;
+}

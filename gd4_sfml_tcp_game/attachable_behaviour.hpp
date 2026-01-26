@@ -24,4 +24,8 @@ public:
 	virtual void Update(sf::Time dt, CommandQueue& commands) =0;
 
 	virtual void Draw(sf::RenderTarget& target, sf::RenderStates states) const {}
+
+	virtual void OnCollision(SceneNode* other);
+
+	SceneNode* GetNode();
 };

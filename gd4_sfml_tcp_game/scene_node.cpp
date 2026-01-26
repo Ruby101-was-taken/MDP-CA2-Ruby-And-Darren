@@ -144,6 +144,22 @@ void SceneNode::UpdateChildren(sf::Time dt, CommandQueue& commands)
     }
 }
 
+void SceneNode::OnCollision(SceneNode* other) {
+    OnCollisionCurrent(other);
+    OnCollisionAttachables(other);
+}
+
+
+void SceneNode::OnCollisionCurrent(SceneNode* other) {
+    //Do nothing
+}
+
+void SceneNode::OnCollisionAttachables(SceneNode* other) {
+    for (AttachableBehaviour* behaviour : behaviours_) {
+        behaviour->OnCollision(other);
+    }
+}
+
 #pragma endregion
 
 void SceneNode::draw(sf::RenderTarget& target, sf::RenderStates states) const
@@ -224,7 +240,7 @@ void SceneNode::AddBehaviour(AttachableBehaviour* behaviour) {
 void SceneNode::CollectColliders(std::vector<BaseColliderBehaviour*>& colliders) {
     for (AttachableBehaviour* behaviour : behaviours_) {
         if (auto* collider = dynamic_cast<BaseColliderBehaviour*>(behaviour))
-            colliders.push_back(collider);
+            colliders.emplace_back(collider);
     }
 
     for (const auto& child : children_) {
