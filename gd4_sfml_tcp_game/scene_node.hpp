@@ -46,6 +46,9 @@ public:
 	sf::Vector2f GetVelocity() const;
 
 	void CollectColliders(std::vector<BaseColliderBehaviour*>& colliders);
+
+	void SetCollisionLayer(CollisionLayer layer);
+	CollisionLayer GetCollisionLayer();
 private:
 	void StartAttachables();
 	virtual void StartCurrent();
@@ -79,6 +82,9 @@ private:
 	bool isDeleted_ = false;
 
 	sf::Vector2f velocity_;
+
+
+	CollisionLayer collision_layer_;
 protected:
 	void AddBehaviour(AttachableBehaviour* behaviour);
 public:

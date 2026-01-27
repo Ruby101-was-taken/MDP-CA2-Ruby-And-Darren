@@ -4,7 +4,10 @@
 #include <iostream>
 
 SceneNode::SceneNode(float x, float y, ReceiverCategories category) 
-    : children_(), parent_(nullptr), default_category_(category)
+    : children_(), 
+    parent_(nullptr), 
+    default_category_(category),
+    collision_layer_(CollisionLayer::kNone)
 {
     this->setPosition({ x, y });
 }
@@ -230,6 +233,15 @@ sf::Vector2f SceneNode::GetVelocity() const {
 bool SceneNode::IsMarkedForRemoval() const
 {
     return IsDestroyed();
+}
+
+void SceneNode::SetCollisionLayer(CollisionLayer layer) {
+    collision_layer_ = layer;
+    printf("set layers");
+}
+
+CollisionLayer SceneNode::GetCollisionLayer() {
+    return collision_layer_;
 }
 
 void SceneNode::AddBehaviour(AttachableBehaviour* behaviour) {

@@ -14,5 +14,6 @@ public:
     );
 
     void Update(sf::Time, CommandQueue&) override {}
+    void Start() override;
     virtual sf::FloatRect GetWorldBounds() const = 0;
 };

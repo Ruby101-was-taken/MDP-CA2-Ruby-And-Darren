@@ -6,3 +6,9 @@ BaseColliderBehaviour::BaseColliderBehaviour(CollisionLayer layer, bool is_trigg
     , is_trigger_(is_trigger)
 {
 }
+
+
+
+void BaseColliderBehaviour::Start() {
+    node_->SetCollisionLayer(layer_);
+}

@@ -145,6 +145,7 @@
     <ClCompile Include="application.cpp" />
     <ClCompile Include="attachable_behaviour.cpp" />
     <ClCompile Include="base_collider_behaviour.cpp" />
+    <ClCompile Include="basic_rectangle.cpp" />
     <ClCompile Include="bloom_effect.cpp" />
     <ClCompile Include="box_collider_behaviour.cpp" />
     <ClCompile Include="button.cpp" />
@@ -185,6 +186,7 @@
     <ClInclude Include="application.hpp" />
     <ClInclude Include="attachable_behaviour.hpp" />
     <ClInclude Include="base_collider_behaviour.hpp" />
+    <ClInclude Include="basic_rectangle.hpp" />
     <ClInclude Include="bloom_effect.hpp" />
     <ClInclude Include="box_collider_behaviour.hpp" />
     <ClInclude Include="button.hpp" />

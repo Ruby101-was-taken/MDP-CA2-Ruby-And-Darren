@@ -1,6 +1,8 @@
 #include "game_world.hpp"
 #include <iostream>
 #include "constants.hpp"
+#include "player.hpp"
+#include "basic_rectangle.hpp"
 
 GameWorld::GameWorld(sf::RenderTarget& output_target, FontHolder& font, SoundPlayer& sounds) : World(output_target, font, sounds) {
 	StartBuildScene();
@@ -22,5 +24,9 @@ void GameWorld::BuildScene() {
         PlayerType::kPlayerTwo
     );
     root_node_.AttachChild(std::move(player_two));
+
+    auto rectangle = std::make_unique<BasicRectangle>(
+    );
+    root_node_.AttachChild(std::move(rectangle));
 }
 

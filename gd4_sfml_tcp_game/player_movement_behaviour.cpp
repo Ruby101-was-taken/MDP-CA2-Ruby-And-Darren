@@ -36,11 +36,12 @@ void PlayerMovementBehaviour::Update(sf::Time dt, CommandQueue& commands) {
 
     // can't normalise a vector of length 0
     if (velocity.length() != 0)
-        // normalise the veolcity so you don't move diagonally faster
+        // normalise the veolcity so you don't move diagonally faster+
         velocity = velocity.normalized()*speed_;
     node_->SetVelocity(velocity);
 }
 
 void PlayerMovementBehaviour::OnCollision(SceneNode* other) {
-    printf("player %d\n", type_);
+    if(other->GetCollisionLayer() == CollisionLayer::kPlayer)
+        printf("colliding with a player\n");
 }

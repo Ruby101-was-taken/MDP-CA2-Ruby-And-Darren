@@ -19,6 +19,18 @@
     <Filter Include="Source Files\Attachables">
       <UniqueIdentifier>{758ef84f-4fb4-4116-a7bb-9dc37f58a035}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\SceneNodes">
+      <UniqueIdentifier>{fe0829e4-b552-4301-bfef-707be7d69522}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\SceneNodes">
+      <UniqueIdentifier>{b29039df-f088-4dfd-af54-ebb4a4a5ea6d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Worlds">
+      <UniqueIdentifier>{752dfb37-1993-4ed3-bec5-4900ff4154e3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Worlds">
+      <UniqueIdentifier>{e11577be-0e80-43ed-a204-cf745261e2cc}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -40,9 +52,6 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="sprite_node.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="world.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="command.cpp">
@@ -111,9 +120,6 @@
     <ClCompile Include="health_behaviour.cpp">
       <Filter>Source Files\Attachables</Filter>
     </ClCompile>
-    <ClCompile Include="player.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="game_world.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -121,9 +127,6 @@
       <Filter>Source Files\Attachables</Filter>
     </ClCompile>
     <ClCompile Include="player_type.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="player_movement_behaviour.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="input_manager.cpp">
@@ -134,6 +137,18 @@
     </ClCompile>
     <ClCompile Include="box_collider_behaviour.cpp">
       <Filter>Source Files\Attachables</Filter>
+    </ClCompile>
+    <ClCompile Include="basic_rectangle.cpp">
+      <Filter>Source Files\SceneNodes</Filter>
+    </ClCompile>
+    <ClCompile Include="player.cpp">
+      <Filter>Source Files\SceneNodes</Filter>
+    </ClCompile>
+    <ClCompile Include="player_movement_behaviour.cpp">
+      <Filter>Source Files\Attachables</Filter>
+    </ClCompile>
+    <ClCompile Include="world.cpp">
+      <Filter>Source Files\Worlds</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -263,13 +278,7 @@
     <ClInclude Include="health_behaviour.hpp">
       <Filter>Header Files\Attachables</Filter>
     </ClInclude>
-    <ClInclude Include="player.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="sprite_node.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="game_world.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="sprite_behaviour.hpp">
@@ -292,6 +301,15 @@
     </ClInclude>
     <ClInclude Include="box_collider_behaviour.hpp">
       <Filter>Header Files\Attachables</Filter>
+    </ClInclude>
+    <ClInclude Include="basic_rectangle.hpp">
+      <Filter>Header Files\SceneNodes</Filter>
+    </ClInclude>
+    <ClInclude Include="player.hpp">
+      <Filter>Header Files\SceneNodes</Filter>
+    </ClInclude>
+    <ClInclude Include="game_world.hpp">
+      <Filter>Header Files\Worlds</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

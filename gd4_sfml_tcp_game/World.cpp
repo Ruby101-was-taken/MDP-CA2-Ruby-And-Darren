@@ -100,6 +100,7 @@ void World::StartBuildScene()
 
 	root_node_ = SceneNode();
 	BuildScene();
+	root_node_.Start();
 }
 void World::BuildScene() {
 }
@@ -164,8 +165,6 @@ void World::HandleCollisions()
 {
 	std::vector<BaseColliderBehaviour*> colliders;
 	root_node_.CollectColliders(colliders);
-
-	std::cout << "===\n";
 
 	const size_t count = colliders.size();
 	for (size_t i = 0; i < count; ++i) {
