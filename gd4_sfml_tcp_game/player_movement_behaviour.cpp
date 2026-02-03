@@ -2,6 +2,8 @@
 #include "scene_node.hpp"
 #include "player.hpp"
 #include "input_manager.hpp"
+#include <iostream>
+#include <chrono>
 
 PlayerMovementBehaviour::PlayerMovementBehaviour(float speed, PlayerType type):
 	speed_(speed),
@@ -42,6 +44,14 @@ void PlayerMovementBehaviour::Update(sf::Time dt, CommandQueue& commands) {
 }
 
 void PlayerMovementBehaviour::OnCollision(SceneNode* other) {
-    if(other->GetCollisionLayer() == CollisionLayer::kPlayer)
+    if (other->GetCollisionLayer() == CollisionLayer::kPlayer)
         printf("colliding with a player\n");
+    else if (other->GetCollisionLayer() == CollisionLayer::kWorld) {
+        // this just makes it easy to see when the collision happens
+        const auto p1 = std::chrono::system_clock::now();
+
+        std::cout << "seconds since epoch: "
+            << std::chrono::duration_cast<std::chrono::seconds>(
+                p1.time_since_epoch()).count() << '\n';
+    }
 }

@@ -3,9 +3,9 @@
 
 class BasicRectangle : public SceneNode {
 public:
-	BasicRectangle(unsigned int w=32, unsigned int h=32);
+	BasicRectangle(unsigned int w=64, unsigned int h=64);
 private:
-	unsigned int w_ = 32;
-	unsigned int h_ = 32;
+	unsigned int w_;
+	unsigned int h_;
 };
 

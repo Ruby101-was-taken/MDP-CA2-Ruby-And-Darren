@@ -17,6 +17,7 @@ World::World(sf::RenderTarget& output_target, FontHolder& font, SoundPlayer& sou
 	,scrollspeed_(-50.f)
 	,scene_texture_({ target_.getSize().x, target_.getSize().y })
 {
+	camera_.setSize({ 640, 360});
 	LoadTextures();
 	StartBuildScene();
 	camera_.setCenter(spawn_position_);
