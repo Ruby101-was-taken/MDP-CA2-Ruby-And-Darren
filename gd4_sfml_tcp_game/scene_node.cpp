@@ -213,6 +213,9 @@ bool SceneNode::IsDestroyed() const
 void SceneNode::SetVelocity(sf::Vector2f v) {
     velocity_ = v;
 }
+void SceneNode::AddVelocity(sf::Vector2f v) {
+    velocity_ += v;
+}
 
 sf::Vector2f SceneNode::GetVelocity() const {
     return velocity_;

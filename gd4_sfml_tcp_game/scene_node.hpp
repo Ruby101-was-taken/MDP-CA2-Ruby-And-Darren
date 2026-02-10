@@ -43,6 +43,7 @@ public:
 	bool IsDestroyed() const;
 
 	void SetVelocity(sf::Vector2f v);
+	void AddVelocity(sf::Vector2f v);
 	sf::Vector2f GetVelocity() const;
 
 	void CollectColliders(std::vector<BaseColliderBehaviour*>& colliders);

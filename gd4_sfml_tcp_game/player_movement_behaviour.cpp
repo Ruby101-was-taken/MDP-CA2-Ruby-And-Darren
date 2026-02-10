@@ -4,14 +4,54 @@
 #include "input_manager.hpp"
 #include <iostream>
 #include <chrono>
+#include "constants.hpp"
+#include "utility.hpp"
 
 PlayerMovementBehaviour::PlayerMovementBehaviour(float speed, PlayerType type):
-	speed_(speed),
-    type_(type)
+    acceleration_speed_(speed),
+    deceleration_speed_(4),
+    type_(type),
+    maxSpeed_(100)
 {
 }
 
 void PlayerMovementBehaviour::Update(sf::Time dt, CommandQueue& commands) {
+    sf::Vector2f velocity = HandlePlayerInput();
+    
+    // can't normalise a vector of length 0
+    if (velocity.length() != 0)
+        // normalise the veolcity so you don't move diagonally faster+
+        velocity = velocity.normalized()*acceleration_speed_;
+
+
+    node_->AddVelocity({ velocity.x, 0 });
+
+    //player is moving left or right
+    int8_t direction = Utility::sign(node_->GetVelocity().x);
+
+    sf::Vector2f nodeVelocity = node_->GetVelocity();
+
+    if (abs(nodeVelocity.x) > maxSpeed_) {
+        node_->SetVelocity({ direction*maxSpeed_, nodeVelocity.y});
+    }
+    node_->AddVelocity({-deceleration_speed_*direction, 0});
+    nodeVelocity.y += 1;
+}
+
+void PlayerMovementBehaviour::OnCollision(SceneNode* other) {
+    if (other->GetCollisionLayer() == CollisionLayer::kPlayer)
+        printf("colliding with a player\n");
+    else if (other->GetCollisionLayer() == CollisionLayer::kWorld) {
+        // this just makes it easy to see when the collision happens
+        const auto p1 = std::chrono::system_clock::now();
+
+        std::cout << "seconds since epoch: "
+            << std::chrono::duration_cast<std::chrono::seconds>(
+                p1.time_since_epoch()).count() << '\n';
+    }
+}
+
+sf::Vector2f PlayerMovementBehaviour::HandlePlayerInput() {
     sf::Vector2f velocity(0.f, 0.f);
 
     //creates the unit vector of movement
@@ -36,22 +76,5 @@ void PlayerMovementBehaviour::Update(sf::Time dt, CommandQueue& commands) {
             velocity.x += 1;
     }
 
-    // can't normalise a vector of length 0
-    if (velocity.length() != 0)
-        // normalise the veolcity so you don't move diagonally faster+
-        velocity = velocity.normalized()*speed_;
-    node_->SetVelocity(velocity);
-}
-
-void PlayerMovementBehaviour::OnCollision(SceneNode* other) {
-    if (other->GetCollisionLayer() == CollisionLayer::kPlayer)
-        printf("colliding with a player\n");
-    else if (other->GetCollisionLayer() == CollisionLayer::kWorld) {
-        // this just makes it easy to see when the collision happens
-        const auto p1 = std::chrono::system_clock::now();
-
-        std::cout << "seconds since epoch: "
-            << std::chrono::duration_cast<std::chrono::seconds>(
-                p1.time_since_epoch()).count() << '\n';
-    }
+    return velocity;
 }

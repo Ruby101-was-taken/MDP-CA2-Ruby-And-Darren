@@ -180,3 +180,8 @@ int Utility::Length(sf::Vector2f vector)
 	return sqrtf(powf(vector.x, 2) + powf(vector.y, 2));
 }
 
+
+int Utility::sign(int num) {
+	return (num > 0) ? 1 : ((num < 0) ? -1 : 0);
+}
+
