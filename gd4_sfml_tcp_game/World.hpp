@@ -33,7 +33,6 @@ protected:
 	sf::FloatRect GetBattleFieldBounds() const;
 
 	void DestroyEntitiesOutsideView();
-	void GuideMissiles();
 
 	void HandleCollisions();
 	void UpdateSounds();

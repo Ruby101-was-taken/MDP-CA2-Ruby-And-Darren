@@ -142,25 +142,6 @@ void World::GuideMissiles()
 {
 }
 
-bool MatchesCategories(SceneNode::Pair& colliders, ReceiverCategories type1, ReceiverCategories type2)
-{
-	unsigned int category1 = colliders.first->GetCategory();
-	unsigned int category2 = colliders.second->GetCategory();
-
-	if (static_cast<int>(type1) & category1 && static_cast<int>(type2) & category2)
-	{
-		return true;
-	}
-	else if (static_cast<int>(type1) & category2 && static_cast<int>(type2) & category1)
-	{ 
-		std::swap(colliders.first, colliders.second);
-	}
-	else
-	{
-		return false;
-	}
-}
-
 
 void World::HandleCollisions()
 {

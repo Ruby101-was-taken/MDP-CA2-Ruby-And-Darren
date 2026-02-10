@@ -204,18 +204,6 @@ void SceneNode::DeleteNode() {
     isDeleted_ = true;
 }
 
-void SceneNode::CheckNodeCollision(SceneNode& node, std::set<Pair>& collision_pairs)
-{
-    if (this != &node && Collision(*this, node) && !IsDestroyed() && !node.IsDestroyed())
-    {
-        collision_pairs.insert(std::minmax(this, &node));
-    }
-    for (Ptr& child : children_)
-    {
-        child->CheckNodeCollision(node, collision_pairs);
-    }
-}
-
 bool SceneNode::IsDestroyed() const
 {
     return isDeleted_;
