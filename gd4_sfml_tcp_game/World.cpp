@@ -17,7 +17,7 @@ World::World(sf::RenderTarget& output_target, FontHolder& font, SoundPlayer& sou
 	,scrollspeed_(-50.f)
 	,scene_texture_({ target_.getSize().x, target_.getSize().y })
 {
-	camera_.setSize({ 640, 360});
+	camera_.setSize({ 640 * 2, 360 * 2});
 	LoadTextures();
 	StartBuildScene();
 	camera_.setCenter(spawn_position_);
@@ -67,8 +67,8 @@ void World::AddNode(Ptr scene_node) {
 
 void World::LoadTextures()
 {
-	textures_.Load(TextureID::kPlayerOne, "Media/Textures/Eagle.png");
-	textures_.Load(TextureID::kPlayerTwo, "Media/Textures/Raptor.png");
+	textures_.Load(TextureID::kPlayerOne, "Media/Textures/Debug/Cube.png");
+	textures_.Load(TextureID::kPlayerTwo, "Media/Textures/Debug/Cube.png");
 	//textures_.Load(TextureID::kAvenger, "Media/Textures/Avenger.png");
 	//textures_.Load(TextureID::kLandscape, "Media/Textures/Desert.png");
 	//textures_.Load(TextureID::kBullet, "Media/Textures/Bullet.png");
