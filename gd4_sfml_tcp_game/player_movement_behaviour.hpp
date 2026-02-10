@@ -4,7 +4,7 @@
 
 class PlayerMovementBehaviour : public AttachableBehaviour {
 public:
-	PlayerMovementBehaviour(float speed = 10.f, PlayerType type=PlayerType::kPlayerOne);
+	PlayerMovementBehaviour(float speed = 1.f, PlayerType type=PlayerType::kPlayerOne);
 	void Update(sf::Time dt, CommandQueue& commands) override;
 	void OnCollision(SceneNode* other) override;
 

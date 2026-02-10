@@ -22,7 +22,7 @@ Player::Player(const TextureHolder& textures, float x, float y, PlayerType type)
 		break;
 	}
 	AddBehaviour(new HealthBehaviour(20));
-	AddBehaviour(new PlayerMovementBehaviour(200.f, type_));
+	AddBehaviour(new PlayerMovementBehaviour(20.f, type_));
 	AddBehaviour(new BoxColliderBehaviour({64.f, 64.f}, CollisionLayer::kPlayer));
 }
 
