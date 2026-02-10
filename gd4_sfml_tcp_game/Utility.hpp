@@ -16,6 +16,5 @@ class Utility
 		static double ToDegrees(double angle);
 		static int RandomInt(int exclusive_max);
 		static int Length(sf::Vector2f vector);
-		static bool CanCollide(CollisionLayer a, CollisionLayer b);
 };
 

@@ -180,18 +180,3 @@ int Utility::Length(sf::Vector2f vector)
 	return sqrtf(powf(vector.x, 2) + powf(vector.y, 2));
 }
 
-bool Utility::CanCollide(CollisionLayer a, CollisionLayer b)
-{
-	switch (a)
-	{
-	case CollisionLayer::kPlayer:
-		return b == CollisionLayer::kPlayer || b == CollisionLayer::kWorld;
-	case CollisionLayer::kWorld:
-		return b == CollisionLayer::kPlayer;
-	case CollisionLayer::kEnemy:
-		return b == CollisionLayer::kPlayer;
-	default:
-		return false;
-	}
-}
-

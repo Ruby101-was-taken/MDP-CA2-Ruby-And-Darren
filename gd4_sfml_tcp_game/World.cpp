@@ -174,10 +174,6 @@ void World::HandleCollisions()
 			
 			auto* a = colliders[i];
 			auto* b = colliders[j];
-
-			
-			//if (!Utility::CanCollide(a->layer, b->layer)) // Layer / mask filtering
-			//	continue;
 			
 			auto intersection = a->GetWorldBounds().findIntersection(b->GetWorldBounds());
 			if (intersection) {
