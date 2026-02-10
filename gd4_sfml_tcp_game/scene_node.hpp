@@ -70,7 +70,6 @@ private:
 	void DrawChildren(sf::RenderTarget& target, sf::RenderStates states) const;
 	
 
-	void CheckNodeCollision(SceneNode& node, std::set<Pair>& collison_pairs);
 	virtual bool IsMarkedForRemoval() const;
 
 private:

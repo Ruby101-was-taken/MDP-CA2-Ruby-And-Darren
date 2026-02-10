@@ -76,15 +76,6 @@ void SceneNode::DrawBoundingRect(sf::RenderTarget& target, sf::RenderStates stat
     target.draw(shape);
 }
 
-void SceneNode::CheckSceneCollision(SceneNode& scene_graph, std::set<Pair>& collision_pairs)
-{
-    CheckNodeCollision(scene_graph, collision_pairs);
-    for (Ptr& child : scene_graph.children_)
-    {
-        CheckSceneCollision(*child, collision_pairs);
-    }
-}
-
 bool Collision(const SceneNode& lhs, const SceneNode& rhs)
 {
     return lhs.GetBoundingRect().findIntersection(rhs.GetBoundingRect()).has_value();

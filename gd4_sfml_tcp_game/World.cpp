@@ -138,9 +138,6 @@ void World::DestroyEntitiesOutsideView()
 	command_queue_.Push(command);
 }
 
-void World::GuideMissiles()
-{
-}
 
 
 void World::HandleCollisions()
