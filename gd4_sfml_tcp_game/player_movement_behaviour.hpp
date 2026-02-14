@@ -10,10 +10,10 @@ public:
 
 private:
 	sf::Vector2f HandlePlayerInput();
+	bool can_play_collision_sound_;
 private:
 	float acceleration_speed_;
 	float deceleration_speed_;
 	float maxSpeed_;
 	PlayerType type_;
 };
-

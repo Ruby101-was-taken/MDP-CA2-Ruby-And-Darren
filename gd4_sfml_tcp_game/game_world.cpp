@@ -3,12 +3,14 @@
 #include "constants.hpp"
 #include "player.hpp"
 #include "basic_rectangle.hpp"
+#include "sound_node.hpp"
 
 GameWorld::GameWorld(sf::RenderTarget& output_target, FontHolder& font, SoundPlayer& sounds) : World(output_target, font, sounds) {
 	StartBuildScene();
 }
 
 void GameWorld::BuildScene() {
+    // Add player 1 node
     auto player_one = std::make_unique<Player>(
         textures_,
         PLAYER_ONE_START_POSITION_X,
@@ -17,6 +19,7 @@ void GameWorld::BuildScene() {
     );
     root_node_.AttachChild(std::move(player_one));
 
+    // Add player 1 node
     auto player_two = std::make_unique<Player>(
         textures_,
         PLAYER_TWO_START_POSITION_X,
@@ -25,8 +28,13 @@ void GameWorld::BuildScene() {
     );
     root_node_.AttachChild(std::move(player_two));
 
+    // Add basic rectangle node
     auto rectangle = std::make_unique<BasicRectangle>(
     );
     root_node_.AttachChild(std::move(rectangle));
+
+    // Add sound effect node
+    std::unique_ptr<SoundNode> soundNode(new SoundNode(sounds_));
+    root_node_.AttachChild(std::move(soundNode));
 }
 

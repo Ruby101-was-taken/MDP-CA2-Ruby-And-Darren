@@ -3,6 +3,7 @@
 #include <SFML/Graphics/RenderTarget.hpp>
 #include <SFML/Graphics/RenderStates.hpp>
 #include "command_queue.hpp"
+#include "sound_effect.hpp"
 
 /*
 scene nodes now contain ATTACHABLES, which let behaviours be shared across many nodes
@@ -26,6 +27,8 @@ public:
 	virtual void Draw(sf::RenderTarget& target, sf::RenderStates states) const {}
 
 	virtual void OnCollision(SceneNode* other);
+
+	void PlayLocalSound(CommandQueue& commands, SoundEffect effect);
 
 	SceneNode* GetNode();
 };

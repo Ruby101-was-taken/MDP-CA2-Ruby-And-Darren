@@ -1,6 +1,5 @@
 #include "world.hpp"
 #include "pickup.hpp"
-#include "sound_node.hpp"
 #include "Utility.hpp"
 #include <iostream>
 
@@ -145,6 +144,10 @@ void World::HandleCollisions()
 	std::vector<BaseColliderBehaviour*> colliders;
 	root_node_.CollectColliders(colliders);
 
+	for (auto* collider : colliders) {
+		collider->BeginCollisionFrame(); // clears currentCollisions_
+	}
+
 	const size_t count = colliders.size();
 	for (size_t i = 0; i < count; ++i) {
 		// start the second iterration later so we don't test already tested collisions
@@ -155,10 +158,14 @@ void World::HandleCollisions()
 			
 			auto intersection = a->GetWorldBounds().findIntersection(b->GetWorldBounds());
 			if (intersection) {
-				a->GetNode()->OnCollision(b->GetNode());
-				b->GetNode()->OnCollision(a->GetNode());
+				a->RegisterCollision(b->GetNode());
+				b->RegisterCollision(a->GetNode());
 			}
 		}
+	}
+
+	for (auto* collider : colliders) {
+		collider->EndCollisionFrame();
 	}
 }
 

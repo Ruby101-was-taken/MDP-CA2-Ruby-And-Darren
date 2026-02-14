@@ -36,11 +36,19 @@ void PlayerMovementBehaviour::Update(sf::Time dt, CommandQueue& commands) {
     }
     node_->AddVelocity({-deceleration_speed_*direction, 0});
     nodeVelocity.y += 1;
+
+    if (can_play_collision_sound_) {
+        PlayLocalSound(commands, SoundEffect::kExplosion1);
+        can_play_collision_sound_ = false;
+    }
 }
 
 void PlayerMovementBehaviour::OnCollision(SceneNode* other) {
-    if (other->GetCollisionLayer() == CollisionLayer::kPlayer)
-        printf("colliding with a player\n");
+    if (other->GetCollisionLayer() == CollisionLayer::kPlayer) {
+        can_play_collision_sound_ = true;
+        printf("Colliding with a player... \n");
+    }
+        
     else if (other->GetCollisionLayer() == CollisionLayer::kWorld) {
         // this just makes it easy to see when the collision happens
         const auto p1 = std::chrono::system_clock::now();

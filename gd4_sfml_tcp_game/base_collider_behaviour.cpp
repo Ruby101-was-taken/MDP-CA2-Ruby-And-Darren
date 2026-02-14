@@ -7,8 +7,23 @@ BaseColliderBehaviour::BaseColliderBehaviour(CollisionLayer layer, bool is_trigg
 {
 }
 
-
-
 void BaseColliderBehaviour::Start() {
     node_->SetCollisionLayer(layer_);
+}
+
+void BaseColliderBehaviour::BeginCollisionFrame() {
+    currentCollisions_.clear();
+}
+
+void BaseColliderBehaviour::RegisterCollision(SceneNode* other) {
+    currentCollisions_.insert(other);
+
+    // Collision ENTER detection
+    if (previousCollisions_.find(other) == previousCollisions_.end()) {
+        node_->OnCollision(other); // call only once
+    }
+}
+
+void BaseColliderBehaviour::EndCollisionFrame() {
+    previousCollisions_ = currentCollisions_;
 }
