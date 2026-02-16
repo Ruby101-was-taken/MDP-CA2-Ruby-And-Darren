@@ -27,3 +27,10 @@ void BaseColliderBehaviour::RegisterCollision(SceneNode* other) {
 void BaseColliderBehaviour::EndCollisionFrame() {
     previousCollisions_ = currentCollisions_;
 }
+
+bool BaseColliderBehaviour::IsCollding(BaseColliderBehaviour* other) {
+    auto intersection = GetWorldBounds().findIntersection(other->GetWorldBounds());
+    if (intersection)
+        return true;
+    return false;
+}

@@ -9,6 +9,7 @@
 #include "command_queue.hpp"
 #include "bloom_effect.hpp"
 #include "sound_player.hpp"
+#include "state.hpp"
 
 #include <array>
 
@@ -17,7 +18,7 @@ class World
 public:
 	typedef std::unique_ptr<SceneNode> Ptr;
 
-	explicit World(sf::RenderTarget& target, FontHolder& font, SoundPlayer& sounds);
+	explicit World(sf::RenderTarget& target, FontHolder& font, SoundPlayer& sounds, State::Context* context);
 	void Update(sf::Time dt);
 	void Draw();
 
@@ -25,6 +26,7 @@ public:
 
 	void AddNode(Ptr scene_node);
 
+	const State::Context* GetContext();
 
 protected:
 	void LoadTextures();
@@ -58,5 +60,6 @@ protected:
 
 	BloomEffect bloom_effect_;
 
+	State::Context* context_;
 };
 

@@ -11,15 +11,20 @@ SceneNode::SceneNode(float x, float y, ReceiverCategories category)
 {
     this->setPosition({ x, y });
 }
+SceneNode::~SceneNode() {
+    for (AttachableBehaviour* behaviour : behaviours_) {
+        delete behaviour;
+    }
+}
 
-void SceneNode::AttachChild(Ptr child)
-{
+
+void SceneNode::AttachChild(Ptr child) {
     child->parent_ = this;
+    child->SetWorld(world_);
     children_.emplace_back(std::move(child));
 }
 
-SceneNode::Ptr SceneNode::DetachChild(const SceneNode& node)
-{
+SceneNode::Ptr SceneNode::DetachChild(const SceneNode& node) {
     auto found = std::find_if(children_.begin(), children_.end(), [&](Ptr& p) {return p.get() == &node; });
     assert(found != children_.end());
 
@@ -28,6 +33,15 @@ SceneNode::Ptr SceneNode::DetachChild(const SceneNode& node)
     children_.erase(found);
     return Ptr();
 }
+
+void SceneNode::SetWorld(World* world) {
+    world_ = world;
+}
+
+World* SceneNode::GetWorld() {
+    return world_;
+}
+
 
 sf::Vector2f SceneNode::GetWorldPosition() const
 {

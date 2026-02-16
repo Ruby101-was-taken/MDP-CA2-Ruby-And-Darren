@@ -50,6 +50,10 @@ void SoundPlayer::Play(SoundEffect effect, sf::Vector2f position)
 	sound.play();
 }
 
+void SoundPlayer::Test() {
+	std::printf("hello world");
+}
+
 void SoundPlayer::RemoveStoppedSounds()
 {
 	sounds_.remove_if([](const sf::Sound& s)

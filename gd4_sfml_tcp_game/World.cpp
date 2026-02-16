@@ -3,18 +3,19 @@
 #include "Utility.hpp"
 #include <iostream>
 
-World::World(sf::RenderTarget& output_target, FontHolder& font, SoundPlayer& sounds)
+World::World(sf::RenderTarget& output_target, FontHolder& font, SoundPlayer& sounds, State::Context* context)
 	:target_(output_target)
-	,camera_(output_target.getDefaultView())
-	,textures_()
-	,fonts_(font)
-	,sounds_(sounds)
-	,root_node_(0, 0,ReceiverCategories::kNone)
-	,scene_layers_()
-	,world_bounds_({ 0.f,0.f }, { camera_.getSize().x, 3000.f })
-	,spawn_position_(0,0)
-	,scrollspeed_(-50.f)
-	,scene_texture_({ target_.getSize().x, target_.getSize().y })
+	, camera_(output_target.getDefaultView())
+	, textures_()
+	, fonts_(font)
+	, sounds_(sounds)
+	, root_node_(0, 0, ReceiverCategories::kNone)
+	, scene_layers_()
+	, world_bounds_({ 0.f,0.f }, { camera_.getSize().x, 3000.f })
+	, spawn_position_(0, 0)
+	, scrollspeed_(-50.f)
+	, scene_texture_({ target_.getSize().x, target_.getSize().y }),
+	context_(context)
 {
 	camera_.setSize({ 640, 360});
 	LoadTextures();
@@ -63,6 +64,10 @@ void World::AddNode(Ptr scene_node) {
 	root_node_.AttachChild(std::move(scene_node));
 }
 
+const State::Context* World::GetContext() {
+	return context_;
+}
+
 
 void World::LoadTextures()
 {
@@ -98,7 +103,7 @@ void World::StartBuildScene()
 		root_node_.AttachChild(std::move(layer));
 	}
 
-	root_node_ = SceneNode();
+	root_node_.SetWorld(this);
 	BuildScene();
 	root_node_.Start();
 }
@@ -156,7 +161,7 @@ void World::HandleCollisions()
 			auto* a = colliders[i];
 			auto* b = colliders[j];
 			
-			auto intersection = a->GetWorldBounds().findIntersection(b->GetWorldBounds());
+			bool intersection = a->IsCollding(b);
 			if (intersection) {
 				a->RegisterCollision(b->GetNode());
 				b->RegisterCollision(a->GetNode());

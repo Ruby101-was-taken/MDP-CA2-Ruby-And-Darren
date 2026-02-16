@@ -21,6 +21,8 @@ public:
     void Start() override;
     virtual sf::FloatRect GetWorldBounds() const = 0;
 
+    bool IsCollding(BaseColliderBehaviour* other);
+
     void BeginCollisionFrame();
     void RegisterCollision(SceneNode* other);
     void EndCollisionFrame();

@@ -10,17 +10,21 @@
 #include <set>
 #include <vector>
 
+class World; //forward declare to avoid cicrular references
 
-class SceneNode : public sf::Transformable, public sf::Drawable
-{
+class SceneNode : public sf::Transformable, public sf::Drawable {
 public:
 	typedef std::unique_ptr<SceneNode> Ptr;
 	typedef std::pair<SceneNode*, SceneNode*> Pair;
 
 public:
 	SceneNode(float x=0, float y=0, ReceiverCategories cateogry = ReceiverCategories::kNone);
+	~SceneNode();
 	void AttachChild(Ptr child);
 	Ptr DetachChild(const SceneNode& node);
+	
+	void SetWorld(World* world);
+	World* GetWorld();
 
 	void Start();
 	void Update(sf::Time dt, CommandQueue& commands);
@@ -83,6 +87,7 @@ private:
 
 	sf::Vector2f velocity_;
 
+	World* world_;
 
 	CollisionLayer collision_layer_;
 protected:

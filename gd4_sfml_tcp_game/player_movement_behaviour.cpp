@@ -6,12 +6,15 @@
 #include <chrono>
 #include "constants.hpp"
 #include "utility.hpp"
+#include "state.hpp"
+#include "World.hpp"
 
 PlayerMovementBehaviour::PlayerMovementBehaviour(float speed, PlayerType type):
     acceleration_speed_(speed),
     deceleration_speed_(4),
     type_(type),
-    maxSpeed_(100)
+    maxSpeed_(100),
+    can_play_collision_sound_(false)
 {
 }
 
@@ -23,6 +26,7 @@ void PlayerMovementBehaviour::Update(sf::Time dt, CommandQueue& commands) {
         // normalise the veolcity so you don't move diagonally faster+
         velocity = velocity.normalized()*acceleration_speed_;
 
+    node_->GetWorld()->GetContext()->sounds->Test();
 
     node_->AddVelocity({ velocity.x, 0 });
 

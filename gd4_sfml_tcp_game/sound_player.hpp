@@ -17,6 +17,8 @@ public:
 	void Play(SoundEffect effect);
 	void Play(SoundEffect effect, sf::Vector2f position);
 
+	void Test();
+
 	void RemoveStoppedSounds();
 	void SetListenerPosition(sf::Vector2f position);
 	sf::Vector2f GetListenerPosition() const;
