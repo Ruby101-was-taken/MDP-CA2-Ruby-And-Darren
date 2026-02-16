@@ -162,6 +162,7 @@
     <ClCompile Include="health_behaviour.cpp" />
     <ClCompile Include="input_manager.cpp" />
     <ClCompile Include="label.cpp" />
+    <ClCompile Include="level.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="music_player.cpp" />
     <ClCompile Include="player.cpp" />
@@ -206,6 +207,7 @@
     <ClInclude Include="input_manager.hpp" />
     <ClInclude Include="input_types.hpp" />
     <ClInclude Include="label.hpp" />
+    <ClInclude Include="level.hpp" />
     <ClInclude Include="menu_options.hpp" />
     <ClInclude Include="mission_status.hpp" />
     <ClInclude Include="music_player.hpp" />

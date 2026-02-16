@@ -6,6 +6,9 @@
 #include <memory>
 #include "music_player.hpp"
 #include "sound_player.hpp"
+//#include "level.hpp"
+
+class Level;
 
 namespace sf
 {
@@ -21,12 +24,13 @@ public:
 
 	struct Context
 	{
-		Context(sf::RenderWindow& window, TextureHolder& textures, FontHolder& fonts, MusicPlayer& music, SoundPlayer& sounds);
+		Context(sf::RenderWindow& window, TextureHolder& textures, FontHolder& fonts, MusicPlayer& music, SoundPlayer& sounds, Level* level);
 		sf::RenderWindow* window;
 		TextureHolder* textures;
 		FontHolder* fonts;
 		MusicPlayer* music;
 		SoundPlayer* sounds;
+		Level* level;
 	};
 
 public:

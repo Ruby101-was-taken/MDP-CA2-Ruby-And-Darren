@@ -9,7 +9,7 @@ const sf::Time Application::kTimePerFrame = sf::seconds(1.f/60.f);
 
 Application::Application() : 
 	window_(sf::VideoMode({WINDOW_WIDTH, WINDOW_HEIGHT }),(std::string)WINDOW_TITLE, sf::Style::Close)
-	, stack_(State::Context(window_, textures_, fonts_, music_, sound_))
+	, stack_(State::Context(window_, textures_, fonts_, music_, sound_, nullptr))
 {
 	window_.setKeyRepeatEnabled(false);
 	fonts_.Load(Font::kMain, "Media/Fonts/Sansation.ttf");

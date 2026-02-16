@@ -6,6 +6,7 @@
 #include "sound_node.hpp"
 
 GameWorld::GameWorld(sf::RenderTarget& output_target, FontHolder& font, SoundPlayer& sounds, State::Context* context) : World(output_target, font, sounds, context) {
+    has_level_ = true;
 	StartBuildScene();
 }
 

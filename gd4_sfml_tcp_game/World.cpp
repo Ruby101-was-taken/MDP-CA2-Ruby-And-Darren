@@ -1,6 +1,7 @@
 #include "world.hpp"
 #include "pickup.hpp"
 #include "Utility.hpp"
+#include "level.hpp"
 #include <iostream>
 
 World::World(sf::RenderTarget& output_target, FontHolder& font, SoundPlayer& sounds, State::Context* context)
@@ -102,10 +103,21 @@ void World::StartBuildScene()
 		scene_layers_[i] = layer.get();
 		root_node_.AttachChild(std::move(layer));
 	}
+	std::unique_ptr<Level> level_ptr;
+
+	if (has_level_) {
+		if (context_->level != nullptr)
+			delete context_->level;
+		level_ptr = std::make_unique<Level>();
+		context_->level = level_ptr.get();
+	}
 
 	root_node_.SetWorld(this);
 	BuildScene();
 	root_node_.Start();
+
+	if(has_level_)
+		root_node_.AttachChild(std::move(level_ptr));
 }
 void World::BuildScene() {
 }

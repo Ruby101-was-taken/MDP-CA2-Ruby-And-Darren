@@ -2,7 +2,7 @@
 #include "state_iD.hpp"
 #include "state_stack.hpp"
 
-State::Context::Context(sf::RenderWindow& window, TextureHolder& textures, FontHolder& fonts, MusicPlayer& music, SoundPlayer& sounds) : window(&window), textures(&textures), fonts(&fonts), music(&music), sounds(&sounds)
+State::Context::Context(sf::RenderWindow& window, TextureHolder& textures, FontHolder& fonts, MusicPlayer& music, SoundPlayer& sounds, Level* level) : window(&window), textures(&textures), fonts(&fonts), music(&music), sounds(&sounds), level(level)
 {
 }
 

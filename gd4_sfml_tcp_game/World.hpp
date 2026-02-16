@@ -61,5 +61,7 @@ protected:
 	BloomEffect bloom_effect_;
 
 	State::Context* context_;
+
+	bool has_level_;
 };
 
