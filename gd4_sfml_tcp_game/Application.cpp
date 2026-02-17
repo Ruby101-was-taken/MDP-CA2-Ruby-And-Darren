@@ -4,12 +4,13 @@
 #include "game_world.hpp"
 #include "constants.hpp"
 #include "input_manager.hpp"
+#include <iostream>
 
 const sf::Time Application::kTimePerFrame = sf::seconds(1.f/60.f);
 
 Application::Application() : 
 	window_(sf::VideoMode({WINDOW_WIDTH, WINDOW_HEIGHT }),(std::string)WINDOW_TITLE, sf::Style::Close)
-	, stack_(State::Context(window_, textures_, fonts_, music_, sound_, nullptr))
+	, stack_(State::Context(window_, textures_, fonts_, music_, sound_))
 {
 	window_.setKeyRepeatEnabled(false);
 	fonts_.Load(Font::kMain, "Media/Fonts/Sansation.ttf");
@@ -35,6 +36,7 @@ void Application::Run()
 	sf::Time time_since_last_update = sf::Time::Zero;
 	while (window_.isOpen())
 	{
+		std::cout << "run()" << std::endl;
 		time_since_last_update += clock.restart();
 		while(time_since_last_update > kTimePerFrame)
 		{

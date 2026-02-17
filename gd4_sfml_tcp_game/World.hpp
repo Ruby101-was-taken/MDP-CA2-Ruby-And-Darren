@@ -26,7 +26,7 @@ public:
 
 	void AddNode(Ptr scene_node);
 
-	const State::Context* GetContext();
+	State::Context* GetContext();
 
 protected:
 	void LoadTextures();
@@ -63,5 +63,6 @@ protected:
 	State::Context* context_;
 
 	bool has_level_;
+	std::string level_path_;
 };
 

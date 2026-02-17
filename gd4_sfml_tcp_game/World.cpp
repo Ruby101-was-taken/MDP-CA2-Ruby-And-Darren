@@ -16,7 +16,8 @@ World::World(sf::RenderTarget& output_target, FontHolder& font, SoundPlayer& sou
 	, spawn_position_(0, 0)
 	, scrollspeed_(-50.f)
 	, scene_texture_({ target_.getSize().x, target_.getSize().y }),
-	context_(context)
+	context_(context),
+	level_path_("data.csv")
 {
 	camera_.setSize({ 640, 360});
 	LoadTextures();
@@ -65,7 +66,7 @@ void World::AddNode(Ptr scene_node) {
 	root_node_.AttachChild(std::move(scene_node));
 }
 
-const State::Context* World::GetContext() {
+State::Context* World::GetContext() {
 	return context_;
 }
 
@@ -103,21 +104,12 @@ void World::StartBuildScene()
 		scene_layers_[i] = layer.get();
 		root_node_.AttachChild(std::move(layer));
 	}
-	std::unique_ptr<Level> level_ptr;
 
-	if (has_level_) {
-		if (context_->level != nullptr)
-			delete context_->level;
-		level_ptr = std::make_unique<Level>();
-		context_->level = level_ptr.get();
-	}
+	Level::LoadLevel(level_path_);
 
 	root_node_.SetWorld(this);
 	BuildScene();
 	root_node_.Start();
-
-	if(has_level_)
-		root_node_.AttachChild(std::move(level_ptr));
 }
 void World::BuildScene() {
 }

@@ -54,6 +54,9 @@ public:
 
 	void SetCollisionLayer(CollisionLayer layer);
 	CollisionLayer GetCollisionLayer();
+
+	template<typename Attachable>
+	Attachable* FindAttachable();
 private:
 	void StartAttachables();
 	virtual void StartCurrent();
@@ -90,6 +93,8 @@ private:
 	World* world_;
 
 	CollisionLayer collision_layer_;
+
+	bool has_started_ = false;
 protected:
 	void AddBehaviour(AttachableBehaviour* behaviour);
 public:
@@ -98,3 +103,13 @@ public:
 float Distance(const SceneNode& lhs, const SceneNode& rhs);
 bool Collision(const SceneNode& lhs, const SceneNode& rhs);
 
+template<typename Attachable> inline Attachable* SceneNode::FindAttachable() { 
+	static_assert(std::is_base_of_v<AttachableBehaviour, Attachable>, "Attachable must derive from AttachableBehaviour"); 
+	for (AttachableBehaviour* behaviour : behaviours_) { 
+		if (auto* casted = dynamic_cast<Attachable*>(behaviour)) {
+			return casted; 
+		} 
+	} 
+	std::printf("Could not find attachable\n");
+	return nullptr;
+}

@@ -108,6 +108,7 @@ void SceneNode::Start() {
     StartCurrent();
     StartAttachables();
     StartChildren();
+    has_started_ = true;
 }
 
 void SceneNode::StartAttachables() {
@@ -127,10 +128,12 @@ void SceneNode::StartChildren() {
 }
 
 void SceneNode::Update(sf::Time dt, CommandQueue& commands) {
-    UpdateCurrent(dt, commands);
-    UpdateAttachables(dt, commands);
-    if (!isDeleted_)
-        UpdateChildren(dt, commands);
+    if (has_started_) {
+        UpdateCurrent(dt, commands);
+        UpdateAttachables(dt, commands);
+        if (!isDeleted_)
+            UpdateChildren(dt, commands);
+    }
 }
 
 void SceneNode::UpdateCurrent(sf::Time dt, CommandQueue& commands)

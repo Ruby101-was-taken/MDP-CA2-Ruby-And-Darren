@@ -1,10 +1,12 @@
 #pragma once
 #include "attachable_behaviour.hpp"
+#include "box_collider_behaviour.hpp"
 #include "player_type.hpp"
 
 class PlayerMovementBehaviour : public AttachableBehaviour {
 public:
-	PlayerMovementBehaviour(float speed = 1.f, PlayerType type=PlayerType::kPlayerOne);
+	PlayerMovementBehaviour(PlayerType type=PlayerType::kPlayerOne);
+	void Start() override;
 	void Update(sf::Time dt, CommandQueue& commands) override;
 	void OnCollision(SceneNode* other) override;
 
@@ -16,4 +18,8 @@ private:
 	float deceleration_speed_;
 	float maxSpeed_;
 	PlayerType type_;
+
+	BoxColliderBehaviour* player_collider_;
+
+	sf::Vector2f velocity_;
 };
