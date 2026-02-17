@@ -7,5 +7,8 @@ enum class TextureID
 	kButtonNormal,
 	kButtonSelected,
 	kButtonActivated,
-	kButtons
+	kButtons,
+
+
+	kLevelTile
 };

@@ -45,6 +45,8 @@ void World::Draw()
 	{
 		scene_texture_.clear();
 		scene_texture_.setView(camera_);
+		sf::Sprite level(Level::level_texture_.getTexture());
+		scene_texture_.draw(level);
 		scene_texture_.draw(root_node_);
 		scene_texture_.display();
 		bloom_effect_.Apply(scene_texture_, target_);
@@ -73,25 +75,9 @@ State::Context* World::GetContext() {
 
 void World::LoadTextures()
 {
-	textures_.Load(TextureID::kPlayerOne, "Media/Textures/Debug/Cube.png");
-	textures_.Load(TextureID::kPlayerTwo, "Media/Textures/Debug/Cube.png");
-	//textures_.Load(TextureID::kAvenger, "Media/Textures/Avenger.png");
-	//textures_.Load(TextureID::kLandscape, "Media/Textures/Desert.png");
-	//textures_.Load(TextureID::kBullet, "Media/Textures/Bullet.png");
-	//textures_.Load(TextureID::kMissile, "Media/Textures/Missile.png");
-
-	//textures_.Load(TextureID::kHealthRefill, "Media/Textures/HealthRefill.png");
-	//textures_.Load(TextureID::kMissileRefill, "Media/Textures/MissileRefill.png");
-	//textures_.Load(TextureID::kFireSpread, "Media/Textures/FireSpread.png");
-	//textures_.Load(TextureID::kFireRate, "Media/Textures/FireRate.png");
-	//textures_.Load(TextureID::kFinishLine, "Media/Textures/FinishLine.png");
-
-	//textures_.Load(TextureID::kEntities, "Media/Textures/Entities.png");
-	//textures_.Load(TextureID::kJungle, "Media/Textures/Jungle.png");
-	//textures_.Load(TextureID::kExplosion, "Media/Textures/Explosion.png");
-	//textures_.Load(TextureID::kParticle, "Media/Textures/Particle.png");
-
-
+	textures_.Load(TextureID::kPlayerOne, "Media/Textures/Player/One/Idle.png");
+	textures_.Load(TextureID::kPlayerTwo, "Media/Textures/Player/Two/Idle.png");
+	textures_.Load(TextureID::kLevelTile, "Media/Textures/Level/Tile.png");
 }
 
 void World::StartBuildScene()
@@ -105,7 +91,7 @@ void World::StartBuildScene()
 		root_node_.AttachChild(std::move(layer));
 	}
 
-	Level::LoadLevel(level_path_);
+	Level::LoadLevel(level_path_, textures_.Get(TextureID::kLevelTile));
 
 	root_node_.SetWorld(this);
 	BuildScene();

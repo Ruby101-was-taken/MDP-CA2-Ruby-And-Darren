@@ -7,6 +7,7 @@
 
 GameWorld::GameWorld(sf::RenderTarget& output_target, FontHolder& font, SoundPlayer& sounds, State::Context* context) : World(output_target, font, sounds, context) {
     has_level_ = true;
+    level_path_ = "Media/Levels/1.csv";
 	StartBuildScene();
 }
 
