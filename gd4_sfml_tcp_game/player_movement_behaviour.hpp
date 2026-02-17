@@ -11,13 +11,24 @@ public:
 	void OnCollision(SceneNode* other) override;
 
 private:
+	void PerformGravity();
+	float MoveInDirection(float speed, sf::Vector2f direction);
+	void PerformDeceleration();
+	void PerformJump();
+
 	sf::Vector2f HandlePlayerInput();
-	bool can_play_collision_sound_;
+
 private:
+	bool can_play_collision_sound_;
 	float acceleration_speed_;
 	float deceleration_speed_;
-	float maxSpeed_;
+	float max_speed_;
+	float jump_power_;
+	bool jump_held_;
+
+
 	PlayerType type_;
+
 
 	BoxColliderBehaviour* player_collider_;
 

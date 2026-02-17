@@ -23,7 +23,7 @@ Player::Player(const TextureHolder& textures, float x, float y, PlayerType type)
 	}
 	AddBehaviour(new HealthBehaviour(20));
 	AddBehaviour(new PlayerMovementBehaviour(type_));
-	AddBehaviour(new BoxColliderBehaviour({64.f, 64.f}, CollisionLayer::kPlayer));
+	AddBehaviour(new BoxColliderBehaviour({16.f, 16.f}, CollisionLayer::kPlayer));
 }
 
 void Player::UpdateCurrent(sf::Time dt, CommandQueue& commands) {

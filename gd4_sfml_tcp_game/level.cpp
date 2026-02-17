@@ -47,7 +47,6 @@ void Level::LoadLevel(const std::string& filename, const sf::Texture& tile_textu
         }
         y += 1;
         x = 0;
-        std::cout << "\n";
     }
 }
 
