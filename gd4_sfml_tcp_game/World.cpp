@@ -22,7 +22,7 @@ World::World(sf::RenderTarget& output_target, FontHolder& font, SoundPlayer& sou
 	camera_.setSize({ 640, 360});
 	LoadTextures();
 	StartBuildScene();
-	camera_.setCenter(spawn_position_);
+	camera_.setCenter({320, 180});
 }
 
 

@@ -36,9 +36,9 @@ void PlayerMovementBehaviour::Update(sf::Time dt, CommandQueue& commands) {
     
     node_->move(velocity_*maxSpeed_);
 
-   /* if (!can_play_collision_sound_)
-        can_play_collision_sound_ = Level::IsCollidingWithLevel(player_collider_);
-        */
+  
+    std::cout << Level::IsCollidingWithLevel(player_collider_) << std::endl;;
+        
     if (can_play_collision_sound_) {
         PlayLocalSound(commands, SoundEffect::kExplosion1);
         can_play_collision_sound_ = false;

@@ -20,7 +20,7 @@ void GameWorld::BuildScene() {
     );
     root_node_.AttachChild(std::move(player_one));
 
-    // Add player 1 node
+    // Add player 2 node
     auto player_two = std::make_unique<Player>(
         textures_,
         PLAYER_TWO_START_POSITION_X,
@@ -30,9 +30,9 @@ void GameWorld::BuildScene() {
     root_node_.AttachChild(std::move(player_two));
 
     // Add basic rectangle node
-    auto rectangle = std::make_unique<BasicRectangle>(
-    );
-    root_node_.AttachChild(std::move(rectangle));
+    //auto rectangle = std::make_unique<BasicRectangle>(
+    //);
+    //root_node_.AttachChild(std::move(rectangle));
 
     // Add sound effect node
     std::unique_ptr<SoundNode> soundNode(new SoundNode(sounds_));

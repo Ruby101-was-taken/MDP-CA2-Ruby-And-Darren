@@ -36,7 +36,6 @@ void Application::Run()
 	sf::Time time_since_last_update = sf::Time::Zero;
 	while (window_.isOpen())
 	{
-		std::cout << "run()" << std::endl;
 		time_since_last_update += clock.restart();
 		while(time_since_last_update > kTimePerFrame)
 		{

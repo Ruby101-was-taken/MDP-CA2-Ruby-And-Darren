@@ -10,14 +10,9 @@ public:
 
     // Static methods
     static void LoadLevel(const std::string& filename = "data.csv");
-    static void StartCurrent();
+    static void AddTile(int x, int y, int size, int id);
     static bool IsCollidingWithLevel(BoxColliderBehaviour* collider);
 
     static std::vector<sf::FloatRect> level_tiles_;
 
-private:
-    static inline float tile_width_ = 64.f;
-    static inline float tile_height_ = 64.f;
-    static inline float tile_x_ = 0.f;
-    static inline float tile_y_ = 0.f;
 };

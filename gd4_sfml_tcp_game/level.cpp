@@ -31,24 +31,38 @@ void Level::LoadLevel(const std::string& filename) {
 
     file.close();
 
+    level_tiles_.clear();
+
+    int x = 0;
+    int y = 0;
+    int tile_size = 16;
     for (const auto& row : data) {
         for (const auto& cell : row) {
-            std::cout << cell << " ";
+            std::cout << "(x: " << x*tile_size << ", y: " << y*tile_size << ")= " << cell << " ";
+            AddTile(x, y, tile_size, std::stoi(cell));
+            x += 1;
         }
+        y += 1;
         std::cout << "\n";
     }
-
-    std::cout << level_tiles_.size() << std::endl;
 }
 
-void Level::StartCurrent() {
-    std::cout << "Level started\n";
+void Level::AddTile(int x, int y, int size, int id) {
+    if (id != 0) {
+        level_tiles_.emplace_back(sf::FloatRect({ x * size * 1.f, y * size * 1.f }, {size * 1.f, size * 1.f }));
+    }
 }
+
 
 bool Level::IsCollidingWithLevel(BoxColliderBehaviour* collider) {
     assert(collider != nullptr);
 
+    for (const sf::FloatRect& rect : level_tiles_) {
+        auto intersection = rect.findIntersection(collider->GetWorldBounds());
+        if (intersection) {
+            return true;
+        }
+    }
 
-
-    return true;
+    return false;
 }
