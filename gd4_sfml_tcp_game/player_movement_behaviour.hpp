@@ -10,6 +10,7 @@ public:
 	void Update(sf::Time dt, CommandQueue& commands) override;
 	void OnCollision(SceneNode* other) override;
 
+	sf::Vector2f& GetVelocity();
 private:
 	void PerformGravity();
 	float MoveInDirection(float speed, sf::Vector2f direction);

@@ -27,41 +27,34 @@ Player::Player(const TextureHolder& textures, float x, float y, PlayerType type)
 	anim->AddAnimation("idle", {
 		{16, 16},          // frame size
 		2,                 // frames
-		sf::seconds(0.6f), // duration
+		sf::seconds(0.5f), // duration
 		true,              // loop
 		0                  // row in sheet
 		});
 
-	anim->AddAnimation("run", {
-		{16, 16},
-		3,
-		sf::seconds(0.5f),
-		true,
-		1
-		});
-
-	anim->AddAnimation("jump", {
-		{16, 16},
-		3,
-		sf::seconds(0.4f),
-		false,
-		2
-		});
-
+	anim->AddAnimation("run", { {16, 16}, 3, sf::seconds(0.2f), true, 1 });
+	anim->AddAnimation("jump", { {16, 16}, 3, sf::seconds(0.2f), false, 2 });
 	AddBehaviour(anim);
 
 	AddBehaviour(new HealthBehaviour(20));
 	AddBehaviour(new PlayerMovementBehaviour(type_));
-	AddBehaviour(new BoxColliderBehaviour({16.f, 16.f}, CollisionLayer::kPlayer));
+	AddBehaviour(new BoxColliderBehaviour({ 16.f, 16.f }, CollisionLayer::kPlayer));
 }
 
 void Player::UpdateCurrent(sf::Time dt, CommandQueue& commands) {
 	move(GetVelocity() * dt.asSeconds());
-	// TODO: Super expensive, store as variable instead, find better solutions
+
+	// TODO: Seems expensive, store as variable instead? Find a better solution.
 	auto* anim = FindAttachable<AnimationBehaviour>();
+	auto* movement = FindAttachable<PlayerMovementBehaviour>();
 
 	if (!anim) return;
-	anim->Play("idle");
+	if (movement->GetVelocity().y > 0.f)
+		anim->Play("jump");
+	else if (movement->GetVelocity().x != 0.f)
+		anim->Play("run");
+	else
+		anim->Play("idle");
 }
 
 

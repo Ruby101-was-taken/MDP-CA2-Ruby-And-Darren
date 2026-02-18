@@ -13,7 +13,7 @@ PlayerMovementBehaviour::PlayerMovementBehaviour(PlayerType type) :
     acceleration_speed_(2.f),
     deceleration_speed_(0.5f),
     type_(type),
-    max_speed_(3.5f),
+    max_speed_(1.5f),
     can_play_collision_sound_(false),
     velocity_({ 0,0 }),
     jump_power_(6.5f),
@@ -49,6 +49,11 @@ void PlayerMovementBehaviour::OnCollision(SceneNode* other) {
         can_play_collision_sound_ = true;
         printf("Colliding with a player... \n");
     }
+}
+
+sf::Vector2f& PlayerMovementBehaviour::GetVelocity()
+{
+    return velocity_;
 }
 
 void PlayerMovementBehaviour::PerformGravity() {
