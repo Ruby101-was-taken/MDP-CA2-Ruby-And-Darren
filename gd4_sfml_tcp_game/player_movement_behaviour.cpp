@@ -13,7 +13,7 @@ PlayerMovementBehaviour::PlayerMovementBehaviour(PlayerType type) :
     acceleration_speed_(2.f),
     deceleration_speed_(0.5f),
     type_(type),
-    max_speed_(3.5f),
+    max_speed_(1.5f),
     can_play_collision_sound_(false),
     velocity_({ 0,0 }),
     jump_power_(6.5f),
@@ -53,6 +53,11 @@ void PlayerMovementBehaviour::Update(sf::Time dt, CommandQueue& commands) {
         PlayLocalSound(commands, SoundEffect::kExplosion1);
         can_play_collision_sound_ = false;
     }
+
+    if (can_play_jump_sound_) {
+        PlayLocalSound(commands, SoundEffect::kPlayerJump);
+        can_play_jump_sound_ = false;
+    }
 }
 
 void PlayerMovementBehaviour::OnCollision(SceneNode* other) {
@@ -60,6 +65,11 @@ void PlayerMovementBehaviour::OnCollision(SceneNode* other) {
         can_play_collision_sound_ = true;
         printf("Colliding with a player... \n");
     }
+}
+
+sf::Vector2f& PlayerMovementBehaviour::GetVelocity()
+{
+    return velocity_;
 }
 
 void PlayerMovementBehaviour::PerformGravity() {
@@ -105,6 +115,7 @@ bool PlayerMovementBehaviour::IsOnGround() {
 
 void PlayerMovementBehaviour::PerformJump() {
     velocity_.y = -jump_power_;
+    can_play_jump_sound_ = true;
     coyote_time_ = 0.f;
     jump_held_ = true;
 }

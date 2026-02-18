@@ -10,6 +10,7 @@ public:
 	void Update(sf::Time dt, CommandQueue& commands) override;
 	void OnCollision(SceneNode* other) override;
 
+	sf::Vector2f& GetVelocity();
 private:
 	void PerformGravity();
 	float MoveInDirection(float speed, sf::Vector2f direction);
@@ -23,7 +24,10 @@ private:
 	sf::Vector2f HandlePlayerInput();
 
 private:
+	// Sounds
 	bool can_play_collision_sound_;
+	bool can_play_jump_sound_;
+
 	float acceleration_speed_;
 	float deceleration_speed_;
 	float max_speed_;

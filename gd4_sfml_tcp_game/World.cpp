@@ -76,7 +76,9 @@ State::Context* World::GetContext() {
 void World::LoadTextures()
 {
 	textures_.Load(TextureID::kPlayerOne, "Media/Textures/Player/One/Idle.png");
+	textures_.Load(TextureID::kPlayerOneSheet, "Media/Textures/Player/One/Sheet.png");
 	textures_.Load(TextureID::kPlayerTwo, "Media/Textures/Player/Two/Idle.png");
+	textures_.Load(TextureID::kPlayerTwoSheet, "Media/Textures/Player/Two/Sheet.png");
 	textures_.Load(TextureID::kLevelTile, "Media/Textures/Level/Tile.png");
 }
 

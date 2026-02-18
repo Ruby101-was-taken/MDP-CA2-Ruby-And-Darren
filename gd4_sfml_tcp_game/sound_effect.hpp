@@ -1,6 +1,7 @@
 #pragma once
 enum class SoundEffect
 {
+	kPlayerJump,
 	kAlliedGunfire,
 	kEnemyGunfire,
 	kExplosion1,
