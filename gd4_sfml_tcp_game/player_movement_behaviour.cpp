@@ -17,7 +17,9 @@ PlayerMovementBehaviour::PlayerMovementBehaviour(PlayerType type) :
     can_play_collision_sound_(false),
     velocity_({ 0,0 }),
     jump_power_(6.5f),
-    jump_held_(false)
+    jump_held_(false),
+    coyote_time_(0.f),
+    default_coyote_time_(0.1f)
 {
 }
 
@@ -36,6 +38,15 @@ void PlayerMovementBehaviour::Update(sf::Time dt, CommandQueue& commands) {
     // moves the player
     velocity_ = { MoveInDirection(velocity_.x, {1, 0}), MoveInDirection(velocity_.y, {0, 1}) };
     PerformDeceleration();
+    
+    // reduce c-time when moving down and having c time
+    if (coyote_time_ > 0 and velocity_.y > 0)
+        coyote_time_ -= dt.asSeconds();
+    else if (coyote_time_ < default_coyote_time_ and velocity_.y == 0) {
+        if (IsOnGround()) { // check on new line for performance
+            coyote_time_ = default_coyote_time_;
+        }
+    }
 
 
     if (can_play_collision_sound_) {
@@ -84,8 +95,29 @@ void PlayerMovementBehaviour::PerformDeceleration() {
         velocity_.x = dir * max_speed_;
 }
 
+bool PlayerMovementBehaviour::IsOnGround() {
+    // move player down and check if they touch ground
+    node_->move({ 0, 1 });
+    bool on_ground = Level::IsCollidingWithLevel(player_collider_);
+    node_->move({ 0, -1 });
+    return on_ground;
+}
+
 void PlayerMovementBehaviour::PerformJump() {
     velocity_.y = -jump_power_;
+    coyote_time_ = 0.f;
+    jump_held_ = true;
+}
+
+//returns true if this player can jump
+bool PlayerMovementBehaviour::CanJump() {
+    //if the player has c-time left they can always jump
+    if (coyote_time_ > 0) return true;
+    // if the player is yet to let go of jump then they can't jump unless they press it again
+    if (jump_held_) return false;
+    // if the player is on the ground you can always jump
+    //if (IsOnGround()) return true; probs doesn't need to be checked since I don't think the above code covers all cases (c-time is always default on ground)
+    return false; // <- for safety :3
 }
 
 sf::Vector2f PlayerMovementBehaviour::HandlePlayerInput() {
@@ -94,11 +126,8 @@ sf::Vector2f PlayerMovementBehaviour::HandlePlayerInput() {
     //creates the unit vector of movement
     if (type_ == PlayerType::kPlayerOne) {
         if (InputManager::InputIsPressed(InputTypes::kPlayerOneUp)) {
-            node_->move({ 0, 1 });
-            if (Level::IsCollidingWithLevel(player_collider_) and not jump_held_)
+            if (CanJump())
                 PerformJump();
-            node_->move({ 0, -1 });
-            jump_held_ = true;
         }
         else {
             jump_held_ = false;
@@ -110,11 +139,8 @@ sf::Vector2f PlayerMovementBehaviour::HandlePlayerInput() {
     }
     else if (type_ == PlayerType::kPlayerTwo) {
         if (InputManager::InputIsPressed(InputTypes::kPlayerTwoUp)) {
-            node_->move({ 0, 1 });
-            if (Level::IsCollidingWithLevel(player_collider_) and not jump_held_)
+            if (CanJump())
                 PerformJump();
-            node_->move({ 0, -1 });
-            jump_held_ = true;
         }
         else {
             jump_held_ = false;

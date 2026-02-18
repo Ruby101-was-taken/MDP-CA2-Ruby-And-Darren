@@ -14,7 +14,11 @@ private:
 	void PerformGravity();
 	float MoveInDirection(float speed, sf::Vector2f direction);
 	void PerformDeceleration();
+
+	bool IsOnGround();
+
 	void PerformJump();
+	bool CanJump();
 
 	sf::Vector2f HandlePlayerInput();
 
@@ -26,6 +30,8 @@ private:
 	float jump_power_;
 	bool jump_held_;
 
+	float default_coyote_time_;
+	float coyote_time_;
 
 	PlayerType type_;
 

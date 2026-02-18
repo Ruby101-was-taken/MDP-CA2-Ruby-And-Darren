@@ -24,7 +24,7 @@ private:
 template <typename WorldClass>
 GameState<WorldClass>::GameState(StateStack& stack, Context context) : State(stack, context), world_(*context.window, *context.fonts, *context.sounds, &context) {
 	//Play the music
-	context.music->Play(MusicThemes::kLevelTheme);
+	//context.music->Play(MusicThemes::kLevelTheme); REMEMBER TO TURN THIS BACK ON THANK YOU :3
 }
 
 template <typename WorldClass>
