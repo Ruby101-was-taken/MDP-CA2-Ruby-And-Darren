@@ -16,7 +16,7 @@ Player::Player(const TextureHolder& textures, float x, float y, PlayerType type)
 		AddBehaviour(new SpriteBehaviour(textures.Get(TextureID::kPlayerOneSheet)));
 		break;
 	case PlayerType::kPlayerTwo:
-		AddBehaviour(new SpriteBehaviour(textures.Get(TextureID::kPlayerTwo)));
+		AddBehaviour(new SpriteBehaviour(textures.Get(TextureID::kPlayerTwoSheet)));
 		break;
 	default:
 		AddBehaviour(new SpriteBehaviour(textures.Get(TextureID::kPlayerOneSheet)));

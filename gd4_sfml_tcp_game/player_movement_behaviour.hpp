@@ -20,7 +20,10 @@ private:
 	sf::Vector2f HandlePlayerInput();
 
 private:
+	// Sounds
 	bool can_play_collision_sound_;
+	bool can_play_jump_sound_;
+
 	float acceleration_speed_;
 	float deceleration_speed_;
 	float max_speed_;

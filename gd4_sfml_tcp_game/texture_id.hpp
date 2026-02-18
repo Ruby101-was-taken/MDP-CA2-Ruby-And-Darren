@@ -6,7 +6,7 @@ enum class TextureID
 
 
 	kPlayerTwo,
-
+	kPlayerTwoSheet,
 
 	kTitleScreen,
 

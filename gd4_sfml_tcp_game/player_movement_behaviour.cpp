@@ -42,6 +42,11 @@ void PlayerMovementBehaviour::Update(sf::Time dt, CommandQueue& commands) {
         PlayLocalSound(commands, SoundEffect::kExplosion1);
         can_play_collision_sound_ = false;
     }
+
+    if (can_play_jump_sound_) {
+        PlayLocalSound(commands, SoundEffect::kPlayerJump);
+        can_play_jump_sound_ = false;
+    }
 }
 
 void PlayerMovementBehaviour::OnCollision(SceneNode* other) {
@@ -91,6 +96,7 @@ void PlayerMovementBehaviour::PerformDeceleration() {
 
 void PlayerMovementBehaviour::PerformJump() {
     velocity_.y = -jump_power_;
+    can_play_jump_sound_ = true;
 }
 
 sf::Vector2f PlayerMovementBehaviour::HandlePlayerInput() {
@@ -102,6 +108,7 @@ sf::Vector2f PlayerMovementBehaviour::HandlePlayerInput() {
             node_->move({ 0, 1 });
             if (Level::IsCollidingWithLevel(player_collider_) and not jump_held_)
                 PerformJump();
+                
             node_->move({ 0, -1 });
             jump_held_ = true;
         }
