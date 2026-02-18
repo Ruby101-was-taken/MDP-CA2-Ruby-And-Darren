@@ -9,6 +9,9 @@ public:
     void Update(sf::Time, CommandQueue&) override {}
     void Draw(sf::RenderTarget& target, sf::RenderStates states) const override;
 
+    sf::Sprite& GetSprite();
+    const sf::Sprite& GetSprite() const;
+
 private:
     sf::Sprite sprite_;
 };

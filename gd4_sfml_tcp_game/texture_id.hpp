@@ -2,8 +2,15 @@
 enum class TextureID
 {
 	kPlayerOne,
+	kPlayerOneSheet,
+
+
 	kPlayerTwo,
+
+
 	kTitleScreen,
+
+
 	kButtonNormal,
 	kButtonSelected,
 	kButtonActivated,

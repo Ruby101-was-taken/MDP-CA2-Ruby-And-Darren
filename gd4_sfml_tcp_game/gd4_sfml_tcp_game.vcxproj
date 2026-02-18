@@ -142,6 +142,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="animation.cpp" />
+    <ClCompile Include="animation_behaviour.cpp" />
     <ClCompile Include="application.cpp" />
     <ClCompile Include="attachable_behaviour.cpp" />
     <ClCompile Include="base_collider_behaviour.cpp" />
@@ -184,6 +185,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="action.hpp" />
+    <ClInclude Include="animation_behaviour.hpp" />
     <ClInclude Include="application.hpp" />
     <ClInclude Include="attachable_behaviour.hpp" />
     <ClInclude Include="base_collider_behaviour.hpp" />
