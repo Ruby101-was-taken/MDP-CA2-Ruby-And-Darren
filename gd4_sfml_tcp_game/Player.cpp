@@ -48,8 +48,10 @@ void Player::UpdateCurrent(sf::Time dt, CommandQueue& commands) {
 	auto* anim = FindAttachable<AnimationBehaviour>();
 	auto* movement = FindAttachable<PlayerMovementBehaviour>();
 
+	std::cout << movement->GetVelocity().y << std::endl;
+
 	if (!anim) return;
-	if (movement->GetVelocity().y > 0.f)
+	if (movement->GetVelocity().y != 0.f)
 		anim->Play("jump");
 	else if (movement->GetVelocity().x != 0.f)
 		anim->Play("run");
