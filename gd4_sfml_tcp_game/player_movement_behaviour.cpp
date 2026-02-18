@@ -19,12 +19,14 @@ PlayerMovementBehaviour::PlayerMovementBehaviour(PlayerType type) :
     jump_power_(6.5f),
     jump_held_(false),
     coyote_time_(0.f),
-    default_coyote_time_(0.1f)
+    default_coyote_time_(0.1f),
+    invincibility_time_(0.f)
 {
 }
 
 void PlayerMovementBehaviour::Start() {
     player_collider_ = node_->FindAttachable<BoxColliderBehaviour>();
+    sprite_ = node_->FindAttachable<SpriteBehaviour>();
 }
 
 void PlayerMovementBehaviour::Update(sf::Time dt, CommandQueue& commands) {
@@ -48,6 +50,19 @@ void PlayerMovementBehaviour::Update(sf::Time dt, CommandQueue& commands) {
         }
     }
 
+    HandleSounds(commands);
+
+    if (invincibility_time_ > 0) {
+        sprite_->ToggleVisibilty();
+        invincibility_time_ -= dt.asSeconds();
+        if (CanBeHit())
+            sprite_->Show();
+    }
+}
+
+
+
+void PlayerMovementBehaviour::HandleSounds(CommandQueue& commands) {
 
     if (can_play_collision_sound_) {
         PlayLocalSound(commands, SoundEffect::kExplosion1);
@@ -60,16 +75,43 @@ void PlayerMovementBehaviour::Update(sf::Time dt, CommandQueue& commands) {
     }
 }
 
+
 void PlayerMovementBehaviour::OnCollision(SceneNode* other) {
     if (other->GetCollisionLayer() == CollisionLayer::kPlayer) {
-        can_play_collision_sound_ = true;
-        printf("Colliding with a player... \n");
+        PlayerMovementBehaviour* other_player = dynamic_cast<Player*>(other)->FindAttachable<PlayerMovementBehaviour>(); //get other player's component
+        if (other_player->CanBeHit()) {
+            if (other_player->velocity_.y < velocity_.y) {
+                other_player->BouncePlayer();
+                BouncePlayer();
+                other_player->MakeInvincible(2.f);
+                MakeInvincible(0.01f);
+            }
+            else if (other_player->velocity_.y == velocity_.y) {
+                other_player->BouncePlayer();
+                BouncePlayer();
+                other_player->MakeInvincible(2.f);
+                MakeInvincible(2.f);
+            }
+        }
     }
+}
+
+void PlayerMovementBehaviour::BouncePlayer() {
+    velocity_.y = -velocity_.y - (GRAVITY * Utility::sign(velocity_.y, 10));
 }
 
 sf::Vector2f& PlayerMovementBehaviour::GetVelocity()
 {
     return velocity_;
+}
+
+void PlayerMovementBehaviour::MakeInvincible(float time) {
+    if (time > invincibility_time_)
+        invincibility_time_ = time;
+}
+
+bool PlayerMovementBehaviour::CanBeHit() {
+    return invincibility_time_ <= 0;
 }
 
 void PlayerMovementBehaviour::PerformGravity() {
@@ -131,6 +173,7 @@ bool PlayerMovementBehaviour::CanJump() {
     return false; // <- for safety :3
 }
 
+// TODO: Update to be command queue
 sf::Vector2f PlayerMovementBehaviour::HandlePlayerInput() {
     sf::Vector2f velocity(0.f, 0.f);
 

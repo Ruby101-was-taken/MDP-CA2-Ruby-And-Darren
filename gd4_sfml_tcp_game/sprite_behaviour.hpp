@@ -12,6 +12,12 @@ public:
     sf::Sprite& GetSprite();
     const sf::Sprite& GetSprite() const;
 
+    void ToggleVisibilty();
+    void Hide();
+    void Show();
+
 private:
     sf::Sprite sprite_;
+
+    bool show_;
 };

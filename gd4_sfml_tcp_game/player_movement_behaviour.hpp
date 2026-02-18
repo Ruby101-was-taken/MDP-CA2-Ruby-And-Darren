@@ -2,6 +2,7 @@
 #include "attachable_behaviour.hpp"
 #include "box_collider_behaviour.hpp"
 #include "player_type.hpp"
+#include "sprite_behaviour.hpp"
 
 class PlayerMovementBehaviour : public AttachableBehaviour {
 public:
@@ -10,7 +11,12 @@ public:
 	void Update(sf::Time dt, CommandQueue& commands) override;
 	void OnCollision(SceneNode* other) override;
 
+	void BouncePlayer();
+
 	sf::Vector2f& GetVelocity();
+
+	void MakeInvincible(float time);
+	bool CanBeHit();
 private:
 	void PerformGravity();
 	float MoveInDirection(float speed, sf::Vector2f direction);
@@ -22,6 +28,8 @@ private:
 	bool CanJump();
 
 	sf::Vector2f HandlePlayerInput();
+
+	void HandleSounds(CommandQueue& commands);
 
 private:
 	// Sounds
@@ -37,10 +45,13 @@ private:
 	float default_coyote_time_;
 	float coyote_time_;
 
+	float invincibility_time_;
+
 	PlayerType type_;
 
 
 	BoxColliderBehaviour* player_collider_;
+	SpriteBehaviour* sprite_;
 
 	sf::Vector2f velocity_;
 };
