@@ -15,7 +15,8 @@ PlayerMovementBehaviour::PlayerMovementBehaviour(BoxColliderBehaviour* collider,
     type_(type),
     jump_power_(6.5f),
     jump_held_(false),
-    invincibility_time_(0.f)
+    invincibility_time_(0.f),
+    sprite_(nullptr)
 {
 }
 

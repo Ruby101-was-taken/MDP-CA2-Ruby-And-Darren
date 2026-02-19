@@ -3,6 +3,7 @@
 #include "health_behaviour.hpp"
 #include "sprite_behaviour.hpp"
 #include "player_movement_behaviour.hpp"
+#include "player_animation_behaviour.hpp"
 #include "box_collider_behaviour.hpp"
 #include "animation_behaviour.hpp"
 #include <iostream>
@@ -22,7 +23,7 @@ Player::Player(const TextureHolder& textures, float x, float y, PlayerType type)
 		AddBehaviour(new SpriteBehaviour(textures.Get(TextureID::kPlayerOneSheet)));
 		break;
 	}
-	auto* anim = new AnimationBehaviour();
+	AnimationBehaviour* anim = new AnimationBehaviour();
 
 	anim->AddAnimation("idle", {
 		{16, 16},          // frame size
@@ -39,23 +40,11 @@ Player::Player(const TextureHolder& textures, float x, float y, PlayerType type)
 	AddBehaviour(new HealthBehaviour(20));
 	AddBehaviour(new BoxColliderBehaviour({ 16.f, 16.f }, CollisionLayer::kPlayer));
 	AddBehaviour(new PlayerMovementBehaviour(FindAttachable<BoxColliderBehaviour>(), type_));
+
+	AddBehaviour(new PlayerAnimationBehaviour(FindAttachable<PlayerMovementBehaviour>(), anim));
 }
 
 void Player::UpdateCurrent(sf::Time dt, CommandQueue& commands) {
-	move(GetVelocity() * dt.asSeconds());
-
-	// TODO: Seems expensive, store as variable instead? Find a better solution.
-	auto* anim = FindAttachable<AnimationBehaviour>();
-	auto* movement = FindAttachable<PlayerMovementBehaviour>();
-
-
-	if (!anim) return;
-	if (movement->GetVelocity().y != 0.f)
-		anim->Play("jump");
-	else if (movement->GetVelocity().x != 0.f)
-		anim->Play("run");
-	else
-		anim->Play("idle");
 }
 
 

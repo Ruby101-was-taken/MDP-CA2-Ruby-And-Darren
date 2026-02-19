@@ -168,6 +168,7 @@
     <ClCompile Include="music_player.cpp" />
     <ClCompile Include="physic_body.cpp" />
     <ClCompile Include="player.cpp" />
+    <ClCompile Include="player_animation_behaviour.cpp" />
     <ClCompile Include="player_movement_behaviour.cpp" />
     <ClCompile Include="player_type.cpp" />
     <ClCompile Include="post_effect.cpp" />
@@ -176,6 +177,7 @@
     <ClCompile Include="sound_player.cpp" />
     <ClCompile Include="sprite_behaviour.cpp" />
     <ClCompile Include="sprite_node.cpp" />
+    <ClCompile Include="star.cpp" />
     <ClCompile Include="state.cpp" />
     <ClCompile Include="state_stack.cpp" />
     <ClCompile Include="test_attachable_behaviour.cpp" />
@@ -217,6 +219,7 @@
     <ClInclude Include="music_themes.hpp" />
     <ClInclude Include="physic_body.hpp" />
     <ClInclude Include="player.hpp" />
+    <ClInclude Include="player_animation_behaviour.hpp" />
     <ClInclude Include="player_movement_behaviour.hpp" />
     <ClInclude Include="player_type.hpp" />
     <ClInclude Include="post_effect.hpp" />
@@ -232,6 +235,7 @@
     <ClInclude Include="sprite_behaviour.hpp" />
     <ClInclude Include="sprite_node.hpp" />
     <ClInclude Include="stack_action.hpp" />
+    <ClInclude Include="star.hpp" />
     <ClInclude Include="state.hpp" />
     <ClInclude Include="state_id.hpp" />
     <ClInclude Include="state_stack.hpp" />
