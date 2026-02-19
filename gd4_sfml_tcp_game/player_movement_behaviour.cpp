@@ -91,7 +91,7 @@ void PlayerMovementBehaviour::OnCollision(SceneNode* other) {
                 MakeInvincible(0.01f);
                 PlayLocalSound(node_->GetWorld()->GetCommandQueue(), SoundEffect::kPlayerCollide);
             }
-            else if (other_player->velocity_.y == velocity_.y) {
+            else if (other_player->velocity_.y == velocity_.y and other_player->CanBeHit() and CanBeHit()) {
                 other_player->BouncePlayer();
                 BouncePlayer();
                 other_player->MakeInvincible(2.f);
