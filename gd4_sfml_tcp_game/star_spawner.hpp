@@ -11,7 +11,7 @@ public:
 
 	void StartStarTimer();
 
-	void SpawnStar();
+	void SpawnStar(int force_position_index = -1);
 
 private:
 	float time_until_spawn_;
@@ -20,5 +20,7 @@ private:
 	TextureHolder& textures_;
 
 	int count_;
+
+	std::vector<sf::Vector2f> spawn_points_;
 };
 

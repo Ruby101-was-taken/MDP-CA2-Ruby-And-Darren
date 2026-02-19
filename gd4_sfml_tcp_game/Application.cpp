@@ -28,6 +28,9 @@ Application::Application() :
 	window_.setIcon(icon);
 
 	InputManager::SetUpInputs();
+
+	//ensure all randomness is random
+	srand(time(NULL));
 }
 
 void Application::Run()
