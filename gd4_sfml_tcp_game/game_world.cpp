@@ -44,4 +44,3 @@ void GameWorld::BuildScene() {
     std::unique_ptr<Star> test_star = std::make_unique<Star>(textures_);
     root_node_.AttachChild(std::move(test_star));
 }
-

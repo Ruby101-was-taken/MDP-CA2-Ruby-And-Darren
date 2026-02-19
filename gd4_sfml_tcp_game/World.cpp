@@ -170,8 +170,9 @@ void World::HandleCollisions()
 void World::UpdateSounds()
 {
 	// Set listener's position to player position
-	sounds_.SetListenerPosition({0,0}); //basic position for right now we need to change this when we do a dynamic camera but for rn we are all cool with a static camera and a static sound listener ok thank you for listening
-
+	
+	sounds_.SetListenerPosition({680, 180}); //basic position for right now we need to change this when we do a dynamic camera but for rn we are all cool with a static camera and a static sound listener ok thank you for listening
+	// TODO: Set listener to center of level
 	// Remove unused sounds
 	sounds_.RemoveStoppedSounds();
 }

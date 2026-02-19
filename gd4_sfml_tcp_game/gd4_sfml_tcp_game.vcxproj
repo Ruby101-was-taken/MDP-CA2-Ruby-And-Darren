@@ -165,6 +165,8 @@
     <ClCompile Include="label.cpp" />
     <ClCompile Include="level.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="menu_state.cpp" />
+    <ClCompile Include="menu_world.cpp" />
     <ClCompile Include="music_player.cpp" />
     <ClCompile Include="physic_body.cpp" />
     <ClCompile Include="player.cpp" />
@@ -183,6 +185,8 @@
     <ClCompile Include="test_attachable_behaviour.cpp" />
     <ClCompile Include="text_node.cpp" />
     <ClCompile Include="texture_holder.cpp" />
+    <ClCompile Include="title_state.cpp" />
+    <ClCompile Include="title_world.cpp" />
     <ClCompile Include="utility.cpp" />
     <ClCompile Include="world.cpp" />
   </ItemGroup>
@@ -214,6 +218,8 @@
     <ClInclude Include="label.hpp" />
     <ClInclude Include="level.hpp" />
     <ClInclude Include="menu_options.hpp" />
+    <ClInclude Include="menu_state.hpp" />
+    <ClInclude Include="menu_world.hpp" />
     <ClInclude Include="mission_status.hpp" />
     <ClInclude Include="music_player.hpp" />
     <ClInclude Include="music_themes.hpp" />
@@ -243,6 +249,8 @@
     <ClInclude Include="text_node.hpp" />
     <ClInclude Include="TextureHolder.hpp" />
     <ClInclude Include="texture_id.hpp" />
+    <ClInclude Include="title_state.hpp" />
+    <ClInclude Include="title_world.hpp" />
     <ClInclude Include="utility.hpp" />
     <ClInclude Include="world.hpp" />
   </ItemGroup>

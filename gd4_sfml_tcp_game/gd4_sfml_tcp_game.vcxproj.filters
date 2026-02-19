@@ -34,6 +34,12 @@
     <Filter Include="Header Files\States">
       <UniqueIdentifier>{15d1730e-f93a-4072-b3f4-57d64cbc3ece}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\States">
+      <UniqueIdentifier>{0c32407e-890e-43cf-b281-27cffe6baf90}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\States">
+      <UniqueIdentifier>{34469026-1653-4921-b623-660d61954582}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -70,9 +76,6 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="application.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="game_state.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="component.cpp">
@@ -167,6 +170,21 @@
     </ClCompile>
     <ClCompile Include="player_animation_behaviour.cpp">
       <Filter>Source Files\Attachables</Filter>
+    </ClCompile>
+    <ClCompile Include="animation_behaviour.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="level.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="game_state.cpp">
+      <Filter>Source Files\States</Filter>
+    </ClCompile>
+    <ClCompile Include="menu_state.cpp">
+      <Filter>Source Files\States</Filter>
+    </ClCompile>
+    <ClCompile Include="title_state.cpp">
+      <Filter>Source Files\States</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -342,6 +360,21 @@
       <Filter>Header Files\Attachables</Filter>
     </ClInclude>
     <ClInclude Include="game_state.hpp">
+      <Filter>Header Files\States</Filter>
+    </ClInclude>
+    <ClInclude Include="animation_behaviour.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="level.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="game_state.hpp">
+      <Filter>Header Files\States</Filter>
+    </ClInclude>
+    <ClInclude Include="title_state.hpp">
+      <Filter>Header Files\States</Filter>
+    </ClInclude>
+    <ClInclude Include="menu_state.hpp">
       <Filter>Header Files\States</Filter>
     </ClInclude>
   </ItemGroup>

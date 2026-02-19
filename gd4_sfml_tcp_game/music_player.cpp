@@ -3,8 +3,8 @@
 MusicPlayer::MusicPlayer()
 	: volume_(10.f)
 {
-	filenames_[MusicThemes::kMenuTheme] = "Media/Music/MenuTheme.ogg";
-	filenames_[MusicThemes::kLevelTheme] = "Media/Music/ready-set-drift-michael-grubb-main-version-24555-02-59.mp3";
+	filenames_[MusicThemes::kMenuTheme] = "Media/Music/MenuTheme.mp3";
+	filenames_[MusicThemes::kLevelTheme] = "Media/Music/LevelTheme.mp3";
 }
 
 void MusicPlayer::Play(MusicThemes theme)
