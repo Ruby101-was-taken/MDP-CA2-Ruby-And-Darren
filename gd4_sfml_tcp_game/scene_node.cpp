@@ -236,7 +236,6 @@ bool SceneNode::IsMarkedForRemoval() const
 
 void SceneNode::SetCollisionLayer(CollisionLayer layer) {
     collision_layer_ = layer;
-    printf("set layers");
 }
 
 CollisionLayer SceneNode::GetCollisionLayer() {

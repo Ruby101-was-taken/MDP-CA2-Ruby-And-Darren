@@ -79,6 +79,7 @@ void World::LoadTextures()
 	textures_.Load(TextureID::kPlayerOneSheet, "Media/Textures/Player/One/Sheet.png");
 	textures_.Load(TextureID::kPlayerTwo, "Media/Textures/Player/Two/Idle.png");
 	textures_.Load(TextureID::kPlayerTwoSheet, "Media/Textures/Player/Two/Sheet.png");
+	textures_.Load(TextureID::kItemStar, "Media/Textures/Item/Star.png");
 	textures_.Load(TextureID::kLevelTile, "Media/Textures/Level/Tile.png");
 }
 

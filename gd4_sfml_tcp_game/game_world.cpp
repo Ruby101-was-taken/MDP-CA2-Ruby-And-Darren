@@ -4,6 +4,7 @@
 #include "player.hpp"
 #include "basic_rectangle.hpp"
 #include "sound_node.hpp"
+#include "star.hpp"
 
 GameWorld::GameWorld(sf::RenderTarget& output_target, FontHolder& font, SoundPlayer& sounds, State::Context* context) : World(output_target, font, sounds, context) {
     has_level_ = true;
@@ -38,5 +39,9 @@ void GameWorld::BuildScene() {
     // Add sound effect node
     std::unique_ptr<SoundNode> soundNode(new SoundNode(sounds_));
     root_node_.AttachChild(std::move(soundNode));
+
+
+    std::unique_ptr<Star> test_star = std::make_unique<Star>(textures_);
+    root_node_.AttachChild(std::move(test_star));
 }
 

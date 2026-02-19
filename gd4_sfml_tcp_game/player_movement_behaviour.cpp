@@ -9,6 +9,8 @@
 #include "World.hpp"
 #include "level.hpp"
 #include "physic_body.hpp"
+#include "health_behaviour.hpp"
+#include "star.hpp"
 
 PlayerMovementBehaviour::PlayerMovementBehaviour(BoxColliderBehaviour* collider, PlayerType type) :
     PhysicBody(collider, 2.f, 0.2f, 0.075f, 1.5f, 0.1f),
@@ -33,8 +35,7 @@ void PlayerMovementBehaviour::OnCollision(SceneNode* other) {
         if (other_player->CanBeHit()) {
             if (other_player->velocity_.y < velocity_.y) {
                 other_player->BouncePlayer();
-                BouncePlayer();
-                other_player->MakeInvincible(2.f);
+                BouncePlayer();                other_player->MakeInvincible(2.f);
                 MakeInvincible(0.01f);
                 PlayLocalSound(node_->GetWorld()->GetCommandQueue(), SoundEffect::kPlayerCollide);
             }
@@ -46,6 +47,11 @@ void PlayerMovementBehaviour::OnCollision(SceneNode* other) {
                 PlayLocalSound(node_->GetWorld()->GetCommandQueue(), SoundEffect::kPlayerCollide);
             }
         }
+    }
+    else if (other->GetCollisionLayer() == CollisionLayer::kItemStar) {
+        std::cout << "get star!!!" << std::endl;
+        HealthBehaviour *star = dynamic_cast<Star*>(other)->FindAttachable<HealthBehaviour>(); //get star health
+        star->ChangeHealthBy(-1.f);
     }
 }
 

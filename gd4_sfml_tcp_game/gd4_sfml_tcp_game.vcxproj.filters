@@ -31,6 +31,9 @@
     <Filter Include="Source Files\Worlds">
       <UniqueIdentifier>{e11577be-0e80-43ed-a204-cf745261e2cc}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\States">
+      <UniqueIdentifier>{15d1730e-f93a-4072-b3f4-57d64cbc3ece}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -150,6 +153,21 @@
     <ClCompile Include="world.cpp">
       <Filter>Source Files\Worlds</Filter>
     </ClCompile>
+    <ClCompile Include="animation_behaviour.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="level.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="physic_body.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="star.cpp">
+      <Filter>Source Files\SceneNodes</Filter>
+    </ClCompile>
+    <ClCompile Include="player_animation_behaviour.cpp">
+      <Filter>Source Files\Attachables</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="game.hpp">
@@ -213,9 +231,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="application.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="game_state.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="menu_options.hpp">
@@ -310,6 +325,24 @@
     </ClInclude>
     <ClInclude Include="game_world.hpp">
       <Filter>Header Files\Worlds</Filter>
+    </ClInclude>
+    <ClInclude Include="animation_behaviour.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="level.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="physic_body.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="star.hpp">
+      <Filter>Header Files\SceneNodes</Filter>
+    </ClInclude>
+    <ClInclude Include="player_animation_behaviour.hpp">
+      <Filter>Header Files\Attachables</Filter>
+    </ClInclude>
+    <ClInclude Include="game_state.hpp">
+      <Filter>Header Files\States</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

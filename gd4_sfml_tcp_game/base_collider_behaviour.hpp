@@ -10,11 +10,9 @@ protected:
     std::unordered_set<SceneNode*> previousCollisions_;
 public:
     CollisionLayer layer_;
-    bool is_trigger_;
 
     BaseColliderBehaviour(
-        CollisionLayer layer,
-        bool is_trigger = false
+        CollisionLayer layer
     );
 
     void Update(sf::Time, CommandQueue&) override {}

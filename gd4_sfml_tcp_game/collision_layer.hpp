@@ -2,9 +2,8 @@
 enum class CollisionLayer {
     kNone,
     kPlayer,
-    kEnemy,
+    kItemStar,
     kWorld,
     kTrigger,
-    kProjectile,
     kAll
 };
