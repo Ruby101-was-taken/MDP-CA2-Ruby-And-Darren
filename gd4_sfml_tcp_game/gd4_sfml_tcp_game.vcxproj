@@ -178,6 +178,7 @@
     <ClCompile Include="sprite_behaviour.cpp" />
     <ClCompile Include="sprite_node.cpp" />
     <ClCompile Include="star.cpp" />
+    <ClCompile Include="star_spawner.cpp" />
     <ClCompile Include="state.cpp" />
     <ClCompile Include="state_stack.cpp" />
     <ClCompile Include="test_attachable_behaviour.cpp" />
@@ -236,6 +237,7 @@
     <ClInclude Include="sprite_node.hpp" />
     <ClInclude Include="stack_action.hpp" />
     <ClInclude Include="star.hpp" />
+    <ClInclude Include="star_spawner.hpp" />
     <ClInclude Include="state.hpp" />
     <ClInclude Include="state_id.hpp" />
     <ClInclude Include="state_stack.hpp" />

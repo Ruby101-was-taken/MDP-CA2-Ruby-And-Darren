@@ -14,8 +14,8 @@ public:
 
 	void MakeInvincible(float time);
 	bool CanBeHit();
-private:
 
+private:
 	void PerformJump();
 	bool CanJump();
 

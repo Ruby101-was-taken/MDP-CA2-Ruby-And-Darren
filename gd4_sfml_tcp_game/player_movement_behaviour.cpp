@@ -11,6 +11,7 @@
 #include "physic_body.hpp"
 #include "health_behaviour.hpp"
 #include "star.hpp"
+#include "star_spawner.hpp"
 
 PlayerMovementBehaviour::PlayerMovementBehaviour(BoxColliderBehaviour* collider, PlayerType type) :
     PhysicBody(collider, 2.f, 0.2f, 0.075f, 1.5f, 0.1f),
@@ -49,9 +50,14 @@ void PlayerMovementBehaviour::OnCollision(SceneNode* other) {
         }
     }
     else if (other->GetCollisionLayer() == CollisionLayer::kItemStar) {
+
+        Star* star = dynamic_cast<Star*>(other); //get star
+
         std::cout << "get star!!!" << std::endl;
-        HealthBehaviour *star = dynamic_cast<Star*>(other)->FindAttachable<HealthBehaviour>(); //get star health
-        star->ChangeHealthBy(-1.f);
+        star->Collect();
+
+        HealthBehaviour* star_health = star->FindAttachable<HealthBehaviour>(); //get star health
+        star_health->ChangeHealthBy(-1.f);
     }
 }
 

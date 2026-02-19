@@ -6,6 +6,7 @@
 SceneNode::SceneNode(float x, float y, ReceiverCategories category) 
     : children_(), 
     parent_(nullptr), 
+    world_(nullptr),
     default_category_(category),
     collision_layer_(CollisionLayer::kNone)
 {
@@ -21,6 +22,8 @@ SceneNode::~SceneNode() {
 void SceneNode::AttachChild(Ptr child) {
     child->parent_ = this;
     child->SetWorld(world_);
+    if (has_started_)
+        child->Start();
     children_.emplace_back(std::move(child));
 }
 
@@ -105,10 +108,12 @@ void SceneNode::RemoveWrecks()
 #pragma region StartAndUpdate
 
 void SceneNode::Start() {
-    StartCurrent();
-    StartAttachables();
-    StartChildren();
-    has_started_ = true;
+    if(!has_started_) {
+        StartCurrent();
+        StartAttachables();
+        StartChildren();
+        has_started_ = true;
+    }
 }
 
 void SceneNode::StartAttachables() {
@@ -147,12 +152,19 @@ void SceneNode::UpdateAttachables(sf::Time dt, CommandQueue& commands) {
     }
 }
 
-void SceneNode::UpdateChildren(sf::Time dt, CommandQueue& commands)
-{
-    for (Ptr& child : children_)
-    {
+void SceneNode::UpdateChildren(sf::Time dt, CommandQueue& commands) {
+
+    for (Ptr& child : children_) {
         child->Update(dt, commands);
     }
+    
+
+    children_.erase(
+        std::remove_if(children_.begin(), children_.end(),
+            [](const Ptr& child) {
+                return child->isDeleted_;
+            }),
+        children_.end());
 }
 
 void SceneNode::OnCollision(SceneNode* other) {
