@@ -1,25 +1,44 @@
 #include "star.hpp"
-#include "sprite_behaviour.hpp"
 #include "health_behaviour.hpp"
 #include "box_collider_behaviour.hpp"
 #include "World.hpp"
 #include "star_spawner.hpp"
 #include <iostream>
+#include "dropped_star_behaviour.hpp"
 
-Star::Star(const TextureHolder& textures, StarSpawner* star_spawner, int x, int y, int count) : 
-	star_spawner_(star_spawner)
+Star::Star(const TextureHolder& textures, StarSpawner* star_spawner, int x, int y, int count, bool dropped) : 
+	star_spawner_(star_spawner),
+	dropped_(dropped),
+	can_be_collected_(0.2f)
 {
 
-	AddBehaviour(new SpriteBehaviour(textures.Get(TextureID::kItemStar)));
+	sprite_ = new SpriteBehaviour(textures.Get(TextureID::kItemStar));
+	AddBehaviour(sprite_);
 	AddBehaviour(new HealthBehaviour(1.f));
-	AddBehaviour(new BoxColliderBehaviour({32.f, 32.f}, CollisionLayer::kItemStar));
+	BoxColliderBehaviour* collider = new BoxColliderBehaviour({ 32.f, 32.f }, CollisionLayer::kItemStar);
+	AddBehaviour(collider);
 	
+	if(dropped_)
+		AddBehaviour(new DroppedStarBehaviour(collider));
+
 	setPosition({x*1.f, y*1.f});
 
 	name_ = "Star" + std::to_string(count);
 }
 
 void Star::Collect() {
-	star_spawner_->StartStarTimer();
+	if(!dropped_)
+		star_spawner_->StartStarTimer();
+}
+
+void Star::UpdateCurrent(sf::Time dt, CommandQueue& commands) {
+	if (can_be_collected_ > 0)
+		can_be_collected_ -= dt.asSeconds();
+	if (dropped_)
+		sprite_->ToggleVisibilty();
+}
+
+bool Star::CanBeCollected() {
+	return can_be_collected_ <= 0;
 }
 

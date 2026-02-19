@@ -5,6 +5,7 @@
 class PhysicBody : public AttachableBehaviour {
 public:
 	PhysicBody(BoxColliderBehaviour* collider, float acceleration_speed, float ground_deceleration_speed, float air_deceleration_speed, float max_speed, float coyote_time);
+	PhysicBody(BoxColliderBehaviour* collider);
 	void Update(sf::Time dt, CommandQueue& commands) override;
 
 	sf::Vector2f& GetVelocity();

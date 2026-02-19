@@ -18,6 +18,18 @@ PhysicBody::PhysicBody(BoxColliderBehaviour* collider, float acceleration_speed,
 {
 }
 
+PhysicBody::PhysicBody(BoxColliderBehaviour* collider) :
+    acceleration_speed_(2.f),
+    deceleration_speed_(0.2f),
+    default_coyote_time_(0.1f),
+    coyote_time_(0.f),
+	ground_deceleration_speed_(1.5f),
+	air_deceleration_speed_(0.075f),
+	max_speed_(1.5f),
+    collider_(collider)
+{
+}
+
 void PhysicBody::Update(sf::Time dt, CommandQueue& commands) {
     velocity_ += CustomPhysicsUpdate(dt, commands);
 

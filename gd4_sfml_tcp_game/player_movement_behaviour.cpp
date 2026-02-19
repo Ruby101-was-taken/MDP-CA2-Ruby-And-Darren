@@ -53,11 +53,13 @@ void PlayerMovementBehaviour::OnCollision(SceneNode* other) {
 
         Star* star = dynamic_cast<Star*>(other); //get star
 
-        std::cout << "get star!!!" << std::endl;
-        star->Collect();
+        if (star->CanBeCollected()) {
+            std::cout << "get star!!!" << std::endl;
+            star->Collect();
 
-        HealthBehaviour* star_health = star->FindAttachable<HealthBehaviour>(); //get star health
-        star_health->ChangeHealthBy(-1.f);
+            HealthBehaviour* star_health = star->FindAttachable<HealthBehaviour>(); //get star health
+            star_health->ChangeHealthBy(-1.f);
+        }
     }
 }
 
