@@ -32,6 +32,9 @@ void PlayerMovementBehaviour::Start() {
 void PlayerMovementBehaviour::Update(sf::Time dt, CommandQueue& commands) {
     velocity_ += HandlePlayerInput()*acceleration_speed_;
     
+    if (velocity_.x != 0)
+        sprite_->SetFlipX(velocity_.x < 0);
+
     PerformGravity();
 
     //player is moving left or right
@@ -58,7 +61,6 @@ void PlayerMovementBehaviour::Update(sf::Time dt, CommandQueue& commands) {
         if (CanBeHit())
             sprite_->Show();
     }
-    sprite_->FlipX();
 
 }
 
@@ -181,7 +183,7 @@ sf::Vector2f PlayerMovementBehaviour::HandlePlayerInput() {
     sf::Vector2f velocity(0.f, 0.f);
 
     //creates the unit vector of movement
-    if (type_ == PlayerType::kPlayerOne) {
+    if (type_ == PlayerType::kPlayerOne or true) {
         if (InputManager::InputIsPressed(InputTypes::kPlayerOneUp)) {
             if (CanJump())
                 PerformJump();

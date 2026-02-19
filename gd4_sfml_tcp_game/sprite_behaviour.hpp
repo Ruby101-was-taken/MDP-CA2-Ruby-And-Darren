@@ -16,7 +16,10 @@ public:
     void Hide();
     void Show();
 
-    void FlipX();
+    void ToggleFlipX();
+    void ToggleFlipY();
+    void SetFlipX(bool flip);
+    void SetFlipY(bool flip);
 
 private:
     sf::Sprite sprite_;
@@ -24,4 +27,5 @@ private:
     bool show_;
 
     bool flip_x_;
+    bool flip_y_;
 };

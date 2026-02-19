@@ -36,8 +36,23 @@ void SpriteBehaviour::Show() {
     show_ = true;
 }
 
-void SpriteBehaviour::FlipX() {
-    flip_x_ = !flip_x_;/*
-    sprite_.setOrigin({ (flip_x_) ? sprite_.getTextureRect().size.x : 0.f, 0 });*/
-    //sprite_.scale({ (flip_x_) ? -1.f : 1.f, sprite_.getScale().y });
+void SpriteBehaviour::ToggleFlipX() {
+    flip_x_ = !flip_x_;
+    sprite_.setOrigin({ (flip_x_) ? sprite_.getTextureRect().size.x : 0.f, sprite_.getOrigin().y});
+    sprite_.setScale({ (flip_x_) ? -1.f : 1.f, sprite_.getScale().y });
+}
+void SpriteBehaviour::ToggleFlipY() {
+    flip_y_ = !flip_y_;
+    sprite_.setOrigin({ sprite_.getOrigin().x, (flip_y_) ? sprite_.getTextureRect().size.y : 0.f });
+    sprite_.setScale({ sprite_.getScale().x, (flip_y_) ? -1.f : 1.f });
+}
+
+void SpriteBehaviour::SetFlipX(bool flip) {
+    if (flip_x_ != flip)
+        ToggleFlipX();
+}
+
+void SpriteBehaviour::SetFlipY(bool flip) {
+    if (flip_y_ != flip)
+        ToggleFlipY();
 }
