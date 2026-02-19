@@ -38,6 +38,8 @@ private:
 
 	float acceleration_speed_;
 	float deceleration_speed_;
+	float ground_deceleration_speed_;
+	float air_deceleration_speed_;
 	float max_speed_;
 	float jump_power_;
 	bool jump_held_;

@@ -11,7 +11,9 @@
 
 PlayerMovementBehaviour::PlayerMovementBehaviour(PlayerType type) :
     acceleration_speed_(2.f),
-    deceleration_speed_(0.5f),
+    deceleration_speed_(0.2f),
+    ground_deceleration_speed_(0.2f),
+    air_deceleration_speed_(0.075f),
     type_(type),
     max_speed_(1.5f),
     can_play_collision_sound_(false),
@@ -45,13 +47,18 @@ void PlayerMovementBehaviour::Update(sf::Time dt, CommandQueue& commands) {
     PerformDeceleration();
     
     // reduce c-time when moving down and having c time
-    if (coyote_time_ > 0 and velocity_.y > 0)
+    if (coyote_time_ > 0 and velocity_.y > 0) {
         coyote_time_ -= dt.asSeconds();
+        deceleration_speed_ = air_deceleration_speed_;
+    }
     else if (coyote_time_ < default_coyote_time_ and velocity_.y == 0) {
         if (IsOnGround()) { // check on new line for performance
             coyote_time_ = default_coyote_time_;
+            deceleration_speed_ = ground_deceleration_speed_;
         }
     }
+
+    if (type_ == PlayerType::kPlayerOne) std::cout << deceleration_speed_ << std::endl;
 
     HandleSounds(commands);
 
@@ -165,6 +172,7 @@ void PlayerMovementBehaviour::PerformJump() {
     can_play_jump_sound_ = true;
     coyote_time_ = 0.f;
     jump_held_ = true;
+    deceleration_speed_ = air_deceleration_speed_;
 }
 
 //returns true if this player can jump
@@ -183,7 +191,7 @@ sf::Vector2f PlayerMovementBehaviour::HandlePlayerInput() {
     sf::Vector2f velocity(0.f, 0.f);
 
     //creates the unit vector of movement
-    if (type_ == PlayerType::kPlayerOne or true) {
+    if (type_ == PlayerType::kPlayerOne) {
         if (InputManager::InputIsPressed(InputTypes::kPlayerOneUp)) {
             if (CanJump())
                 PerformJump();
