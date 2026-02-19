@@ -155,6 +155,7 @@
     <ClCompile Include="component.cpp" />
     <ClCompile Include="container.cpp" />
     <ClCompile Include="data_tables.cpp" />
+    <ClCompile Include="dropped_star_behaviour.cpp" />
     <ClCompile Include="entity.cpp" />
     <ClCompile Include="game.cpp" />
     <ClCompile Include="game_over_state.cpp" />
@@ -180,6 +181,7 @@
     <ClCompile Include="sprite_behaviour.cpp" />
     <ClCompile Include="sprite_node.cpp" />
     <ClCompile Include="star.cpp" />
+    <ClCompile Include="star_spawner.cpp" />
     <ClCompile Include="state.cpp" />
     <ClCompile Include="state_stack.cpp" />
     <ClCompile Include="test_attachable_behaviour.cpp" />
@@ -207,6 +209,7 @@
     <ClInclude Include="constants.hpp" />
     <ClInclude Include="container.hpp" />
     <ClInclude Include="data_tables.hpp" />
+    <ClInclude Include="dropped_star_behaviour.hpp" />
     <ClInclude Include="entity.hpp" />
     <ClInclude Include="font.hpp" />
     <ClInclude Include="game.hpp" />
@@ -242,6 +245,7 @@
     <ClInclude Include="sprite_node.hpp" />
     <ClInclude Include="stack_action.hpp" />
     <ClInclude Include="star.hpp" />
+    <ClInclude Include="star_spawner.hpp" />
     <ClInclude Include="state.hpp" />
     <ClInclude Include="state_id.hpp" />
     <ClInclude Include="state_stack.hpp" />
