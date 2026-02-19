@@ -58,8 +58,6 @@ void PlayerMovementBehaviour::Update(sf::Time dt, CommandQueue& commands) {
         }
     }
 
-    if (type_ == PlayerType::kPlayerOne) std::cout << deceleration_speed_ << std::endl;
-
     HandleSounds(commands);
 
     if (invincibility_time_ > 0) {
@@ -68,22 +66,17 @@ void PlayerMovementBehaviour::Update(sf::Time dt, CommandQueue& commands) {
         if (CanBeHit())
             sprite_->Show();
     }
-
 }
 
 
 
 void PlayerMovementBehaviour::HandleSounds(CommandQueue& commands) {
-
+    
     if (can_play_collision_sound_) {
         PlayLocalSound(commands, SoundEffect::kExplosion1);
         can_play_collision_sound_ = false;
     }
 
-    if (can_play_jump_sound_) {
-        PlayLocalSound(commands, SoundEffect::kPlayerJump);
-        can_play_jump_sound_ = false;
-    }
 }
 
 
@@ -96,12 +89,14 @@ void PlayerMovementBehaviour::OnCollision(SceneNode* other) {
                 BouncePlayer();
                 other_player->MakeInvincible(2.f);
                 MakeInvincible(0.01f);
+                PlayLocalSound(node_->GetWorld()->GetCommandQueue(), SoundEffect::kPlayerCollide);
             }
             else if (other_player->velocity_.y == velocity_.y) {
                 other_player->BouncePlayer();
                 BouncePlayer();
                 other_player->MakeInvincible(2.f);
                 MakeInvincible(2.f);
+                PlayLocalSound(node_->GetWorld()->GetCommandQueue(), SoundEffect::kPlayerCollide);
             }
         }
     }
@@ -111,8 +106,7 @@ void PlayerMovementBehaviour::BouncePlayer() {
     velocity_.y = -velocity_.y - (GRAVITY * Utility::sign(velocity_.y, 10));
 }
 
-sf::Vector2f& PlayerMovementBehaviour::GetVelocity()
-{
+sf::Vector2f& PlayerMovementBehaviour::GetVelocity() {
     return velocity_;
 }
 
@@ -169,10 +163,13 @@ bool PlayerMovementBehaviour::IsOnGround() {
 
 void PlayerMovementBehaviour::PerformJump() {
     velocity_.y = -jump_power_;
-    can_play_jump_sound_ = true;
+
     coyote_time_ = 0.f;
     jump_held_ = true;
+
     deceleration_speed_ = air_deceleration_speed_;
+
+    PlayLocalSound(node_->GetWorld()->GetCommandQueue(), SoundEffect::kPlayerJump);
 }
 
 //returns true if this player can jump

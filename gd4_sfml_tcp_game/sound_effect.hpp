@@ -2,6 +2,8 @@
 enum class SoundEffect
 {
 	kPlayerJump,
+	kPlayerCollide,
+
 	kAlliedGunfire,
 	kEnemyGunfire,
 	kExplosion1,

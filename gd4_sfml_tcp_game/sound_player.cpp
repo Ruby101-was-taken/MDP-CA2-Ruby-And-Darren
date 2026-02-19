@@ -19,7 +19,8 @@ namespace
 
 SoundPlayer::SoundPlayer()
 {
-	sound_buffers_.Load(SoundEffect::kPlayerJump, "Media/Sound/Player/Jump.ogg");
+	sound_buffers_.Load(SoundEffect::kPlayerJump, "Media/Sound/Player/Player-Jump.ogg");
+	sound_buffers_.Load(SoundEffect::kPlayerCollide, "Media/Sound/Player/Player-Collide.ogg");
 	sound_buffers_.Load(SoundEffect::kAlliedGunfire, "Media/Sound/AlliedGunfire.wav");
 	sound_buffers_.Load(SoundEffect::kEnemyGunfire, "Media/Sound/EnemyGunfire.wav");
 	sound_buffers_.Load(SoundEffect::kExplosion1, "Media/Sound/Explosion1.wav");
