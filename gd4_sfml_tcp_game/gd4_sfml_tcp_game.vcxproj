@@ -155,7 +155,6 @@
     <ClCompile Include="component.cpp" />
     <ClCompile Include="container.cpp" />
     <ClCompile Include="data_tables.cpp" />
-    <ClCompile Include="entity.cpp" />
     <ClCompile Include="game.cpp" />
     <ClCompile Include="game_over_state.cpp" />
     <ClCompile Include="game_state.cpp" />
@@ -179,7 +178,6 @@
     <ClCompile Include="sprite_node.cpp" />
     <ClCompile Include="state.cpp" />
     <ClCompile Include="state_stack.cpp" />
-    <ClCompile Include="test_attachable_behaviour.cpp" />
     <ClCompile Include="text_node.cpp" />
     <ClCompile Include="texture_holder.cpp" />
     <ClCompile Include="title_state.cpp" />
@@ -241,7 +239,7 @@
     <ClInclude Include="state_stack.hpp" />
     <ClInclude Include="test_attachable_behaviour.hpp" />
     <ClInclude Include="text_node.hpp" />
-    <ClInclude Include="TextureHolder.hpp" />
+    <ClInclude Include="texture_holder.hpp" />
     <ClInclude Include="texture_id.hpp" />
     <ClInclude Include="title_state.hpp" />
     <ClInclude Include="title_world.hpp" />
