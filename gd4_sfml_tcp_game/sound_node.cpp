@@ -11,7 +11,7 @@ SoundNode::SoundNode(SoundPlayer& player)
 
 void SoundNode::PlaySound(SoundEffect sound, sf::Vector2f position)
 {
-	sounds_.Play(sound, position);
+	sounds_.Play(sound);
 }
 
 unsigned int SoundNode::GetCategory() const
