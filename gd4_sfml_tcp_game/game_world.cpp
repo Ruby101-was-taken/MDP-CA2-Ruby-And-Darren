@@ -39,4 +39,3 @@ void GameWorld::BuildScene() {
     std::unique_ptr<SoundNode> soundNode(new SoundNode(sounds_));
     root_node_.AttachChild(std::move(soundNode));
 }
-

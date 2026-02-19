@@ -1,7 +1,11 @@
 #include "application.hpp"
 #include "game_state.hpp"
+#include "title_state.hpp"
+#include "menu_state.hpp"
 #include "game_over_state.hpp"
 #include "game_world.hpp"
+#include "title_world.hpp"
+#include "menu_world.hpp"
 #include "constants.hpp"
 #include "input_manager.hpp"
 #include <iostream>
@@ -21,7 +25,7 @@ Application::Application() :
 	textures_.Load(TextureID::kButtons, "Media/Textures/Buttons.png");
 
 	RegisterStates();
-	stack_.PushState(StateID::kGame);
+	stack_.PushState(StateID::kTitle);
 
 	//set icon
 	sf::Image icon("Media/Textures/Interface/Window_Icon.png");
@@ -77,6 +81,7 @@ void Application::Render()
 
 void Application::RegisterStates()
 {
+	stack_.RegisterState<TitleState<TitleWorld>>(StateID::kTitle);
+	stack_.RegisterState<MenuState<MenuWorld>>(StateID::kMenu);
 	stack_.RegisterState<GameState<GameWorld>>(StateID::kGame);
-
 }
