@@ -58,6 +58,8 @@ void PlayerMovementBehaviour::Update(sf::Time dt, CommandQueue& commands) {
         if (CanBeHit())
             sprite_->Show();
     }
+    sprite_->FlipX();
+
 }
 
 
@@ -141,8 +143,9 @@ float PlayerMovementBehaviour::MoveInDirection(float speed, sf::Vector2f directi
 void PlayerMovementBehaviour::PerformDeceleration() {
     int dir = Utility::sign(velocity_.x);
     velocity_.x -= deceleration_speed_*dir;
-    if (Utility::sign(velocity_.x) != dir) // we know the player change direction from decel
+    if (Utility::sign(velocity_.x) != dir) {// we know the player change direction from decel
         velocity_.x = 0;
+    }
     if (abs(velocity_.x) > max_speed_)
         velocity_.x = dir * max_speed_;
 }
@@ -164,10 +167,10 @@ void PlayerMovementBehaviour::PerformJump() {
 
 //returns true if this player can jump
 bool PlayerMovementBehaviour::CanJump() {
-    //if the player has c-time left they can always jump
-    if (coyote_time_ > 0) return true;
     // if the player is yet to let go of jump then they can't jump unless they press it again
     if (jump_held_) return false;
+    //if the player has c-time left they can always jump
+    if (coyote_time_ > 0) return true;
     // if the player is on the ground you can always jump
     //if (IsOnGround()) return true; probs doesn't need to be checked since I don't think the above code covers all cases (c-time is always default on ground)
     return false; // <- for safety :3

@@ -16,8 +16,12 @@ public:
     void Hide();
     void Show();
 
+    void FlipX();
+
 private:
     sf::Sprite sprite_;
 
     bool show_;
+
+    bool flip_x_;
 };
