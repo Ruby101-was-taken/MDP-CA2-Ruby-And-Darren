@@ -166,6 +166,7 @@
     <ClCompile Include="level.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="music_player.cpp" />
+    <ClCompile Include="physic_body.cpp" />
     <ClCompile Include="player.cpp" />
     <ClCompile Include="player_movement_behaviour.cpp" />
     <ClCompile Include="player_type.cpp" />
@@ -214,6 +215,7 @@
     <ClInclude Include="mission_status.hpp" />
     <ClInclude Include="music_player.hpp" />
     <ClInclude Include="music_themes.hpp" />
+    <ClInclude Include="physic_body.hpp" />
     <ClInclude Include="player.hpp" />
     <ClInclude Include="player_movement_behaviour.hpp" />
     <ClInclude Include="player_type.hpp" />

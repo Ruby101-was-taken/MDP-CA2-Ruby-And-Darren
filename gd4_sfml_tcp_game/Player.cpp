@@ -37,8 +37,8 @@ Player::Player(const TextureHolder& textures, float x, float y, PlayerType type)
 	AddBehaviour(anim);
 
 	AddBehaviour(new HealthBehaviour(20));
-	AddBehaviour(new PlayerMovementBehaviour(type_));
 	AddBehaviour(new BoxColliderBehaviour({ 16.f, 16.f }, CollisionLayer::kPlayer));
+	AddBehaviour(new PlayerMovementBehaviour(FindAttachable<BoxColliderBehaviour>(), type_));
 }
 
 void Player::UpdateCurrent(sf::Time dt, CommandQueue& commands) {
