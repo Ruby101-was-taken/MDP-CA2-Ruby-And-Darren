@@ -9,6 +9,9 @@ public:
 
 	void IncrementScore();
 	bool DecrementScore(); // returns true if the player has a start to remove
+
+private:
+	void UpdateScoreVisual();
 	
 private:
 	unsigned int score_;

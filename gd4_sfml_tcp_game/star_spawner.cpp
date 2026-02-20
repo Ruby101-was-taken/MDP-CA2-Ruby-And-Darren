@@ -57,8 +57,8 @@ void StarSpawner::SpawnStar(sf::Vector2f spawn_point) {
 	std::cout << "I spawned a star!" << std::endl;
 }
 
-unsigned int StarSpawner::GetCategory() const {
-	return static_cast<int>(ReceiverCategories::kStarSpawner);
+ReceiverCategories StarSpawner::GetCategoryEnum() const {
+	return ReceiverCategories::kStarSpawner;
 }
 
 

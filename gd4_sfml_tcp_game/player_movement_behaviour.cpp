@@ -22,7 +22,12 @@ PlayerMovementBehaviour::PlayerMovementBehaviour(BoxColliderBehaviour* collider,
     invincibility_time_(0.f),
     sprite_(nullptr)
 {
-    ReceiverCategories category = (type_ == PlayerType::kPlayerOne) ? ReceiverCategories::kPlayerOne : ReceiverCategories::kPlayerTwo;
+}
+
+void PlayerMovementBehaviour::Start() {
+    sprite_ = node_->FindAttachable<SpriteBehaviour>();
+
+    ReceiverCategories category = node_->GetCategoryEnum();
 
     get_score_.category = static_cast<int>(category);
     get_score_.action = DerivedAction<Player>([](Player& player, sf::Time) {
@@ -35,10 +40,6 @@ PlayerMovementBehaviour::PlayerMovementBehaviour(BoxColliderBehaviour* collider,
         PlayerScoreManager* score_manager = player.FindAttachable<PlayerScoreManager>();
         score_manager->DecrementScore();
         });
-}
-
-void PlayerMovementBehaviour::Start() {
-    sprite_ = node_->FindAttachable<SpriteBehaviour>();
 }
 
 

@@ -213,7 +213,11 @@ void SceneNode::DrawChildren(sf::RenderTarget& target, sf::RenderStates states) 
 
 unsigned int SceneNode::GetCategory() const
 {
-    return static_cast<unsigned int>(default_category_);
+    return static_cast<unsigned int>(GetCategoryEnum());
+}
+
+ReceiverCategories SceneNode::GetCategoryEnum() const {
+    return default_category_;
 }
 
 void SceneNode::DeleteNode() {

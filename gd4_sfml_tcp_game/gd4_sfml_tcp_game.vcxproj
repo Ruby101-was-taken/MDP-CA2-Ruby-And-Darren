@@ -188,6 +188,7 @@
     <ClCompile Include="test_attachable_behaviour.cpp" />
     <ClCompile Include="text_node.cpp" />
     <ClCompile Include="texture_holder.cpp" />
+    <ClCompile Include="text_node_behaviour.cpp" />
     <ClCompile Include="title_state.cpp" />
     <ClCompile Include="title_world.cpp" />
     <ClCompile Include="utility.cpp" />
@@ -255,6 +256,7 @@
     <ClInclude Include="text_node.hpp" />
     <ClInclude Include="texture_holder.hpp" />
     <ClInclude Include="texture_id.hpp" />
+    <ClInclude Include="text_node_behaviour.hpp" />
     <ClInclude Include="title_state.hpp" />
     <ClInclude Include="title_world.hpp" />
     <ClInclude Include="utility.hpp" />

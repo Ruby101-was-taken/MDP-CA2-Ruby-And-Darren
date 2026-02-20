@@ -39,7 +39,8 @@ public:
 	void DrawBoundingRect(sf::RenderTarget& target, sf::RenderStates states, sf::FloatRect& rect) const;
 ;
 	void RemoveWrecks();
-	virtual unsigned int GetCategory() const;
+	unsigned int GetCategory() const;
+	virtual ReceiverCategories GetCategoryEnum() const;
 
 	void DeleteNode();
 

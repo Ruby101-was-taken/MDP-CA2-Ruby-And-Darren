@@ -17,6 +17,7 @@ void GameWorld::BuildScene() {
     // Add player 1 node
     auto player_one = std::make_unique<Player>(
         textures_,
+        fonts_,
         PLAYER_ONE_START_POSITION_X,
         PLAYER_ONE_START_POSITION_Y,
         PlayerType::kPlayerOne
@@ -26,6 +27,7 @@ void GameWorld::BuildScene() {
     // Add player 2 node
     auto player_two = std::make_unique<Player>(
         textures_,
+        fonts_,
         PLAYER_TWO_START_POSITION_X,
         PLAYER_TWO_START_POSITION_Y,
         PlayerType::kPlayerTwo

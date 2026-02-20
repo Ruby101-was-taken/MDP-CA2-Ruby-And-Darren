@@ -9,8 +9,9 @@
 #include "player_score_manager.hpp"
 #include <iostream>
 #include "star_spawner.hpp"
+#include "text_node_behaviour.hpp"
 
-Player::Player(const TextureHolder& textures, float x, float y, PlayerType type) 
+Player::Player(const TextureHolder& textures, const FontHolder& fonts, float x, float y, PlayerType type)
 	: SceneNode(x, y) ,
 	type_(type)
 {
@@ -48,15 +49,16 @@ Player::Player(const TextureHolder& textures, float x, float y, PlayerType type)
 
 	AddBehaviour(new PlayerScoreManager());
 
+	AddBehaviour(new TextNodeBehaviour(fonts, "0", {7, -10}));
 }
 
 void Player::UpdateCurrent(sf::Time dt, CommandQueue& commands) {
 }
 
 
-unsigned int Player::GetCategory() const {
+ReceiverCategories Player::GetCategoryEnum() const {
 	ReceiverCategories category = (type_ == PlayerType::kPlayerOne) ? ReceiverCategories::kPlayerOne : ReceiverCategories::kPlayerTwo;
 
-	return static_cast<int>(category);
+	return category;
 }
 
