@@ -12,7 +12,9 @@ public:
 	void StartStarTimer();
 
 	void SpawnStar(int force_position_index = -1);
+	void SpawnStar(sf::Vector2f spawn_point);
 
+	virtual unsigned int GetCategory() const override;
 private:
 	float time_until_spawn_;
 	float default_time_until_spawn;

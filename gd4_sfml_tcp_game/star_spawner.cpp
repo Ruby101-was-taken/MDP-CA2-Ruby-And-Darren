@@ -47,6 +47,20 @@ void StarSpawner::SpawnStar(int force_position_index) {
 		spawn_point = spawn_points_[force_position_index];
 	std::unique_ptr<Star> new_star = std::make_unique<Star>(textures_, this, spawn_point.x, spawn_point.y, count_);
 	AttachChild(std::move(new_star));
+	std::cout << "I spawned a star!" << std::endl;
+
+}
+
+void StarSpawner::SpawnStar(sf::Vector2f spawn_point)
+{
+	std::unique_ptr<Star> new_star = std::make_unique<Star>(textures_, this, spawn_point.x, spawn_point.y, 1, true);
+	AttachChild(std::move(new_star));
+	std::cout << "I spawned a star!" << std::endl;
+}
+
+unsigned int StarSpawner::GetCategory() const
+{
+	return static_cast<int>(ReceiverCategories::kStarSpawner);
 }
 
 

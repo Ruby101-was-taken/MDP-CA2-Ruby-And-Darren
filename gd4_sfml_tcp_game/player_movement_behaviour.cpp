@@ -39,6 +39,16 @@ void PlayerMovementBehaviour::OnCollision(SceneNode* other) {
                 BouncePlayer();                other_player->MakeInvincible(2.f);
                 MakeInvincible(0.01f);
                 PlayLocalSound(node_->GetWorld()->GetCommandQueue(), SoundEffect::kPlayerCollide);
+                std::cout << "I hit the other player!" << std::endl;
+                // Spawn a dropped star on the other player's position
+                sf::Vector2f dropped_star_spawn_point = other_player->GetNode()->GetWorldPosition();
+                Command spawnCommand;
+                spawnCommand.category = static_cast<int>(ReceiverCategories::kStarSpawner);
+                spawnCommand.action = DerivedAction<StarSpawner>([dropped_star_spawn_point](StarSpawner& ss, sf::Time) {
+                    ss.SpawnStar(1);
+                });
+                node_->GetWorld()->GetCommandQueue().Push(spawnCommand);
+
             }
             else if (other_player->velocity_.y == velocity_.y and other_player->CanBeHit() and CanBeHit()) {
                 other_player->BouncePlayer();
