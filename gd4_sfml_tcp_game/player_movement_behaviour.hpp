@@ -10,7 +10,7 @@ public:
 	void Start() override;
 	void OnCollision(SceneNode* other) override;
 
-	void BouncePlayer();
+	void BouncePlayer(bool spawn_star);
 
 	void MakeInvincible(float time);
 	bool CanBeHit();

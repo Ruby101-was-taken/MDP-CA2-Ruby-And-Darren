@@ -39,14 +39,6 @@ void GameWorld::BuildScene() {
 
 
     std::unique_ptr<StarSpawner> spawner_ = std::make_unique<StarSpawner>(textures_);
-
-
-    /*std::unique_ptr<Star> test_star = std::make_unique<Star>(textures_, spawner_.get(), 100, 200);
-    root_node_.AttachChild(std::move(test_star))*/;
-
-    std::unique_ptr<Star> dropped_star(new Star(textures_, spawner_.get(), 260, 0, 0, true));
-    root_node_.AttachChild(std::move(dropped_star));
-
     root_node_.AttachChild(std::move(spawner_));
 }
 

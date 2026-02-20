@@ -18,8 +18,10 @@ Star::Star(const TextureHolder& textures, StarSpawner* star_spawner, int x, int 
 	BoxColliderBehaviour* collider = new BoxColliderBehaviour({ 32.f, 32.f }, CollisionLayer::kItemStar);
 	AddBehaviour(collider);
 	
-	if(dropped_)
+	if (dropped_) {
 		AddBehaviour(new DroppedStarBehaviour(collider));
+		can_be_collected_ *= 2; // feels better for dropped stars to take a little bit before they can be picked up
+	}
 
 	setPosition({x*1.f, y*1.f});
 

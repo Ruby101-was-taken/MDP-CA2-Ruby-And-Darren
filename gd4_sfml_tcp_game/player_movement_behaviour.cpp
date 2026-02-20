@@ -34,25 +34,17 @@ void PlayerMovementBehaviour::OnCollision(SceneNode* other) {
     if (other->GetCollisionLayer() == CollisionLayer::kPlayer) {
         PlayerMovementBehaviour* other_player = dynamic_cast<Player*>(other)->FindAttachable<PlayerMovementBehaviour>(); //get other player's component
         if (other_player->CanBeHit()) {
-            if (other_player->velocity_.y < velocity_.y) {
-                other_player->BouncePlayer();
-                BouncePlayer();                other_player->MakeInvincible(2.f);
+            if (other_player->velocity_.y < velocity_.y) { // hit the other player
+                other_player->BouncePlayer(true);
+                BouncePlayer(false);                
+                other_player->MakeInvincible(2.f);
                 MakeInvincible(0.01f);
                 PlayLocalSound(node_->GetWorld()->GetCommandQueue(), SoundEffect::kPlayerCollide);
-                std::cout << "I hit the other player!" << std::endl;
-                // Spawn a dropped star on the other player's position
-                sf::Vector2f dropped_star_spawn_point = other_player->GetNode()->GetWorldPosition();
-                Command spawnCommand;
-                spawnCommand.category = static_cast<int>(ReceiverCategories::kStarSpawner);
-                spawnCommand.action = DerivedAction<StarSpawner>([dropped_star_spawn_point](StarSpawner& ss, sf::Time) {
-                    ss.SpawnStar(dropped_star_spawn_point);
-                });
-                node_->GetWorld()->GetCommandQueue().Push(spawnCommand);
-
+                std::cout << "I hit the other player!" << std::endl;               
             }
-            else if (other_player->velocity_.y == velocity_.y and other_player->CanBeHit() and CanBeHit()) {
-                other_player->BouncePlayer();
-                BouncePlayer();
+            else if (other_player->velocity_.y == velocity_.y and other_player->CanBeHit() and CanBeHit()) { // both player hit eachother
+                other_player->BouncePlayer(true);
+                BouncePlayer(true);
                 other_player->MakeInvincible(2.f);
                 MakeInvincible(2.f);
                 PlayLocalSound(node_->GetWorld()->GetCommandQueue(), SoundEffect::kPlayerCollide);
@@ -69,14 +61,25 @@ void PlayerMovementBehaviour::OnCollision(SceneNode* other) {
             PlayLocalSound(node_->GetWorld()->GetCommandQueue(), SoundEffect::kCollectStar);
 
             HealthBehaviour* star_health = star->FindAttachable<HealthBehaviour>(); //get star health
-            star_health->ChangeHealthBy(-1.f);
+            if(star_health != nullptr)
+                star_health->ChangeHealthBy(-1.f);
         }
     }
 }
 
 
-void PlayerMovementBehaviour::BouncePlayer() {
+void PlayerMovementBehaviour::BouncePlayer(bool spawn_star) {
     velocity_.y = -velocity_.y - (GRAVITY * Utility::sign(velocity_.y, 10));
+    if (spawn_star) {
+        // Spawn a dropped star on the other player's position
+        sf::Vector2f dropped_star_spawn_point = node_->GetWorldPosition();
+        Command spawnCommand;
+        spawnCommand.category = static_cast<int>(ReceiverCategories::kStarSpawner);
+        spawnCommand.action = DerivedAction<StarSpawner>([dropped_star_spawn_point](StarSpawner& ss, sf::Time) {
+            ss.SpawnStar(dropped_star_spawn_point);
+            });
+        node_->GetWorld()->GetCommandQueue().Push(spawnCommand);
+    }
 }
 
 
