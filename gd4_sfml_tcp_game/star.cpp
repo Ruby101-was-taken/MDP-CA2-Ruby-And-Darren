@@ -29,8 +29,10 @@ Star::Star(const TextureHolder& textures, StarSpawner* star_spawner, int x, int 
 }
 
 void Star::Collect() {
-	if(!dropped_)
+	can_be_collected_ = UINT64_MAX; // ensure star can only be collected once
+	if (!dropped_) {
 		star_spawner_->StartStarTimer();
+	}
 }
 
 void Star::UpdateCurrent(sf::Time dt, CommandQueue& commands) {
