@@ -49,7 +49,7 @@ Player::Player(const TextureHolder& textures, const FontHolder& fonts, float x, 
 
 	AddBehaviour(new PlayerScoreManager());
 
-	AddBehaviour(new TextNodeBehaviour(fonts, "0", {7, -10}));
+	AddBehaviour(new TextNodeBehaviour(fonts, "0", {8, -10}));
 }
 
 void Player::UpdateCurrent(sf::Time dt, CommandQueue& commands) {
