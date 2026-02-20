@@ -19,10 +19,10 @@ World::World(sf::RenderTarget& output_target, FontHolder& font, SoundPlayer& sou
 	context_(context),
 	level_path_("data.csv")
 {
-	camera_.setSize({ 640, 360});
+	SetCameraSize({ 640, 360});
 	LoadTextures();
 	StartBuildScene();
-	camera_.setCenter({320, 180});
+	SetCameraPosition({ 320, 180 });
 }
 
 
@@ -39,23 +39,45 @@ void World::Update(sf::Time dt)
 	root_node_.Update(dt, command_queue_);	
 }
 
-void World::Draw()
-{
-	if (PostEffect::IsSupported())
-	{
-		scene_texture_.clear();
+void World::DrawWorld() {
+
+	if (PostEffect::IsSupported()) {
 		scene_texture_.setView(camera_);
-		sf::Sprite level(Level::level_texture_.getTexture());
-		scene_texture_.draw(level);
-		scene_texture_.draw(root_node_);
+	}
+	else {
+		target_.setView(camera_);
+	}
+
+	sf::Sprite level(Level::level_texture_.getTexture());
+	Draw(level);
+	Draw(root_node_);
+
+}
+
+void World::ClearScreen() {
+	scene_texture_.clear();
+}
+
+void World::Draw(const sf::Drawable& object) {
+
+	if (PostEffect::IsSupported()) {
+		scene_texture_.draw(object);
+	}
+	else {
+		target_.draw(object);
+	}
+}
+
+void World::ApplyPostEffects() {
+	if (PostEffect::IsSupported()) {
 		scene_texture_.display();
 		bloom_effect_.Apply(scene_texture_, target_);
 	}
-	else
-	{
-		target_.setView(camera_);
-		target_.draw(root_node_);
-	}
+}
+
+void World::RenderLogic() {
+	ClearScreen();
+	DrawWorld();
 }
 
 CommandQueue& World::GetCommandQueue()
@@ -70,6 +92,13 @@ void World::AddNode(Ptr scene_node) {
 
 State::Context* World::GetContext() {
 	return context_;
+}
+
+void World::SetCameraPosition(sf::Vector2f position) {
+	camera_.setCenter(position);
+}
+void World::SetCameraSize(sf::Vector2f position) {
+	camera_.setSize(position);
 }
 
 
