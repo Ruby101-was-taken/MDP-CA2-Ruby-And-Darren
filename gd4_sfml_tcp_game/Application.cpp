@@ -18,7 +18,7 @@ Application::Application() :
 {
 	window_.setKeyRepeatEnabled(false);
 	fonts_.Load(Font::kMain, "Media/Fonts/Sansation.ttf");
-	textures_.Load(TextureID::kTitleScreen, "Media/Textures/TitleScreen.png");
+	textures_.Load(TextureID::kTitleScreen, "Media/Textures/Interface/TitleScreen.png");
 	textures_.Load(TextureID::kButtonNormal, "Media/Textures/ButtonNormal.png");
 	textures_.Load(TextureID::kButtonSelected, "Media/Textures/ButtonSelected.png");
 	textures_.Load(TextureID::kButtonActivated, "Media/Textures/ButtonPressed.png");
