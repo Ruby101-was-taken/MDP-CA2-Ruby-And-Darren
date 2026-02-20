@@ -32,4 +32,7 @@ private:
 	PlayerType type_;
 
 	SpriteBehaviour* sprite_;
+
+	Command get_score_;
+	Command lose_score_;
 };

@@ -129,9 +129,6 @@
     <ClCompile Include="player_animation_behaviour.cpp">
       <Filter>Source Files\Attachables</Filter>
     </ClCompile>
-    <ClCompile Include="animation_behaviour.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="level.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -233,6 +230,12 @@
     </ClCompile>
     <ClCompile Include="application.cpp">
       <Filter>Source Files\General</Filter>
+    </ClCompile>
+    <ClCompile Include="player_score_manager.cpp">
+      <Filter>Source Files\Attachables</Filter>
+    </ClCompile>
+    <ClCompile Include="animation_behaviour.cpp">
+      <Filter>Source Files\Attachables</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -436,6 +439,9 @@
     </ClInclude>
     <ClInclude Include="texture_holder.hpp">
       <Filter>Header Files\General</Filter>
+    </ClInclude>
+    <ClInclude Include="player_score_manager.hpp">
+      <Filter>Header Files\Attachables</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

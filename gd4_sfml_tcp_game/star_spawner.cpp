@@ -51,15 +51,13 @@ void StarSpawner::SpawnStar(int force_position_index) {
 
 }
 
-void StarSpawner::SpawnStar(sf::Vector2f spawn_point)
-{
+void StarSpawner::SpawnStar(sf::Vector2f spawn_point) {
 	std::unique_ptr<Star> new_star = std::make_unique<Star>(textures_, this, spawn_point.x, spawn_point.y, 1, true);
 	AttachChild(std::move(new_star));
 	std::cout << "I spawned a star!" << std::endl;
 }
 
-unsigned int StarSpawner::GetCategory() const
-{
+unsigned int StarSpawner::GetCategory() const {
 	return static_cast<int>(ReceiverCategories::kStarSpawner);
 }
 

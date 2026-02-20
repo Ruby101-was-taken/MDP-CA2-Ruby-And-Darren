@@ -173,6 +173,7 @@
     <ClCompile Include="player.cpp" />
     <ClCompile Include="player_animation_behaviour.cpp" />
     <ClCompile Include="player_movement_behaviour.cpp" />
+    <ClCompile Include="player_score_manager.cpp" />
     <ClCompile Include="player_type.cpp" />
     <ClCompile Include="post_effect.cpp" />
     <ClCompile Include="scene_node.cpp" />
@@ -230,6 +231,7 @@
     <ClInclude Include="player.hpp" />
     <ClInclude Include="player_animation_behaviour.hpp" />
     <ClInclude Include="player_movement_behaviour.hpp" />
+    <ClInclude Include="player_score_manager.hpp" />
     <ClInclude Include="player_type.hpp" />
     <ClInclude Include="post_effect.hpp" />
     <ClInclude Include="receiver_categories.hpp" />

@@ -9,6 +9,7 @@ public:
 
 	void UpdateCurrent(sf::Time dt, CommandQueue& commands) override;
 
+	virtual unsigned int GetCategory() const override;
 private:
 	PlayerType type_;
 };

@@ -6,7 +6,9 @@
 #include "player_animation_behaviour.hpp"
 #include "box_collider_behaviour.hpp"
 #include "animation_behaviour.hpp"
+#include "player_score_manager.hpp"
 #include <iostream>
+#include "star_spawner.hpp"
 
 Player::Player(const TextureHolder& textures, float x, float y, PlayerType type) 
 	: SceneNode(x, y) ,
@@ -42,9 +44,19 @@ Player::Player(const TextureHolder& textures, float x, float y, PlayerType type)
 	AddBehaviour(new PlayerMovementBehaviour(FindAttachable<BoxColliderBehaviour>(), type_));
 
 	AddBehaviour(new PlayerAnimationBehaviour(FindAttachable<PlayerMovementBehaviour>(), anim));
+
+
+	AddBehaviour(new PlayerScoreManager());
+
 }
 
 void Player::UpdateCurrent(sf::Time dt, CommandQueue& commands) {
 }
 
+
+unsigned int Player::GetCategory() const {
+	ReceiverCategories category = (type_ == PlayerType::kPlayerOne) ? ReceiverCategories::kPlayerOne : ReceiverCategories::kPlayerTwo;
+
+	return static_cast<int>(category);
+}
 

@@ -12,6 +12,7 @@
 #include "health_behaviour.hpp"
 #include "star.hpp"
 #include "star_spawner.hpp"
+#include "player_score_manager.hpp"
 
 PlayerMovementBehaviour::PlayerMovementBehaviour(BoxColliderBehaviour* collider, PlayerType type) :
     PhysicBody(collider, 2.f, 0.2f, 0.075f, 1.5f, 0.1f),
@@ -21,6 +22,19 @@ PlayerMovementBehaviour::PlayerMovementBehaviour(BoxColliderBehaviour* collider,
     invincibility_time_(0.f),
     sprite_(nullptr)
 {
+    ReceiverCategories category = (type_ == PlayerType::kPlayerOne) ? ReceiverCategories::kPlayerOne : ReceiverCategories::kPlayerTwo;
+
+    get_score_.category = static_cast<int>(category);
+    get_score_.action = DerivedAction<Player>([](Player& player, sf::Time) {
+        PlayerScoreManager* score_manager = player.FindAttachable<PlayerScoreManager>();
+        score_manager->IncrementScore();
+        });
+
+    lose_score_.category = static_cast<int>(category);
+    lose_score_.action = DerivedAction<Player>([](Player& player, sf::Time) {
+        PlayerScoreManager* score_manager = player.FindAttachable<PlayerScoreManager>();
+        score_manager->DecrementScore();
+        });
 }
 
 void PlayerMovementBehaviour::Start() {
@@ -59,6 +73,7 @@ void PlayerMovementBehaviour::OnCollision(SceneNode* other) {
             std::cout << "get star!!!" << std::endl;
             star->Collect();
             PlayLocalSound(node_->GetWorld()->GetCommandQueue(), SoundEffect::kCollectStar);
+            node_->GetWorld()->GetCommandQueue().Push(get_score_);
 
             HealthBehaviour* star_health = star->FindAttachable<HealthBehaviour>(); //get star health
             if(star_health != nullptr)
@@ -71,14 +86,7 @@ void PlayerMovementBehaviour::OnCollision(SceneNode* other) {
 void PlayerMovementBehaviour::BouncePlayer(bool spawn_star) {
     velocity_.y = -velocity_.y - (GRAVITY * Utility::sign(velocity_.y, 10));
     if (spawn_star) {
-        // Spawn a dropped star on the other player's position
-        sf::Vector2f dropped_star_spawn_point = node_->GetWorldPosition();
-        Command spawnCommand;
-        spawnCommand.category = static_cast<int>(ReceiverCategories::kStarSpawner);
-        spawnCommand.action = DerivedAction<StarSpawner>([dropped_star_spawn_point](StarSpawner& ss, sf::Time) {
-            ss.SpawnStar(dropped_star_spawn_point);
-            });
-        node_->GetWorld()->GetCommandQueue().Push(spawnCommand);
+        node_->GetWorld()->GetCommandQueue().Push(lose_score_);
     }
 }
 
