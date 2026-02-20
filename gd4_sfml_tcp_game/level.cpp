@@ -30,16 +30,21 @@ void Level::LoadLevel(const std::string& filename, const sf::Texture& tile_textu
         data.push_back(row);
     }
 
-    file.close();
-    level_texture_.clear();
-    level_texture_.resize({640, 360});
-    sf::Sprite tile(tile_texture);
-
-    level_tiles_.clear();
 
     int x = 0;
     int y = 0;
     int tile_size = 16;
+
+    file.close();
+    level_texture_.clear();
+    level_texture_.resize({ 
+        static_cast<unsigned int>(data[0].size() * tile_size),
+        static_cast<unsigned int>(data.size() * tile_size) 
+    });
+    sf::Sprite tile(tile_texture);
+
+    level_tiles_.clear();
+
     for (const auto& row : data) {
         for (const auto& cell : row) {
             AddTile(x, y, tile_size, std::stoi(cell), tile);
