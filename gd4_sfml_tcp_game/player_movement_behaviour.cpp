@@ -45,7 +45,7 @@ void PlayerMovementBehaviour::OnCollision(SceneNode* other) {
                 Command spawnCommand;
                 spawnCommand.category = static_cast<int>(ReceiverCategories::kStarSpawner);
                 spawnCommand.action = DerivedAction<StarSpawner>([dropped_star_spawn_point](StarSpawner& ss, sf::Time) {
-                    ss.SpawnStar(1);
+                    ss.SpawnStar(dropped_star_spawn_point);
                 });
                 node_->GetWorld()->GetCommandQueue().Push(spawnCommand);
 
