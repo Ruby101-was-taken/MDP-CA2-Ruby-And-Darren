@@ -1,4 +1,4 @@
-#include "TextureHolder.hpp"
+#include "texture_holder.hpp"
 #include <cassert>
 
 void TextureHolder::Load(TextureID id, const std::string& filename)

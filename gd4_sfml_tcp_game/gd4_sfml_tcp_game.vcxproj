@@ -251,7 +251,7 @@
     <ClInclude Include="state_stack.hpp" />
     <ClInclude Include="test_attachable_behaviour.hpp" />
     <ClInclude Include="text_node.hpp" />
-    <ClInclude Include="TextureHolder.hpp" />
+    <ClInclude Include="texture_holder.hpp" />
     <ClInclude Include="texture_id.hpp" />
     <ClInclude Include="title_state.hpp" />
     <ClInclude Include="title_world.hpp" />
