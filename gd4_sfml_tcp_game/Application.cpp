@@ -26,7 +26,7 @@ Application::Application() :
 	textures_.Load(TextureID::kTitleScreen, "Media/Textures/Interface/TitleScreen.png");
 	textures_.Load(TextureID::kButtonNormal, "Media/Textures/Interface/ButtonNormal.png");
 	textures_.Load(TextureID::kButtonSelected, "Media/Textures/Interface/ButtonSelected.png");
-	textures_.Load(TextureID::kButtonActivated, "Media/Textures/ButtonPressed.png");
+	//textures_.Load(TextureID::kButtonActivated, "Media/Textures/ButtonPressed.png");
 	textures_.Load(TextureID::kButtons, "Media/Textures/Interface/Buttons.png");
 
 	RegisterStates();
