@@ -11,7 +11,9 @@ public:
 
 private:
     void BuildScene() override;
-    sf::Vector2f GetBackgroundPosition(const sf::Vector2f& player_position);
+    sf::Vector2f GetBackgroundPosition();
+
+    void KeepCameraInBounds();
 
 private:
     Player* player_one_;

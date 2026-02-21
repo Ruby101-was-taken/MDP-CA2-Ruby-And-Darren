@@ -31,30 +31,52 @@ void GameWorld::RenderLogic() {
 
 
     SetCameraPosition(player_one_->getPosition());
+    KeepCameraInBounds();
     camera_.setViewport(sf::FloatRect({ 0.f, 0.f }, { 1.f, 0.5f }));
-    background_texture_.setPosition(GetBackgroundPosition(player_one_->getPosition()));
+    background_texture_.setPosition(GetBackgroundPosition());
     Draw(background_texture_);
     DrawWorld();
 
     SetCameraPosition(player_two_->getPosition());
+    KeepCameraInBounds();
     camera_.setViewport(sf::FloatRect({ 0.f, 0.5f }, { 1.f, 0.5f }));
-    background_texture_.setPosition(GetBackgroundPosition(player_two_->getPosition()));
+    background_texture_.setPosition(GetBackgroundPosition());
     Draw(background_texture_);
     DrawWorld();
 
     ApplyPostEffects();
 }
 
-sf::Vector2f GameWorld::GetBackgroundPosition(const sf::Vector2f& player_position) {
+sf::Vector2f GameWorld::GetBackgroundPosition() {
     sf::Vector2f position(0, 0);
 
     //TODO - make the backdrop scroll
 
-    position.x = player_position.x - background_texture_.getTexture().getSize().x / 2;
-    position.y = player_position.y -background_texture_.getTexture().getSize().y / 2;
+    position.x = camera_.getCenter().x - background_texture_.getTexture().getSize().x / 2;
+    position.y = camera_.getCenter().y -background_texture_.getTexture().getSize().y / 2;
 
 
     return position;
+}
+
+void GameWorld::KeepCameraInBounds() {
+    sf::Vector2f cam_center = camera_.getCenter();
+    sf::Vector2f half_cam_size = camera_.getSize()*0.5f;
+    sf::Vector2f level_size(Level::level_texture_.getSize());
+
+    // limit cam in X
+    if (cam_center.x - half_cam_size.x < 0)
+        SetCameraPosition({ half_cam_size.x, cam_center.y});
+    else if(cam_center.x + half_cam_size.x > level_size.x)
+        SetCameraPosition({ level_size.x-half_cam_size.x, cam_center.y });
+
+    cam_center = camera_.getCenter();
+
+    // limit cam in Y
+    if (cam_center.y - half_cam_size.y < 0)
+        SetCameraPosition({ cam_center.x, half_cam_size.y });
+    else if (cam_center.y + half_cam_size.y > level_size.y)
+        SetCameraPosition({ cam_center.x, level_size.y - half_cam_size.y });
 }
 
 void GameWorld::BuildScene() {
