@@ -22,7 +22,7 @@ StarSpawner::StarSpawner(TextureHolder& textures) :
 }
 
 void StarSpawner::StartCurrent() {
-	SpawnStar(1);
+	SpawnStar(0);
 }
 
 void StarSpawner::UpdateCurrent(sf::Time dt, CommandQueue& commands) {

@@ -11,11 +11,11 @@ constexpr std::string_view WINDOW_TITLE = "YES!!!! YOU GUESSED IT... TODAY IS TH
 #pragma endregion
 
 #pragma region Player Start Positions
-constexpr int PLAYER_ONE_START_POSITION_X = 17;
-constexpr int PLAYER_ONE_START_POSITION_Y = 256;
+constexpr int PLAYER_ONE_START_POSITION_X = 240;
+constexpr int PLAYER_ONE_START_POSITION_Y = 304;
 
-constexpr int PLAYER_TWO_START_POSITION_X = 606;
-constexpr int PLAYER_TWO_START_POSITION_Y = 256;
+constexpr int PLAYER_TWO_START_POSITION_X = 384;
+constexpr int PLAYER_TWO_START_POSITION_Y = 304;
 #pragma endregion
 
 #pragma region Physics
