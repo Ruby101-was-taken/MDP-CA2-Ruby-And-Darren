@@ -13,8 +13,6 @@ void ResourceHolder<Identifier, Resource>::Load(Identifier id, const std::string
 	else
 		loaded = resource->loadFromFile(filename);
 
-	std::cout << filename << std::endl;
-
 	if (!loaded)
 		throw std::runtime_error("ResourceHolder::load - Failed to load " + filename);
 

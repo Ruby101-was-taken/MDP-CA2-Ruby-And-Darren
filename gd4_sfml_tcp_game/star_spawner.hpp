@@ -22,7 +22,5 @@ private:
 	TextureHolder& textures_;
 
 	int count_;
-
-	std::vector<sf::Vector2f> spawn_points_;
 };
 
