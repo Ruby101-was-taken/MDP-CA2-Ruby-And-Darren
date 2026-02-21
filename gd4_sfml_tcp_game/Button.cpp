@@ -39,6 +39,7 @@ void gui::Button::Select()
 {
     Component::Select();
     ChangeTexture(ButtonType::kSelected);
+    sounds_.Play(SoundEffect::kButtonSelected);
 }
 
 void gui::Button::Deselect()
@@ -64,7 +65,7 @@ void gui::Button::Activate()
     {
         Deactivate();
     }
-    sounds_.Play(SoundEffect::kButton);
+    sounds_.Play(SoundEffect::kButtonClicked);
 }
 
 void gui::Button::Deactivate()
@@ -94,9 +95,20 @@ void gui::Button::draw(sf::RenderTarget& target, sf::RenderStates states) const
     target.draw(text_, states);
 }
 
-
+// Darren
 void gui::Button::ChangeTexture(ButtonType buttonType)
 {
-    sf::IntRect textureRect({ 0, 50 * static_cast<int>(buttonType) }, { 200, 50 });
+    sf::IntRect textureRect; // Account for the different dimensions of each button type
+    if (buttonType == ButtonType::kNormal)
+        textureRect = sf::IntRect({ 0, 0 }, { 160, 50 });
+    else if (buttonType == ButtonType::kSelected)
+        textureRect = sf::IntRect({ 0, 50 }, { 160, 70 });
+    else
+        textureRect = sf::IntRect({ 0, 100 }, { 160, 50 });
+
     sprite_.setTextureRect(textureRect);
+
+    // Re-center text
+    sf::FloatRect bounds = sprite_.getLocalBounds();
+    text_.setPosition({ bounds.size.x / 2, bounds.size.y / 2 });
 }

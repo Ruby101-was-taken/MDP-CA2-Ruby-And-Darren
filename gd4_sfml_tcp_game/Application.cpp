@@ -3,12 +3,17 @@
 #include "title_state.hpp"
 #include "menu_state.hpp"
 #include "game_over_state.hpp"
+#include "pause_state.hpp"
 #include "game_world.hpp"
 #include "title_world.hpp"
 #include "menu_world.hpp"
 #include "constants.hpp"
 #include "input_manager.hpp"
 #include <iostream>
+#include "tutorial_state.hpp"
+#include "tutorial_world.hpp"
+#include "settings_state.hpp"
+#include "settings_world.hpp"
 
 const sf::Time Application::kTimePerFrame = sf::seconds(1.f/60.f);
 
@@ -19,10 +24,10 @@ Application::Application() :
 	window_.setKeyRepeatEnabled(false);
 	fonts_.Load(Font::kMain, "Media/Fonts/Sansation.ttf");
 	textures_.Load(TextureID::kTitleScreen, "Media/Textures/Interface/TitleScreen.png");
-	textures_.Load(TextureID::kButtonNormal, "Media/Textures/ButtonNormal.png");
-	textures_.Load(TextureID::kButtonSelected, "Media/Textures/ButtonSelected.png");
-	textures_.Load(TextureID::kButtonActivated, "Media/Textures/ButtonPressed.png");
-	textures_.Load(TextureID::kButtons, "Media/Textures/Buttons.png");
+	textures_.Load(TextureID::kButtonNormal, "Media/Textures/Interface/ButtonNormal.png");
+	textures_.Load(TextureID::kButtonSelected, "Media/Textures/Interface/ButtonSelected.png");
+	//textures_.Load(TextureID::kButtonActivated, "Media/Textures/ButtonPressed.png");
+	textures_.Load(TextureID::kButtons, "Media/Textures/Interface/Buttons.png");
 
 	RegisterStates();
 	stack_.PushState(StateID::kTitle);
@@ -87,4 +92,7 @@ void Application::RegisterStates()
 	stack_.RegisterState<TitleState<TitleWorld>>(StateID::kTitle);
 	stack_.RegisterState<MenuState<MenuWorld>>(StateID::kMenu);
 	stack_.RegisterState<GameState<GameWorld>>(StateID::kGame);
+	stack_.RegisterState<PauseState>(StateID::kPause);
+	stack_.RegisterState<TutorialState<TutorialWorld>>(StateID::kTutorial);
+	stack_.RegisterState<SettingsState<TutorialWorld>>(StateID::kSettings);
 }
