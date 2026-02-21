@@ -63,13 +63,13 @@ void Level::AddTile(int x, int y, int size, int id, sf::Sprite tile) {
         level_tiles_.emplace_back(sf::FloatRect(position, {size * 1.f, size * 1.f }));
                                                     /// offset the top rendering by tile size 
         tile.setPosition({ position.x, level_texture_.getSize().y - size - position.y });
+        tile.setScale({1, -1});
+        tile.setOrigin({ 0, size*1.f });
         level_texture_.draw(tile);
     }
     else if (id == 1) {
         if (x != 0 and y != 0) {
             star_spawn_spots_.emplace_back(position);
-            std::cout << star_spawn_spots_.size() << std::endl;
-            std::cout << position.x << ", " << position.y << "-" << id << std::endl;
         }
     }
 }
