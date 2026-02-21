@@ -12,11 +12,6 @@ SceneNode::SceneNode(float x, float y, ReceiverCategories category)
 {
     this->setPosition({ x, y });
 }
-SceneNode::~SceneNode() {
-    for (AttachableBehaviour* behaviour : behaviours_) {
-        delete behaviour;
-    }
-}
 
 
 void SceneNode::AttachChild(Ptr child) {

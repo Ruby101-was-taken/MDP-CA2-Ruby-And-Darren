@@ -237,6 +237,9 @@
     <ClCompile Include="animation_behaviour.cpp">
       <Filter>Source Files\Attachables</Filter>
     </ClCompile>
+    <ClCompile Include="text_node_behaviour.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="entity.hpp">
@@ -298,9 +301,6 @@
     </ClInclude>
     <ClInclude Include="game_state.hpp">
       <Filter>Header Files\States</Filter>
-    </ClInclude>
-    <ClInclude Include="animation_behaviour.hpp">
-      <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="level.hpp">
       <Filter>Header Files</Filter>
@@ -441,6 +441,12 @@
       <Filter>Header Files\General</Filter>
     </ClInclude>
     <ClInclude Include="player_score_manager.hpp">
+      <Filter>Header Files\Attachables</Filter>
+    </ClInclude>
+    <ClInclude Include="text_node_behaviour.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="animation_behaviour.hpp">
       <Filter>Header Files\Attachables</Filter>
     </ClInclude>
   </ItemGroup>
