@@ -59,7 +59,12 @@ void World::ClearScreen() {
 }
 
 void World::Draw(const sf::Drawable& object) {
-
+	if (PostEffect::IsSupported()) {
+		scene_texture_.setView(camera_);
+	}
+	else {
+		target_.setView(camera_);
+	}
 	if (PostEffect::IsSupported()) {
 		scene_texture_.draw(object);
 	}
@@ -110,6 +115,7 @@ void World::LoadTextures()
 	textures_.Load(TextureID::kPlayerTwoSheet, "Media/Textures/Player/Two/Sheet.png");
 	textures_.Load(TextureID::kItemStar, "Media/Textures/Item/Star.png");
 	textures_.Load(TextureID::kLevelTile, "Media/Textures/Level/Tile.png");
+	textures_.Load(TextureID::kLevelBackdrop, "Media/Textures/Level/Backdrop.png");
 }
 
 void World::StartBuildScene()

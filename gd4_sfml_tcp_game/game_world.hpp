@@ -11,11 +11,14 @@ public:
 
 private:
     void BuildScene() override;
+    sf::Vector2f GetBackgroundPosition(const sf::Vector2f& player_position);
 
 private:
     Player* player_one_;
     Player* player_two_;
 
     sf::RectangleShape split_screen_splitter_;
+
+    sf::Sprite background_texture_;
 };
 

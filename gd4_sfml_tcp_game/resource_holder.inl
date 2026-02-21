@@ -1,5 +1,6 @@
 #include "resource_holder.hpp"
 #include <SFML/Graphics/Font.hpp>
+#include <iostream>
 
 template <typename Identifier, typename Resource>
 void ResourceHolder<Identifier, Resource>::Load(Identifier id, const std::string& filename)
@@ -12,6 +13,7 @@ void ResourceHolder<Identifier, Resource>::Load(Identifier id, const std::string
 	else
 		loaded = resource->loadFromFile(filename);
 
+	std::cout << filename << std::endl;
 
 	if (!loaded)
 		throw std::runtime_error("ResourceHolder::load - Failed to load " + filename);
