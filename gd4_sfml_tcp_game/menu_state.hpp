@@ -35,7 +35,7 @@ MenuState<WorldClass>::MenuState(StateStack& stack, Context context)
     //background_sprite_.setTexture(texture);
 
     auto play_button = std::make_shared<gui::Button>(context);
-    play_button->setPosition({ 100, 250 });
+    play_button->setPosition({ 530, 530 });
     play_button->SetText("Play");
     play_button->SetCallback([this]()
         {
@@ -44,7 +44,7 @@ MenuState<WorldClass>::MenuState(StateStack& stack, Context context)
         });
 
     auto settings_button = std::make_shared<gui::Button>(context);
-    settings_button->setPosition({ 100, 300 });
+    settings_button->setPosition({ 730, 530 });
     settings_button->SetText("Settings");
     settings_button->SetCallback([this]()
         {
@@ -53,7 +53,7 @@ MenuState<WorldClass>::MenuState(StateStack& stack, Context context)
         });
     // Darren - D00255479
     auto tutorial_button = std::make_shared<gui::Button>(context);
-    tutorial_button->setPosition({ 100, 350 });
+    tutorial_button->setPosition({ 930, 530 });
     tutorial_button->SetText("How to Play");
     tutorial_button->SetCallback([this]()
         {
@@ -62,7 +62,7 @@ MenuState<WorldClass>::MenuState(StateStack& stack, Context context)
         });
 
     auto exit_button = std::make_shared<gui::Button>(context);
-    exit_button->setPosition({ 100, 400 });
+    exit_button->setPosition({ 1130, 530 });
     exit_button->SetText("Exit");
     exit_button->SetCallback([this]()
         {
