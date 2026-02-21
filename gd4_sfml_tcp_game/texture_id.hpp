@@ -10,6 +10,8 @@ enum class TextureID
 
 	kTitleScreen,
 
+	kLevelBackdrop,
+
 	kItemStar,
 
 	kButtonNormal,
