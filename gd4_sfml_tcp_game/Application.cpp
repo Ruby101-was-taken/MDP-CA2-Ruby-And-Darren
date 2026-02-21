@@ -10,6 +10,10 @@
 #include "constants.hpp"
 #include "input_manager.hpp"
 #include <iostream>
+#include "tutorial_state.hpp"
+#include "tutorial_world.hpp"
+#include "settings_state.hpp"
+#include "settings_world.hpp"
 
 const sf::Time Application::kTimePerFrame = sf::seconds(1.f/60.f);
 
@@ -89,4 +93,6 @@ void Application::RegisterStates()
 	stack_.RegisterState<MenuState<MenuWorld>>(StateID::kMenu);
 	stack_.RegisterState<GameState<GameWorld>>(StateID::kGame);
 	stack_.RegisterState<PauseState>(StateID::kPause);
+	stack_.RegisterState<TutorialState<TutorialWorld>>(StateID::kTutorial);
+	stack_.RegisterState<SettingsState<TutorialWorld>>(StateID::kSettings);
 }

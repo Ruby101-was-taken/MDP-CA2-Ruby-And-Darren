@@ -48,19 +48,30 @@ MenuState<WorldClass>::MenuState(StateStack& stack, Context context)
     settings_button->SetText("Settings");
     settings_button->SetCallback([this]()
         {
+            RequestStackPop();
             RequestStackPush(StateID::kSettings);
+        });
+    // Darren - D00255479
+    auto tutorial_button = std::make_shared<gui::Button>(context);
+    tutorial_button->setPosition({ 100, 350 });
+    tutorial_button->SetText("How to Play");
+    tutorial_button->SetCallback([this]()
+        {
+            RequestStackPop();
+            RequestStackPush(StateID::kTutorial);
         });
 
     auto exit_button = std::make_shared<gui::Button>(context);
-    exit_button->setPosition({ 100, 350 });
+    exit_button->setPosition({ 100, 400 });
     exit_button->SetText("Exit");
     exit_button->SetCallback([this]()
         {
             RequestStackPop();
         });
 
-    gui_container_.Pack(play_button);
+    gui_container_.Pack(play_button);    
     gui_container_.Pack(settings_button);
+    gui_container_.Pack(tutorial_button);
     gui_container_.Pack(exit_button);
 
     //Play the music
@@ -75,11 +86,13 @@ void MenuState<WorldClass>::Draw()
     window.draw(background_sprite_);
     window.draw(gui_container_);
 }
+
 template <typename WorldClass>
 bool MenuState<WorldClass>::Update(sf::Time dt)
 {
     return true;
 }
+
 template <typename WorldClass>
 bool MenuState<WorldClass>::HandleEvent(const sf::Event& event)
 {
