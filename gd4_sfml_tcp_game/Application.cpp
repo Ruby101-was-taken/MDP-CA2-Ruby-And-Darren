@@ -3,6 +3,7 @@
 #include "title_state.hpp"
 #include "menu_state.hpp"
 #include "game_over_state.hpp"
+#include "pause_state.hpp"
 #include "game_world.hpp"
 #include "title_world.hpp"
 #include "menu_world.hpp"
@@ -87,4 +88,5 @@ void Application::RegisterStates()
 	stack_.RegisterState<TitleState<TitleWorld>>(StateID::kTitle);
 	stack_.RegisterState<MenuState<MenuWorld>>(StateID::kMenu);
 	stack_.RegisterState<GameState<GameWorld>>(StateID::kGame);
+	stack_.RegisterState<PauseState>(StateID::kPause);
 }

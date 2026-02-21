@@ -169,6 +169,8 @@
     <ClCompile Include="menu_state.cpp" />
     <ClCompile Include="menu_world.cpp" />
     <ClCompile Include="music_player.cpp" />
+    <ClCompile Include="pause_state.cpp" />
+    <ClCompile Include="pause_state.hpp" />
     <ClCompile Include="physic_body.cpp" />
     <ClCompile Include="player.cpp" />
     <ClCompile Include="player_animation_behaviour.cpp" />
