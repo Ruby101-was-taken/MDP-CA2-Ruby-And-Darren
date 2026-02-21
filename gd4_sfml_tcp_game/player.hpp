@@ -5,10 +5,11 @@
 
 class Player: public SceneNode {
 public:
-	Player(const TextureHolder& textures, float x = 0.f, float y = 0.f, PlayerType type = PlayerType::kPlayerOne);
+	Player(const TextureHolder& textures, const FontHolder& fonts, float x = 0.f, float y = 0.f, PlayerType type = PlayerType::kPlayerOne);
 
 	void UpdateCurrent(sf::Time dt, CommandQueue& commands) override;
 
+	virtual ReceiverCategories GetCategoryEnum() const override;
 private:
 	PlayerType type_;
 };

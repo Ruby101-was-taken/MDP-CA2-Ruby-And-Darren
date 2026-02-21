@@ -1,8 +1,8 @@
 #include "box_collider_behaviour.hpp"
 #include "scene_node.hpp"
 
-BoxColliderBehaviour::BoxColliderBehaviour(sf::Vector2f size, CollisionLayer layer, bool is_trigger)
-    : BaseColliderBehaviour(layer, is_trigger)
+BoxColliderBehaviour::BoxColliderBehaviour(sf::Vector2f size, CollisionLayer layer)
+    : BaseColliderBehaviour(layer)
     , size_(size)
 {
 }

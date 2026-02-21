@@ -79,6 +79,7 @@ void World::LoadTextures()
 	textures_.Load(TextureID::kPlayerOneSheet, "Media/Textures/Player/One/Sheet.png");
 	textures_.Load(TextureID::kPlayerTwo, "Media/Textures/Player/Two/Idle.png");
 	textures_.Load(TextureID::kPlayerTwoSheet, "Media/Textures/Player/Two/Sheet.png");
+	textures_.Load(TextureID::kItemStar, "Media/Textures/Item/Star.png");
 	textures_.Load(TextureID::kLevelTile, "Media/Textures/Level/Tile.png");
 }
 
@@ -119,19 +120,18 @@ sf::FloatRect World::GetBattleFieldBounds() const
 
 }
 
-void World::DestroyEntitiesOutsideView()
-{
-	Command command;
-	command.category = static_cast<int>(ReceiverCategories::kEnemyAircraft) | static_cast<int>(ReceiverCategories::kProjectile);
-	command.action = DerivedAction<Entity>([this](Entity& e, sf::Time dt)
-		{
-			//Does the object intersect with the battlefield
-			if (!GetBattleFieldBounds().findIntersection(e.GetBoundingRect()).has_value())
-			{
-				e.Destroy();
-			}
-		});
-	command_queue_.Push(command);
+void World::DestroyEntitiesOutsideView() {
+	//Command command;
+	//command.category = static_cast<int>(ReceiverCategories::kPlayer2) | static_cast<int>(ReceiverCategories::kProjectile);
+	//command.action = DerivedAction<Entity>([this](Entity& e, sf::Time dt)
+	//	{
+	//		//Does the object intersect with the battlefield
+	//		if (!GetBattleFieldBounds().findIntersection(e.GetBoundingRect()).has_value())
+	//		{
+	//			e.Destroy();
+	//		}
+	//	});
+	//command_queue_.Push(command);
 }
 
 

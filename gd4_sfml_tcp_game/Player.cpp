@@ -3,11 +3,15 @@
 #include "health_behaviour.hpp"
 #include "sprite_behaviour.hpp"
 #include "player_movement_behaviour.hpp"
+#include "player_animation_behaviour.hpp"
 #include "box_collider_behaviour.hpp"
 #include "animation_behaviour.hpp"
+#include "player_score_manager.hpp"
 #include <iostream>
+#include "star_spawner.hpp"
+#include "text_node_behaviour.hpp"
 
-Player::Player(const TextureHolder& textures, float x, float y, PlayerType type) 
+Player::Player(const TextureHolder& textures, const FontHolder& fonts, float x, float y, PlayerType type)
 	: SceneNode(x, y) ,
 	type_(type)
 {
@@ -22,7 +26,7 @@ Player::Player(const TextureHolder& textures, float x, float y, PlayerType type)
 		AddBehaviour(new SpriteBehaviour(textures.Get(TextureID::kPlayerOneSheet)));
 		break;
 	}
-	auto* anim = new AnimationBehaviour();
+	AnimationBehaviour* anim = new AnimationBehaviour();
 
 	anim->AddAnimation("idle", {
 		{16, 16},          // frame size
@@ -37,26 +41,24 @@ Player::Player(const TextureHolder& textures, float x, float y, PlayerType type)
 	AddBehaviour(anim);
 
 	AddBehaviour(new HealthBehaviour(20));
-	AddBehaviour(new PlayerMovementBehaviour(type_));
 	AddBehaviour(new BoxColliderBehaviour({ 16.f, 16.f }, CollisionLayer::kPlayer));
+	AddBehaviour(new PlayerMovementBehaviour(FindAttachable<BoxColliderBehaviour>(), type_));
+
+	AddBehaviour(new PlayerAnimationBehaviour(FindAttachable<PlayerMovementBehaviour>(), anim));
+
+
+	AddBehaviour(new PlayerScoreManager());
+
+	AddBehaviour(new TextNodeBehaviour(fonts, "0", {8, -10}));
 }
 
 void Player::UpdateCurrent(sf::Time dt, CommandQueue& commands) {
-	move(GetVelocity() * dt.asSeconds());
-
-	// TODO: Seems expensive, store as variable instead? Find a better solution.
-	auto* anim = FindAttachable<AnimationBehaviour>();
-	auto* movement = FindAttachable<PlayerMovementBehaviour>();
-
-	std::cout << movement->GetVelocity().y << std::endl;
-
-	if (!anim) return;
-	if (movement->GetVelocity().y != 0.f)
-		anim->Play("jump");
-	else if (movement->GetVelocity().x != 0.f)
-		anim->Play("run");
-	else
-		anim->Play("idle");
 }
 
+
+ReceiverCategories Player::GetCategoryEnum() const {
+	ReceiverCategories category = (type_ == PlayerType::kPlayerOne) ? ReceiverCategories::kPlayerOne : ReceiverCategories::kPlayerTwo;
+
+	return category;
+}
 

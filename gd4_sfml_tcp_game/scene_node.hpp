@@ -37,10 +37,10 @@ public:
 
 	virtual sf::FloatRect GetBoundingRect() const;
 	void DrawBoundingRect(sf::RenderTarget& target, sf::RenderStates states, sf::FloatRect& rect) const;
-
-	void CheckSceneCollision(SceneNode& scene_graph, std::set<Pair>& collison_pairs);
+;
 	void RemoveWrecks();
-	virtual unsigned int GetCategory() const;
+	unsigned int GetCategory() const;
+	virtual ReceiverCategories GetCategoryEnum() const;
 
 	void DeleteNode();
 
@@ -79,9 +79,11 @@ private:
 
 	virtual bool IsMarkedForRemoval() const;
 
+protected:
+	void AddBehaviour(AttachableBehaviour* behaviour);
+
 private:
 	std::vector<Ptr> children_;
-	SceneNode* parent_;
 	ReceiverCategories default_category_;
 
 	std::vector<AttachableBehaviour*> behaviours_;
@@ -96,7 +98,7 @@ private:
 
 	bool has_started_ = false;
 protected:
-	void AddBehaviour(AttachableBehaviour* behaviour);
+	SceneNode* parent_;
 public:
 	std::string name_;
 };

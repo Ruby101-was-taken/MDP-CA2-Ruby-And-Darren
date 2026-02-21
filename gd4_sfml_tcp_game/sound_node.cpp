@@ -14,7 +14,7 @@ void SoundNode::PlaySound(SoundEffect sound, sf::Vector2f position)
 	sounds_.Play(sound);
 }
 
-unsigned int SoundNode::GetCategory() const
+ReceiverCategories SoundNode::GetCategoryEnum() const
 {
-	return static_cast<int>(ReceiverCategories::kSoundEffect);
+	return ReceiverCategories::kSoundEffect;
 }

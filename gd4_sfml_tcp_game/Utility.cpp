@@ -181,7 +181,7 @@ int Utility::Length(sf::Vector2f vector)
 }
 
 
-int Utility::sign(float num) {
-	return (num > 0) ? 1 : ((num < 0) ? -1 : 0);
+int Utility::sign(float num, int edge_case) {
+	return (num > 0) ? 1 : ((num < 0) ? -1 : edge_case);
 }
 

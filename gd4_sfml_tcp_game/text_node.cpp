@@ -5,8 +5,8 @@
 TextNode::TextNode(const FontHolder& fonts, std::string& text)
 	:text_(fonts.Get(Font::kMain))
 {
-	text_.setString(text);
 	text_.setCharacterSize(20);
+	SetString(text);
 }
 
 void TextNode::SetString(const std::string& text)

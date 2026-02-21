@@ -19,13 +19,16 @@ namespace
 
 SoundPlayer::SoundPlayer()
 {
-	sound_buffers_.Load(SoundEffect::kPlayerJump, "Media/Sound/Player/Jump.ogg");
+	sound_buffers_.Load(SoundEffect::kPlayerJump, "Media/Sound/Player/Player-Jump.ogg");
+	sound_buffers_.Load(SoundEffect::kPlayerCollide, "Media/Sound/Player/Player-Collide.ogg");
+	sound_buffers_.Load(SoundEffect::kCollectStar, "Media/Sound/CollectPickup.wav");
+
+
 	sound_buffers_.Load(SoundEffect::kAlliedGunfire, "Media/Sound/AlliedGunfire.wav");
 	sound_buffers_.Load(SoundEffect::kEnemyGunfire, "Media/Sound/EnemyGunfire.wav");
 	sound_buffers_.Load(SoundEffect::kExplosion1, "Media/Sound/Explosion1.wav");
 	sound_buffers_.Load(SoundEffect::kExplosion2, "Media/Sound/Explosion2.wav");
-	sound_buffers_.Load(SoundEffect::kLaunchMissile, "Media/Sound/LaunchMissile.wav");
-	sound_buffers_.Load(SoundEffect::kCollectPickup, "Media/Sound/CollectPickup.wav");
+	sound_buffers_.Load(SoundEffect::kLaunchMissile, "Media/Sound/LaunchMissile.wav");	
 	sound_buffers_.Load(SoundEffect::kButton, "Media/Sound/Button.wav");
 
 	// Listener points towards the screen (default in SFML)
