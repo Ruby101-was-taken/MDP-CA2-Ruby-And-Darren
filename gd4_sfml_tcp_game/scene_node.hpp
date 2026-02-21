@@ -57,6 +57,9 @@ public:
 
 	template<typename Attachable>
 	Attachable* FindAttachable();
+
+
+	void AddBehaviour(AttachableBehaviour* behaviour);
 private:
 	void StartAttachables();
 	virtual void StartCurrent();
@@ -79,8 +82,6 @@ private:
 
 	virtual bool IsMarkedForRemoval() const;
 
-protected:
-	void AddBehaviour(AttachableBehaviour* behaviour);
 
 private:
 	std::vector<Ptr> children_;

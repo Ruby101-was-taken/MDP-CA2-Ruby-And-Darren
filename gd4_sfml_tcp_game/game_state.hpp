@@ -29,7 +29,7 @@ GameState<WorldClass>::GameState(StateStack& stack, Context context) : State(sta
 
 template <typename WorldClass>
 void GameState<WorldClass>::Draw() {
-	world_.Draw();
+	world_.RenderLogic();
 }
 
 template <typename WorldClass>

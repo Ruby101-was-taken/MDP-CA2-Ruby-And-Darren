@@ -20,7 +20,8 @@ public:
 
 	explicit World(sf::RenderTarget& target, FontHolder& font, SoundPlayer& sounds, State::Context* context);
 	void Update(sf::Time dt);
-	void Draw();
+
+	virtual void RenderLogic();
 
 	CommandQueue& GetCommandQueue();
 
@@ -28,7 +29,16 @@ public:
 
 	State::Context* GetContext();
 
+
 protected:
+	void SetCameraPosition(sf::Vector2f position);
+	void SetCameraSize(sf::Vector2f position);
+
+	void DrawWorld();
+	void ClearScreen();
+	void Draw(const sf::Drawable& object);
+	void ApplyPostEffects();
+
 	void LoadTextures();
 	
 	sf::FloatRect GetViewBounds() const;
