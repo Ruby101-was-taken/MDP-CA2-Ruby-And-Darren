@@ -39,6 +39,7 @@ void gui::Button::Select()
 {
     Component::Select();
     ChangeTexture(ButtonType::kSelected);
+    sounds_.Play(SoundEffect::kButtonSelected);
 }
 
 void gui::Button::Deselect()
@@ -64,7 +65,7 @@ void gui::Button::Activate()
     {
         Deactivate();
     }
-    sounds_.Play(SoundEffect::kButton);
+    sounds_.Play(SoundEffect::kButtonClicked);
 }
 
 void gui::Button::Deactivate()

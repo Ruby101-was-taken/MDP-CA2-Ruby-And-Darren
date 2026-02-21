@@ -29,7 +29,9 @@ SoundPlayer::SoundPlayer()
 	sound_buffers_.Load(SoundEffect::kExplosion1, "Media/Sound/Explosion1.wav");
 	sound_buffers_.Load(SoundEffect::kExplosion2, "Media/Sound/Explosion2.wav");
 	sound_buffers_.Load(SoundEffect::kLaunchMissile, "Media/Sound/LaunchMissile.wav");	
-	sound_buffers_.Load(SoundEffect::kButton, "Media/Sound/Button.wav");
+
+	sound_buffers_.Load(SoundEffect::kButtonClicked, "Media/Sound/UI/ButtonClick.wav");
+	sound_buffers_.Load(SoundEffect::kButtonSelected, "Media/Sound/UI/ButtonHover.wav");
 
 	// Listener points towards the screen (default in SFML)
 	sf::Listener::setDirection({ 0.f, 0.f, -1.f });
