@@ -18,8 +18,6 @@ public:
 
 private:
     sf::Sprite background_sprite_;
-    sf::Text text_volume_music;
-    sf::Text text_volume_sound;
     gui::Container gui_container_;
 
     sf::Text sfx_volume_;
@@ -68,27 +66,30 @@ SettingsState<WorldClass>::SettingsState(StateStack& stack, Context context)
     add_sound_volume_button->SetCallback([this, context]() {
         context.sounds->IncrementVolume(20.f);
         sfx_volume_.setString("SFX: " + std::to_string((int)context.sounds->GetVolume()/1));
-        });
+    });
 
+    // Music
     auto subtract_music_volume_button = std::make_shared<gui::Button>(context);
+    subtract_music_volume_button->SetSmall(true);
     subtract_music_volume_button->setPosition({ 700, 500 });
     subtract_music_volume_button->SetText("-");
     subtract_music_volume_button->SetCallback([this, context]() {
         context.music->IncrementVolume(-20.f);
         music_volume_.setString("Music: " + std::to_string((int)context.music->GetVolume()));
-        });
+    });
 
-    music_volume_.setPosition({ 450, 450 });
+    music_volume_.setPosition({ 800, 450 });
     music_volume_.setString("Music: 100");
     music_volume_.setFillColor(sf::Color::Black);
 
     auto add_music_volume_button = std::make_shared<gui::Button>(context);
+    add_music_volume_button->SetSmall(true);
     add_music_volume_button->setPosition({ 900, 500 });
     add_music_volume_button->SetText("+");
     add_music_volume_button->SetCallback([this, context]() {
         context.music->IncrementVolume(20.f);
         music_volume_.setString("Music: " + std::to_string((int)context.music->GetVolume() / 1));
-        });
+    });
 
     gui_container_.Pack(back_button);
     gui_container_.Pack(subtract_sound_volume_button);
@@ -115,8 +116,6 @@ void SettingsState<WorldClass>::Draw()
     window.draw(sfx_volume_);
     window.draw(music_volume_);
     window.draw(gui_container_);
-    window.draw(text_volume_sound);
-    window.draw(text_volume_music);
 }
 
 template <typename WorldClass>
