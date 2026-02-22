@@ -20,8 +20,11 @@ PlayerMovementBehaviour::PlayerMovementBehaviour(BoxColliderBehaviour* collider,
     jump_power_(6.5f),
     jump_held_(false),
     invincibility_time_(0.f),
-    sprite_(nullptr)
+    sprite_(nullptr),
+    last_star_spawn(0,0)
 {
+    random_number = 0;
+    timer = 0.f;
 }
 
 void PlayerMovementBehaviour::Start() {
@@ -101,6 +104,14 @@ bool PlayerMovementBehaviour::CanBeHit() {
     return invincibility_time_ <= 0;
 }
 
+void PlayerMovementBehaviour::SetLastStarSpawn(sf::Vector2f pos) {
+    last_star_spawn = pos;
+}
+
+void PlayerMovementBehaviour::SetLastPlayerPos(sf::Vector2f pos) {
+    last_player_pos = pos;
+}
+
 
 
 void PlayerMovementBehaviour::PerformJump() {
@@ -128,6 +139,33 @@ bool PlayerMovementBehaviour::CanJump() {
 // TODO: Update to be command queue
 sf::Vector2f PlayerMovementBehaviour::HandlePlayerInput() {
     sf::Vector2f velocity(0.f, 0.f);
+
+    if (timer <= 0) {
+        timer = 0.5f;
+        if (rand() % 2 == 0)
+            random_number = (rand() % 100) - 50;
+        else
+            random_number = last_star_spawn.x - node_->GetWorldPosition().x;
+
+
+    }
+    if (rand() % 100 < 30) {
+        if (CanJump())
+            PerformJump();
+    }
+    else {
+        jump_held_ = false;
+    }
+    if (random_number <= 0) {
+        std::cout << random_number << std::endl;
+        velocity.x -= 1;
+    }
+    if (random_number > 0) {
+        std::cout << random_number << std::endl;
+        velocity.x += 1;
+    }
+
+    return velocity;
 
     //creates the unit vector of movement
     if (type_ == PlayerType::kPlayerOne) {
@@ -161,6 +199,8 @@ sf::Vector2f PlayerMovementBehaviour::HandlePlayerInput() {
 }
 
 sf::Vector2f PlayerMovementBehaviour::CustomPhysicsUpdate(sf::Time dt, CommandQueue& commands) {
+
+    timer -= dt.asSeconds();
 
     if (invincibility_time_ > 0) {
         sprite_->ToggleVisibilty();

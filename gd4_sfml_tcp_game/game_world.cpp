@@ -79,6 +79,19 @@ void GameWorld::KeepCameraInBounds() {
         SetCameraPosition({ cam_center.x, level_size.y - half_cam_size.y });
 }
 
+void GameWorld::AddPlayer() {
+    // Add player 1 node
+    sf::Vector2f spawn = Level::GetPlayerSpawn(1);
+    auto player = std::make_unique<Player>(
+        textures_,
+        fonts_,
+        spawn.x,
+        spawn.y,
+        PlayerType::kPlayerOne
+    );
+    root_node_.AttachChild(std::move(player));
+}
+
 void GameWorld::BuildScene() {
 
     textures_.Get(TextureID::kLevelBackdrop).setRepeated(true);

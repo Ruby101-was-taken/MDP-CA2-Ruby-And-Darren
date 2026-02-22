@@ -15,6 +15,9 @@ public:
 	void MakeInvincible(float time);
 	bool CanBeHit();
 
+	void SetLastStarSpawn(sf::Vector2f pos);
+	void SetLastPlayerPos(sf::Vector2f pos);
+
 private:
 	void PerformJump();
 	bool CanJump();
@@ -35,4 +38,9 @@ private:
 
 	Command get_score_;
 	Command lose_score_;
+
+	int random_number;
+	float timer;
+	sf::Vector2f last_star_spawn;
+	sf::Vector2f last_player_pos;
 };

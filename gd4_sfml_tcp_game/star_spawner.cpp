@@ -3,6 +3,8 @@
 #include "world.hpp"
 #include "level.hpp"
 #include "sound_node.hpp"
+#include "player.hpp"
+#include "player_movement_behaviour.hpp"
 #include <iostream>
 
 StarSpawner::StarSpawner(TextureHolder& textures) :
@@ -28,6 +30,16 @@ void StarSpawner::UpdateCurrent(sf::Time dt, CommandQueue& commands) {
 
 void StarSpawner::StartStarTimer() {
 	time_until_spawn_ = default_time_until_spawn;
+	Command command2;
+
+	ReceiverCategories category = ReceiverCategories::kPlayers;
+	command2.category = static_cast<int>(category);
+	command2.action = DerivedAction<Player>([](Player& player, sf::Time) {
+		PlayerMovementBehaviour* score_manager = player.FindAttachable<PlayerMovementBehaviour>();
+		score_manager->SetLastStarSpawn(sf::Vector2f(Level::level_texture_.getSize().x/2, 0));
+		});
+
+	GetWorld()->GetCommandQueue().Push(command2);
 }
 
 void StarSpawner::SpawnStar(int force_position_index) {
@@ -39,6 +51,16 @@ void StarSpawner::SpawnStar(int force_position_index) {
 		spawn_point = Level::GetStarSpawnSpots()[force_position_index];
 	AddStar(false, spawn_point);
 
+	Command command2;
+
+	ReceiverCategories category = ReceiverCategories::kPlayers;
+	command2.category = static_cast<int>(category);
+	command2.action = DerivedAction<Player>([spawn_point](Player& player, sf::Time) {
+		PlayerMovementBehaviour* score_manager = player.FindAttachable<PlayerMovementBehaviour>();
+		score_manager->SetLastStarSpawn(spawn_point);
+		});
+
+	GetWorld()->GetCommandQueue().Push(command2);
 }
 
 void StarSpawner::SpawnStar(sf::Vector2f spawn_point) {
@@ -60,7 +82,8 @@ void StarSpawner::AddStar(bool dropped_star, sf::Vector2f spawn_point) {
 		});
 
 	GetWorld()->GetCommandQueue().Push(command);
-	
+
+
 }
 
 ReceiverCategories StarSpawner::GetCategoryEnum() const {

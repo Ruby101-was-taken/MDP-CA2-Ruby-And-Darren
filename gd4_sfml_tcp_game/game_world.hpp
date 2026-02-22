@@ -15,6 +15,8 @@ private:
 
     void KeepCameraInBounds();
 
+    void AddPlayer();
+
 private:
     Player* player_one_;
     Player* player_two_;
