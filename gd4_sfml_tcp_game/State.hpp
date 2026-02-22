@@ -30,9 +30,6 @@ public:
 		FontHolder* fonts;
 		MusicPlayer* music;
 		SoundPlayer* sounds;
-		Level* level;
-
-		void SetLevel(Level* lvl);
 	};
 
 public:

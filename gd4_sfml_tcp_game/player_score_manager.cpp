@@ -18,7 +18,8 @@ void PlayerScoreManager::IncrementScore() {
 	score_ += 1;
 	std::printf("get score");
 	UpdateScoreVisual();
-	//TODO - add check if they have won
+	
+	if (score_ > 10) {	}
 }
 
 bool PlayerScoreManager::DecrementScore() {

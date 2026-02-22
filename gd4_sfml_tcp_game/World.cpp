@@ -99,6 +99,13 @@ State::Context* World::GetContext() {
 	return context_;
 }
 
+void World::SetState(State* state) {
+	state_ = state;
+}
+State* World::GetState() {
+	return state_;
+}
+
 void World::SetCameraPosition(sf::Vector2f position) {
 	camera_.setCenter(position);
 }
