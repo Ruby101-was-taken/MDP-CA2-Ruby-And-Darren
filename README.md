@@ -15,7 +15,8 @@ W or Up Arrow for jumping
 ESC - Pause
 
 # How To Play
-It is Tuesday.\nYou have to collect 10 stars before the other player to win.
+It is Tuesday.
+You have to collect 10 stars before the other player to win.
 You know a star has appeared when a sound plays.
 Jumping on another player's head makes them drop a star... if they have one.
 Bumping into them will also make them drop a star... but you will also drop one of yours.
