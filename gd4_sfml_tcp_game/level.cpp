@@ -126,10 +126,14 @@ void Level::AddTile(int x, int y, int size, int id, sf::Sprite& tile, std::vecto
     sf::Vector2 position = { x * size * 1.f, y * size * 1.f };
     if (id == 0) {
         
-        level_tiles_.emplace_back(sf::FloatRect(position, {size * 1.f, size * 1.f }));
-                                                    /// offset the top rendering by tile size 
+        sf::Vector2i slice_position = GetTileSlicePosition(x, y, size, id, data);
 
-        PrepareTileForRender(x, y, size, tile, position, GetTileSlicePosition(x, y, size, id, data));
+        if (slice_position != sf::Vector2i(size, size))
+                                                    /// offset the top rendering by tile size 
+            level_tiles_.emplace_back(sf::FloatRect(position, {size * 1.f, size * 1.f }));
+                                                   
+
+        PrepareTileForRender(x, y, size, tile, position, slice_position);
 
         level_texture_.draw(tile);
     }

@@ -38,8 +38,9 @@ TitleState<WorldClass>::TitleState(StateStack& stack, Context context)
     //background_sprite_.setTexture(context.textures->Get(TextureID::kTitleScreen));
     //text_.setFont(context.fonts->Get(Font::kMain));
     text_.setString("Press any key to continue");
+    text_.setFillColor(sf::Color::Black);
     Utility::CentreOrigin(text_);
-    text_.setPosition(context.window->getView().getSize() / 2.f);
+    text_.setPosition({ 850, 500 });
 }
 
 template <typename WorldClass>
