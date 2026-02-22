@@ -51,7 +51,7 @@ TutorialState<WorldClass>::TutorialState(StateStack& stack, Context context)
 
     help_.setPosition({ 300, 300 });
     help_.setFillColor(sf::Color::White);
-    help_.setString("HOW TO PLAY:\nYou have to collect 10 stars before the other player to win.\nYou know a star has appeared when a sound plays.\nJumping on another player's head makes them drop a star...\nif they have one.\nBumping into them will also make them drop a star...\nbut you will also drop one of yours.");
+    help_.setString("HOW TO PLAY:\nIt is Tuesday.\nYou have to collect 10 stars before the other player to win.\nYou know a star has appeared when a sound plays.\nJumping on another player's head makes them drop a star...\nif they have one.\nBumping into them will also make them drop a star...\nbut you will also drop one of yours.");
 
     // TODO: Add a unique theme for this menu and settings
     context.music->Play(MusicThemes::kMenuTheme);
