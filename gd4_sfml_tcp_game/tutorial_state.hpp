@@ -18,6 +18,8 @@ public:
 private:
     sf::Sprite background_sprite_;
     gui::Container gui_container_;
+
+    sf::Text help_;
 };
 
 #include "menu_state.hpp"
@@ -29,6 +31,7 @@ template <typename WorldClass>
 TutorialState<WorldClass>::TutorialState(StateStack& stack, Context context)
     :State(stack, context)
     , background_sprite_(context.textures->Get(TextureID::kTitleScreen))
+    , help_(context.fonts->Get(Font::kMain))
 {
     //sf::Texture& texture = context.textures->Get(TextureID::kTitleScreen);
 
@@ -46,6 +49,10 @@ TutorialState<WorldClass>::TutorialState(StateStack& stack, Context context)
 
     gui_container_.Pack(back_button);
 
+    help_.setPosition({ 300, 300 });
+    help_.setFillColor(sf::Color::White);
+    help_.setString("HOW TO PLAY:\nYou have to collect 10 stars before the other player to win.\nYou know a star has appeared when a sound plays.\nJumping on another player's head makes them drop a star...\nif they have one.\nBumping into them will also make them drop a star...\nbut you will also drop one of yours.");
+
     // TODO: Add a unique theme for this menu and settings
     context.music->Play(MusicThemes::kMenuTheme);
 }
@@ -53,6 +60,7 @@ TutorialState<WorldClass>::TutorialState(StateStack& stack, Context context)
 template <typename WorldClass>
 void TutorialState<WorldClass>::Draw()
 {
+    help_.setPosition({ 300, 300 });
     sf::RenderWindow& window = *GetContext().window;
     window.setView(window.getDefaultView());
 
@@ -62,6 +70,7 @@ void TutorialState<WorldClass>::Draw()
     
     window.draw(background_sprite_);
     window.draw(backgroundShape);
+    window.draw(help_);
     window.draw(gui_container_);
 }
 

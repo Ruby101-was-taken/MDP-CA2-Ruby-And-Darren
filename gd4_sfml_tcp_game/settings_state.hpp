@@ -21,6 +21,9 @@ private:
     sf::Text text_volume_music;
     sf::Text text_volume_sound;
     gui::Container gui_container_;
+
+    sf::Text sfx_volume_;
+    sf::Text music_volume_;
 };
 
 #include "menu_state.hpp"
@@ -32,8 +35,8 @@ template <typename WorldClass>
 SettingsState<WorldClass>::SettingsState(StateStack& stack, Context context)
     :State(stack, context)
     , background_sprite_(context.textures->Get(TextureID::kTitleScreen))
-    , text_volume_music(context.fonts->Get(Font::kMain))
-    , text_volume_sound(context.fonts->Get(Font::kMain))
+    , sfx_volume_(context.fonts->Get(Font::kMain))
+    , music_volume_(context.fonts->Get(Font::kMain))
 {
     auto back_button = std::make_shared<gui::Button>(context);
     back_button->setPosition({ 100, 500 });
@@ -50,54 +53,48 @@ SettingsState<WorldClass>::SettingsState(StateStack& stack, Context context)
     subtract_sound_volume_button->setPosition({ 500, 500 });
     subtract_sound_volume_button->SetText("-");
     subtract_sound_volume_button->SetCallback([this, context]() {
-        context.sounds->IncrementVolume(-10.f);
+        context.sounds->IncrementVolume(-20.f);
+        sfx_volume_.setString("SFX: " + std::to_string((int)context.sounds->GetVolume()));
     });
 
-    text_volume_sound.setString("Sound Volume");
-    Utility::CentreOrigin(text_volume_sound);
-    text_volume_sound.setCharacterSize(15);
-    text_volume_sound.setPosition({ 628, 500 });
-
+    sfx_volume_.setPosition({ 450, 450 });
+    sfx_volume_.setString("SFX: 100");
+    sfx_volume_.setFillColor(sf::Color::Black);
 
     auto add_sound_volume_button = std::make_shared<gui::Button>(context);
     add_sound_volume_button->SetSmall(true);
     add_sound_volume_button->setPosition({ 700, 500 });
     add_sound_volume_button->SetText("+");
     add_sound_volume_button->SetCallback([this, context]() {
-        context.sounds->IncrementVolume(10.f);
-    });
+        context.sounds->IncrementVolume(20.f);
+        sfx_volume_.setString("SFX: " + std::to_string((int)context.sounds->GetVolume()/1));
+        });
 
-
-    // Music Volume
     auto subtract_music_volume_button = std::make_shared<gui::Button>(context);
-    subtract_music_volume_button->SetSmall(true);
-    subtract_music_volume_button->setPosition({ 800, 500 });
+    subtract_music_volume_button->setPosition({ 700, 500 });
     subtract_music_volume_button->SetText("-");
     subtract_music_volume_button->SetCallback([this, context]() {
-        context.music->IncrementVolume(-10.f);
-    });
+        context.music->IncrementVolume(-20.f);
+        music_volume_.setString("Music: " + std::to_string((int)context.music->GetVolume()));
+        });
 
-    text_volume_music.setString("Music Volume");
-    Utility::CentreOrigin(text_volume_sound);
-    text_volume_music.setCharacterSize(15);
-    text_volume_music.setPosition({ 878, 500 });
-
+    music_volume_.setPosition({ 450, 450 });
+    music_volume_.setString("Music: 100");
+    music_volume_.setFillColor(sf::Color::Black);
 
     auto add_music_volume_button = std::make_shared<gui::Button>(context);
-    add_music_volume_button->SetSmall(true);
-    add_music_volume_button->setPosition({ 1000, 500 });
+    add_music_volume_button->setPosition({ 900, 500 });
     add_music_volume_button->SetText("+");
     add_music_volume_button->SetCallback([this, context]() {
-        context.music->IncrementVolume(10.f);
-    });
+        context.music->IncrementVolume(20.f);
+        music_volume_.setString("Music: " + std::to_string((int)context.music->GetVolume() / 1));
+        });
 
-
-    // Add buttons to container
     gui_container_.Pack(back_button);
     gui_container_.Pack(subtract_sound_volume_button);
     gui_container_.Pack(add_sound_volume_button);
+    gui_container_.Pack(add_music_volume_button);
     gui_container_.Pack(subtract_music_volume_button);
-    gui_container_.Pack(add_music_volume_button);    
 
     // TODO: Add a unique theme for this menu and settings
     context.music->Play(MusicThemes::kMenuTheme);
@@ -115,6 +112,8 @@ void SettingsState<WorldClass>::Draw()
 
     window.draw(background_sprite_);
     window.draw(backgroundShape);
+    window.draw(sfx_volume_);
+    window.draw(music_volume_);
     window.draw(gui_container_);
     window.draw(text_volume_sound);
     window.draw(text_volume_music);

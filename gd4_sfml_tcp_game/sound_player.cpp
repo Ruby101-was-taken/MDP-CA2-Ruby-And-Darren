@@ -77,6 +77,9 @@ void SoundPlayer::SetVolume(float volume) {
 	volume_ = std::clamp(volume_, 0.f, 200.f);
 }
 // Darren - D00255479
+float SoundPlayer::GetVolume() {
+	return volume_;
+}
 void SoundPlayer::IncrementVolume(float volume) {
 	volume_ += volume;
 	volume_ = std::clamp(volume_, 0.f, 200.f);

@@ -22,6 +22,7 @@ public:
 	sf::Vector2f GetListenerPosition() const;
 
 	void SetVolume(float volume);
+	float GetVolume();
 	void IncrementVolume(float volume);
 
 private:
