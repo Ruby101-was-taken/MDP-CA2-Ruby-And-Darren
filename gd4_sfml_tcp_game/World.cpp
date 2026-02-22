@@ -36,9 +36,11 @@ void World::Update(sf::Time dt)
 
 	HandleCollisions();
 
-	root_node_.Update(dt, command_queue_);	
+	// Ruby White - D00255322
+	root_node_.Update(dt, command_queue_);
 }
 
+// Ruby White - D00255322
 void World::DrawWorld() {
 
 	if (PostEffect::IsSupported()) {
@@ -58,6 +60,7 @@ void World::ClearScreen() {
 	scene_texture_.clear();
 }
 
+// Ruby White - D00255322
 void World::Draw(const sf::Drawable& object) {
 	if (PostEffect::IsSupported()) {
 		scene_texture_.setView(camera_);
@@ -80,6 +83,7 @@ void World::ApplyPostEffects() {
 	}
 }
 
+// Ruby White - D00255322
 void World::RenderLogic() {
 	ClearScreen();
 	DrawWorld();
@@ -106,6 +110,7 @@ State* World::GetState() {
 	return state_;
 }
 
+// Ruby White - D00255322
 void World::SetCameraPosition(sf::Vector2f position) {
 	camera_.setCenter(position);
 }
@@ -125,6 +130,7 @@ void World::LoadTextures()
 	textures_.Load(TextureID::kLevelBackdrop, "Media/Textures/Level/Backdrop.png");
 }
 
+// Ruby White - D00255322
 void World::StartBuildScene()
 {
 	//Initialize the different layers
@@ -144,6 +150,7 @@ void World::StartBuildScene()
 
 	level_is_over = false;
 }
+// Ruby White - D00255322
 void World::BuildScene() {
 }
 
@@ -180,6 +187,8 @@ void World::DestroyEntitiesOutsideView() {
 
 
 
+// Ruby White - D00255322
+// Darren Meidl - D00255479
 void World::HandleCollisions()
 {
 	std::vector<BaseColliderBehaviour*> colliders;
@@ -210,6 +219,7 @@ void World::HandleCollisions()
 	}
 }
 
+// Darren - D00255479
 void World::UpdateSounds()
 {
 	// Set listener's position to player position
@@ -220,16 +230,19 @@ void World::UpdateSounds()
 	sounds_.RemoveStoppedSounds();
 }
 
+// Darren - D00255479
 void World::SetWinningPlayer(ReceiverCategories new_winning_player)
 {
 	winning_player = new_winning_player;
 	level_is_over = true;
 }
 
+// Darren - D00255479
 ReceiverCategories World::GetWinningPlayer() const {
 	return winning_player;
 }
 
+// Darren - D00255479
 bool World::LevelHasEnded() const {
 	return level_is_over;
 }

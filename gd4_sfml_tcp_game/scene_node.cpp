@@ -32,6 +32,7 @@ SceneNode::Ptr SceneNode::DetachChild(const SceneNode& node) {
     return Ptr();
 }
 
+// Ruby White - D00255322
 void SceneNode::SetWorld(World* world) {
     world_ = world;
 }
@@ -141,6 +142,7 @@ void SceneNode::UpdateCurrent(sf::Time dt, CommandQueue& commands)
     //Do nothing
 }
 
+// Ruby White - D00255322
 void SceneNode::UpdateAttachables(sf::Time dt, CommandQueue& commands) {
     for (AttachableBehaviour* behaviour : behaviours_) {
         behaviour->Update(dt, commands);
@@ -162,16 +164,19 @@ void SceneNode::UpdateChildren(sf::Time dt, CommandQueue& commands) {
         children_.end());
 }
 
+// Ruby White - D00255322
 void SceneNode::OnCollision(SceneNode* other) {
     OnCollisionCurrent(other);
     OnCollisionAttachables(other);
 }
 
 
+// Ruby White - D00255322
 void SceneNode::OnCollisionCurrent(SceneNode* other) {
     //Do nothing
 }
 
+// Ruby White - D00255322
 void SceneNode::OnCollisionAttachables(SceneNode* other) {
     for (AttachableBehaviour* behaviour : behaviours_) {
         behaviour->OnCollision(other);
@@ -211,6 +216,7 @@ unsigned int SceneNode::GetCategory() const
     return static_cast<unsigned int>(GetCategoryEnum());
 }
 
+// Ruby White - D00255322
 ReceiverCategories SceneNode::GetCategoryEnum() const {
     return default_category_;
 }
@@ -245,19 +251,24 @@ bool SceneNode::IsMarkedForRemoval() const
     return IsDestroyed();
 }
 
+// Ruby White - D00255322
 void SceneNode::SetCollisionLayer(CollisionLayer layer) {
     collision_layer_ = layer;
 }
 
+// Ruby White - D00255322
 CollisionLayer SceneNode::GetCollisionLayer() {
     return collision_layer_;
 }
 
+// Ruby White - D00255322
 void SceneNode::AddBehaviour(AttachableBehaviour* behaviour) {
     behaviour->SetupBehaviour(this);
     behaviours_.emplace_back(behaviour);
 
 }
+
+// Darren Meidl - D00255479
 void SceneNode::CollectColliders(std::vector<BaseColliderBehaviour*>& colliders) {
     for (AttachableBehaviour* behaviour : behaviours_) {
         if (auto* collider = dynamic_cast<BaseColliderBehaviour*>(behaviour))

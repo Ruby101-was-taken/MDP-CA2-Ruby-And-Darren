@@ -1,6 +1,8 @@
 #include "attachable_behaviour.hpp"
 #include "sound_node.hpp"
 
+// Ruby White - D00255322
+
 AttachableBehaviour::AttachableBehaviour() {
 	// this is used
 }
@@ -21,6 +23,8 @@ void AttachableBehaviour::Update(sf::Time dt, CommandQueue& commands) {
 
 void AttachableBehaviour::OnCollision(SceneNode* other) {
 }
+
+// Darren Meidl - D00255479
 
 void AttachableBehaviour::PlayLocalSound(CommandQueue& commands, SoundEffect effect)
 {

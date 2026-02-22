@@ -1,3 +1,4 @@
+// Ruby White - D00255322
 #include "player_score_manager.hpp"
 #include "scene_node.hpp"
 #include "star_spawner.hpp"
@@ -18,7 +19,7 @@ void PlayerScoreManager::IncrementScore() {
 	score_ += 1;
 	std::printf("get score");
 	UpdateScoreVisual();
-	//TODO - add check if they have won	
+	// check if player has won
 	if (score_ >= score_to_win_) {
 		ReceiverCategories player_category = node_->GetCategoryEnum();
 		node_->GetWorld()->SetWinningPlayer(player_category);
@@ -32,6 +33,7 @@ bool PlayerScoreManager::DecrementScore() {
 		score_ -= 1;
 		UpdateScoreVisual();
 		// Spawn a dropped star on the other player's position
+		// Darren Meidl - D00255479
 		sf::Vector2f dropped_star_spawn_point = node_->GetWorldPosition();
 		Command spawnCommand;
 		spawnCommand.category = static_cast<int>(ReceiverCategories::kStarSpawner);

@@ -2,6 +2,8 @@
 #include "scene_node.hpp"
 #include <iostream>
 
+// Darren Meidl - D00255479
+
 SpriteBehaviour::SpriteBehaviour(const sf::Texture& texture)
     : sprite_(texture),
     show_(true),
@@ -23,6 +25,10 @@ sf::Sprite& SpriteBehaviour::GetSprite() {
 const sf::Sprite& SpriteBehaviour::GetSprite() const {
     return sprite_;
 }
+
+
+// Ruby White - D00255322
+
 
 void SpriteBehaviour::ToggleVisibilty() {
     show_ = !show_;

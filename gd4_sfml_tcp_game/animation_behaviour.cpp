@@ -1,3 +1,4 @@
+// Darren Meidl - D00255479 - Whole class
 #include "animation_behaviour.hpp"
 #include "scene_node.hpp"
 #include "sprite_behaviour.hpp"

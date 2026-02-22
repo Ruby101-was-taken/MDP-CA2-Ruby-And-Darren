@@ -1,4 +1,5 @@
 // Darren - D00255479
+// Ruby White - D00255322
 #pragma once
 #include "state.hpp"
 #include "menu_options.hpp"
@@ -40,6 +41,7 @@ SettingsState<WorldClass>::SettingsState(StateStack& stack, Context context)
 
     //background_sprite_.setTexture(texture);
 
+    // Darren - D00255479
     auto back_button = std::make_shared<gui::Button>(context);
     back_button->setPosition({ 100, 500 });
     back_button->SetText("Back");
@@ -48,6 +50,7 @@ SettingsState<WorldClass>::SettingsState(StateStack& stack, Context context)
         RequestStackPush(StateID::kMenu);
     });
 
+    // Darren - D00255479
     auto subtract_sound_volume_button = std::make_shared<gui::Button>(context);
     subtract_sound_volume_button->SetSmall(true);
     subtract_sound_volume_button->setPosition({ 300, 500 });
@@ -57,10 +60,12 @@ SettingsState<WorldClass>::SettingsState(StateStack& stack, Context context)
         sfx_volume_.setString("SFX: " + std::to_string((int)context.sounds->GetVolume()));
     });
 
+    // Ruby White - D00255322
     sfx_volume_.setPosition({ 450, 450 });
     sfx_volume_.setString("SFX: 100");
     sfx_volume_.setFillColor(sf::Color::Black);
 
+    // Darren - D00255479
     auto add_sound_volume_button = std::make_shared<gui::Button>(context);
     add_sound_volume_button->SetSmall(true);
     add_sound_volume_button->setPosition({ 500, 500 });
@@ -70,6 +75,7 @@ SettingsState<WorldClass>::SettingsState(StateStack& stack, Context context)
         sfx_volume_.setString("SFX: " + std::to_string((int)context.sounds->GetVolume()/1));
         });
 
+    // Ruby White - D00255322
     auto subtract_music_volume_button = std::make_shared<gui::Button>(context);
     subtract_music_volume_button->setPosition({ 700, 500 });
     subtract_music_volume_button->SetText("-");
@@ -78,10 +84,12 @@ SettingsState<WorldClass>::SettingsState(StateStack& stack, Context context)
         music_volume_.setString("Music: " + std::to_string((int)context.music->GetVolume()));
         });
 
+    // Ruby White - D00255322
     music_volume_.setPosition({ 450, 450 });
     music_volume_.setString("Music: 100");
     music_volume_.setFillColor(sf::Color::Black);
 
+    // Ruby White - D00255322
     auto add_music_volume_button = std::make_shared<gui::Button>(context);
     add_music_volume_button->setPosition({ 900, 500 });
     add_music_volume_button->SetText("+");
@@ -101,6 +109,7 @@ SettingsState<WorldClass>::SettingsState(StateStack& stack, Context context)
     //context.sounds->SetVolume(0.f);
 }
 
+// Darren - D00255479
 template <typename WorldClass>
 void SettingsState<WorldClass>::Draw()
 {

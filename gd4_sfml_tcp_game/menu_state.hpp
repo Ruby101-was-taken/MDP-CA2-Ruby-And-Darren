@@ -1,3 +1,4 @@
+// Darren Meidl - D00255479
 #pragma once
 #include "state.hpp"
 #include "menu_options.hpp"
@@ -25,6 +26,7 @@ private:
 #include "utility.hpp"
 #include "button.hpp"
 
+// Darren Meidl - D00255479
 template <typename WorldClass>
 MenuState<WorldClass>::MenuState(StateStack& stack, Context context)
     :State(stack, context)

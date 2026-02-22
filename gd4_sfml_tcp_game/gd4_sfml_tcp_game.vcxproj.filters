@@ -314,9 +314,6 @@
     <ClInclude Include="game_state.hpp">
       <Filter>Header Files\States</Filter>
     </ClInclude>
-    <ClInclude Include="animation_behaviour.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="level.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -481,6 +478,9 @@
     </ClInclude>
     <ClInclude Include="player_two_win_state.hpp">
       <Filter>Header Files\States</Filter>
+    </ClInclude>
+    <ClInclude Include="animation_behaviour.hpp">
+      <Filter>Header Files\Attachables</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

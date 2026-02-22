@@ -181,6 +181,7 @@ int Utility::Length(sf::Vector2f vector)
 }
 
 
+// Ruby White - D00255322
 int Utility::sign(float num, int edge_case) {
 	return (num > 0) ? 1 : ((num < 0) ? -1 : edge_case);
 }

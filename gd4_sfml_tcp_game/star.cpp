@@ -1,3 +1,4 @@
+// Ruby White - D00255322 - Whole Class
 #include "star.hpp"
 #include "health_behaviour.hpp"
 #include "box_collider_behaviour.hpp"

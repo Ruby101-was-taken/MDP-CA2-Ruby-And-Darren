@@ -1,3 +1,4 @@
+// Ruby White - D00255322
 #include "game_world.hpp"
 #include <iostream>
 #include "constants.hpp"
@@ -109,6 +110,7 @@ void GameWorld::BuildScene() {
     root_node_.AttachChild(std::move(player_two));
 
 
+    // Darren - D00255479 thanks :3
     // Add sound effect node
     std::unique_ptr<SoundNode> soundNode(new SoundNode(sounds_));
     root_node_.AttachChild(std::move(soundNode));

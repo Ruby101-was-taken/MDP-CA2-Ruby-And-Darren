@@ -1,3 +1,5 @@
+// Ruby White - D00255322
+// Darren - D00255479
 #pragma once
 #include "state.hpp"
 #include "menu_options.hpp"
@@ -37,6 +39,7 @@ TutorialState<WorldClass>::TutorialState(StateStack& stack, Context context)
 
     //background_sprite_.setTexture(texture);
 
+    // Darren - D00255479
     auto back_button = std::make_shared<gui::Button>(context);
     back_button->setPosition({ 100, 500 });
     back_button->SetText("Back");
@@ -51,6 +54,7 @@ TutorialState<WorldClass>::TutorialState(StateStack& stack, Context context)
 
     help_.setPosition({ 300, 300 });
     help_.setFillColor(sf::Color::White);
+    // Ruby White - D00255322
     help_.setString("HOW TO PLAY:\nIt is Tuesday.\nYou have to collect 10 stars before the other player to win.\nYou know a star has appeared when a sound plays.\nJumping on another player's head makes them drop a star...\nif they have one.\nBumping into them will also make them drop a star...\nbut you will also drop one of yours.");
 
     // TODO: Add a unique theme for this menu and settings

@@ -1,3 +1,4 @@
+// Ruby White - D00255322 - Whole Class
 #pragma once
 #include "attachable_behaviour.hpp"
 #include "text_node.hpp"

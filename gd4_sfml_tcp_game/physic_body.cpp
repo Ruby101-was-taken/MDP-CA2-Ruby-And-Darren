@@ -1,3 +1,4 @@
+// Ruby White - D00255322 - Whole Class
 #include "physic_body.hpp"
 #include "utility.hpp"
 #include "scene_node.hpp"

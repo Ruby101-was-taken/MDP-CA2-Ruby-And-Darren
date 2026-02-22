@@ -1,3 +1,4 @@
+// Darren Meidl - D00255479 - Whole Class
 #include "base_collider_behaviour.hpp"
 #include "scene_node.hpp"
 
@@ -19,7 +20,7 @@ void BaseColliderBehaviour::RegisterCollision(SceneNode* other) {
 
     // Collision ENTER detection
     if (previousCollisions_.find(other) == previousCollisions_.end()) {
-        node_->OnCollision(other); // call only once
+        node_->OnCollision(other); // call only once ok
     }
 }
 

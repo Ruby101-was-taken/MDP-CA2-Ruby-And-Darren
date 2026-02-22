@@ -24,11 +24,13 @@ void MusicPlayer::Stop()
 	music_.stop();
 }
 
+// Darren Meidl - D00255479
 void MusicPlayer::SetVolume(float volume){
 	volume_ = volume;
 	volume_ = std::clamp(volume_, 0.f, 200.f);
 }
 
+// Darren Meidl - D00255479
 float MusicPlayer::GetVolume() {
 	return volume_;
 }
@@ -40,7 +42,7 @@ void MusicPlayer::SetPaused(bool paused)
 	else
 		music_.play();
 }
-// Darren
+// Darren Meidl - D00255479
 void MusicPlayer::IncrementVolume(float volume) {
 	volume_ += volume;
 }

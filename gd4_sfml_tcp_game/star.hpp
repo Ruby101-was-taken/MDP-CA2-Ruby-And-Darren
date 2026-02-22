@@ -1,3 +1,5 @@
+// Ruby White - D00255322
+// Darren Meidl - D00255479
 #pragma once
 #include "scene_node.hpp"
 #include "resource_identifiers.hpp"

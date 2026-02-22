@@ -1,3 +1,4 @@
+// Ruby White - D00255322
 #include "star_spawner.hpp"
 #include "star.hpp"
 #include "world.hpp"
@@ -41,6 +42,7 @@ void StarSpawner::SpawnStar(int force_position_index) {
 
 }
 
+// Darren Meidl - D00255479
 void StarSpawner::SpawnStar(sf::Vector2f spawn_point) {
 	AddStar(true, spawn_point);
 }
@@ -60,7 +62,6 @@ void StarSpawner::AddStar(bool dropped_star, sf::Vector2f spawn_point) {
 		});
 
 	GetWorld()->GetCommandQueue().Push(command);
-	
 }
 
 ReceiverCategories StarSpawner::GetCategoryEnum() const {

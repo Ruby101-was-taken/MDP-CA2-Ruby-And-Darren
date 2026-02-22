@@ -1,3 +1,4 @@
+// Ruby White - D00255322 - Whole Class
 #pragma once
 #include "box_collider_behaviour.hpp"
 #include <SFML/Graphics.hpp>

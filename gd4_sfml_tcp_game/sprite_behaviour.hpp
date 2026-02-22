@@ -1,3 +1,5 @@
+// Darren Meidl - D00255479
+// Ruby White - D00255322
 #pragma once
 #include "attachable_behaviour.hpp"
 #include <SFML/Graphics/Sprite.hpp>

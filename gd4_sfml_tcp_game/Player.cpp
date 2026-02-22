@@ -1,3 +1,4 @@
+// Ruby White - D00255322
 #include "player.hpp"
 #include "resource_holder.hpp"
 #include "health_behaviour.hpp"
@@ -26,6 +27,9 @@ Player::Player(const TextureHolder& textures, const FontHolder& fonts, float x, 
 		AddBehaviour(new SpriteBehaviour(textures.Get(TextureID::kPlayerOneSheet)));
 		break;
 	}
+
+
+	// Darren Meidl - D00255479
 	AnimationBehaviour* anim = new AnimationBehaviour();
 
 	anim->AddAnimation("idle", {
@@ -41,8 +45,10 @@ Player::Player(const TextureHolder& textures, const FontHolder& fonts, float x, 
 	anim->AddAnimation("fall", { {16, 16}, 1, sf::seconds(0.1f), true, 3 });
 	AddBehaviour(anim);
 
-	AddBehaviour(new HealthBehaviour(20));
 	AddBehaviour(new BoxColliderBehaviour({ 16.f, 16.f }, CollisionLayer::kPlayer));
+	//===
+
+	AddBehaviour(new HealthBehaviour(20));
 	AddBehaviour(new PlayerMovementBehaviour(FindAttachable<BoxColliderBehaviour>(), type_));
 
 	AddBehaviour(new PlayerAnimationBehaviour(FindAttachable<PlayerMovementBehaviour>(), anim));

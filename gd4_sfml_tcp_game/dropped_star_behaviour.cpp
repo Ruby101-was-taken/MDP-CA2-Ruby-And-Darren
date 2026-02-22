@@ -1,3 +1,4 @@
+// Ruby White - D00255322 - Whole Class
 #include "dropped_star_behaviour.hpp"
 #include "scene_node.hpp"
 #include <iostream>

@@ -1,3 +1,5 @@
+// Ruby White - D00255322
+// Darren Meidl - D00255479
 #pragma once
 #include "state.hpp"
 #include "world.hpp"
@@ -24,14 +26,17 @@ private:
 template <typename WorldClass>
 GameState<WorldClass>::GameState(StateStack& stack, Context context) : State(stack, context), world_(*context.window, *context.fonts, *context.sounds, &context) {
 	//Play the music
+	// Darren Meidl - D00255479
 	context.music->Play(MusicThemes::kLevelTheme); // REMEMBER TO TURN THIS BACK ON THANK YOU :3
 }
 
+// Ruby White - D00255322
 template <typename WorldClass>
 void GameState<WorldClass>::Draw() {
 	world_.RenderLogic();
 }
 
+// Darren Meidl - D00255479
 template <typename WorldClass>
 bool GameState<WorldClass>::Update(sf::Time dt) {
 	world_.Update(dt);

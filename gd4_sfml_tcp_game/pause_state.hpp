@@ -1,3 +1,4 @@
+// Darren Meidl - D00255479
 #pragma once
 #include "State.hpp"
 #include <SFML/Graphics/Sprite.hpp>
@@ -22,6 +23,7 @@ private:
 #include <SFML/Graphics/RenderWindow.hpp>
 #include "Utility.hpp"
 
+// Darren Meidl - D00255479
 PauseState::PauseState(StateStack& stack, Context context)
     :State(stack, context)
     , background_sprite_(context.textures->Get(TextureID::kTitleScreen))
@@ -46,6 +48,7 @@ PauseState::PauseState(StateStack& stack, Context context)
     GetContext().music->SetPaused(true);
 }
 
+// Darren Meidl - D00255479
 void PauseState::Draw()
 {
     sf::RenderWindow& window = *GetContext().window;

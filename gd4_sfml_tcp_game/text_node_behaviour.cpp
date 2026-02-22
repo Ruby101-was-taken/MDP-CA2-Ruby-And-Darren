@@ -1,3 +1,4 @@
+// Ruby White - D00255322 - Whole Class
 #include "text_node_behaviour.hpp"
 
 TextNodeBehaviour::TextNodeBehaviour(const FontHolder& fonts, std::string text, sf::Vector2f offset) :

@@ -1,3 +1,4 @@
+// Ruby White - D00255322 - Whole Class
 #include "health_behaviour.hpp"
 #include "scene_node.hpp"
 #include <iostream>

@@ -1,3 +1,4 @@
+// Ruby White - D00255322 - Whole Class
 #include "input_manager.hpp"
 
 std::map<InputTypes, sf::Keyboard::Scancode> InputManager::input_map_;

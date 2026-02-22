@@ -1,3 +1,4 @@
+// Darren Meidl - D00255479 - Whole Class
 #pragma once
 #include "State.hpp"
 #include <SFML/Graphics/Sprite.hpp>

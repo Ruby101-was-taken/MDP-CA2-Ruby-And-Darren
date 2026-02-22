@@ -1,3 +1,5 @@
+// Ruby White - D00255322
+// Darren - D00255479
 #pragma once
 #include <SFML/Graphics.hpp>
 #include "resource_identifiers.hpp"
