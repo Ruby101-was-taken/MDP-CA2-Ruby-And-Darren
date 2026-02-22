@@ -37,10 +37,12 @@ bool GameState<WorldClass>::Update(sf::Time dt) {
 	world_.Update(dt);
 	CommandQueue& commands = world_.GetCommandQueue();
 
-	if (world_.HasWon()) {
-		RequestStackPop();
-		RequestStackPush(StateID::kMenu);
-	}
+	if (world_.LevelHasEnded()) {
+		if (world_.GetWinningPlayer() == ReceiverCategories::kPlayerOne)
+			RequestStackPush(StateID::kPlayerOneWin);
+		else if (world_.GetWinningPlayer() == ReceiverCategories::kPlayerTwo)
+			RequestStackPush(StateID::kPlayerTwoWin);
+	}	
 
 	return true;
 }

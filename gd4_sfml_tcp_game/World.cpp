@@ -142,7 +142,7 @@ void World::StartBuildScene()
 	BuildScene();
 	root_node_.Start();
 
-	win_condition_ = false;
+	level_is_over = false;
 }
 void World::BuildScene() {
 }
@@ -220,11 +220,16 @@ void World::UpdateSounds()
 	sounds_.RemoveStoppedSounds();
 }
 
-void World::SetWinCondition(bool new_condition)
+void World::SetWinningPlayer(ReceiverCategories new_winning_player)
 {
-	win_condition_ = new_condition;
+	winning_player = new_winning_player;
+	level_is_over = true;
 }
 
-bool World::HasWon() const {
-	return win_condition_;
+ReceiverCategories World::GetWinningPlayer() const {
+	return winning_player;
+}
+
+bool World::LevelHasEnded() const {
+	return level_is_over;
 }

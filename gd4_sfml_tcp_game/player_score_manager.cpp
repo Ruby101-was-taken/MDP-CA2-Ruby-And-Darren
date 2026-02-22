@@ -18,9 +18,12 @@ void PlayerScoreManager::IncrementScore() {
 	score_ += 1;
 	std::printf("get score");
 	UpdateScoreVisual();
-	//TODO - add check if they have won
-	if (score_ >= score_to_win_)
-		 node_->GetWorld()->SetWinCondition(true);
+	//TODO - add check if they have won	
+	if (score_ >= score_to_win_) {
+		ReceiverCategories player_category = node_->GetCategoryEnum();
+		node_->GetWorld()->SetWinningPlayer(player_category);
+	}
+		 
 }
 
 bool PlayerScoreManager::DecrementScore() {

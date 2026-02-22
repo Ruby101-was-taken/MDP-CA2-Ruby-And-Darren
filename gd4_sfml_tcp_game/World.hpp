@@ -29,8 +29,9 @@ public:
 
 	State::Context* GetContext();
 
-	void SetWinCondition(bool new_condition);
-	bool HasWon() const;
+	void SetWinningPlayer(ReceiverCategories payer_category);
+	ReceiverCategories GetWinningPlayer() const;
+	bool LevelHasEnded() const;
 	void SetState(State* state);
 
 	State* GetState();
@@ -80,6 +81,7 @@ protected:
 
 	bool has_level_;
 	std::string level_path_;
-	bool win_condition_ = false;
+	ReceiverCategories winning_player;
+	bool level_is_over = false;
 };
 

@@ -7,6 +7,7 @@ enum class StateID
 	kGame,
 	kPause,
 	kSettings,
-	kGameOver,
 	kTutorial,
+	kPlayerOneWin,
+	kPlayerTwoWin
 };

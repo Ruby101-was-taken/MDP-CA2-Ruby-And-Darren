@@ -238,7 +238,9 @@
     <ClInclude Include="player_animation_behaviour.hpp" />
     <ClInclude Include="player_movement_behaviour.hpp" />
     <ClInclude Include="player_score_manager.hpp" />
+    <ClInclude Include="player_two_win_state.hpp" />
     <ClInclude Include="player_type.hpp" />
+    <ClInclude Include="player_one_win_state.hpp" />
     <ClInclude Include="post_effect.hpp" />
     <ClInclude Include="receiver_categories.hpp" />
     <ClInclude Include="resource_holder.hpp" />

@@ -14,6 +14,9 @@
 #include "tutorial_world.hpp"
 #include "settings_state.hpp"
 #include "settings_world.hpp"
+#include "player_one_win_state.hpp"
+#include "player_two_win_state.hpp"
+
 
 const sf::Time Application::kTimePerFrame = sf::seconds(1.f/60.f);
 
@@ -95,4 +98,6 @@ void Application::RegisterStates()
 	stack_.RegisterState<PauseState>(StateID::kPause);
 	stack_.RegisterState<TutorialState<TutorialWorld>>(StateID::kTutorial);
 	stack_.RegisterState<SettingsState<TutorialWorld>>(StateID::kSettings);
+	stack_.RegisterState<PlayerOneWinState>(StateID::kPlayerOneWin);
+	stack_.RegisterState<PlayerTwoWinState>(StateID::kPlayerTwoWin);
 }
