@@ -80,7 +80,6 @@ void GameWorld::KeepCameraInBounds() {
 }
 
 void GameWorld::BuildScene() {
-
     textures_.Get(TextureID::kLevelBackdrop).setRepeated(true);
     sf::Vector2 level_size_bigger = sf::Vector2((int)background_texture_.getTexture().getSize().x * 2, (int)background_texture_.getTexture().getSize().y * 2);
     background_texture_.setTextureRect(sf::IntRect({ 0,0 }, level_size_bigger));

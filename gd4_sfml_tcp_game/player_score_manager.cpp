@@ -19,6 +19,8 @@ void PlayerScoreManager::IncrementScore() {
 	std::printf("get score");
 	UpdateScoreVisual();
 	//TODO - add check if they have won
+	if (score_ >= score_to_win_)
+		 node_->GetWorld()->SetWinCondition(true);
 }
 
 bool PlayerScoreManager::DecrementScore() {

@@ -29,6 +29,8 @@ public:
 
 	State::Context* GetContext();
 
+	void SetWinCondition(bool new_condition);
+	bool HasWon() const;
 
 protected:
 	void SetCameraPosition(sf::Vector2f position);
@@ -74,5 +76,6 @@ protected:
 
 	bool has_level_;
 	std::string level_path_;
+	bool win_condition_ = false;
 };
 

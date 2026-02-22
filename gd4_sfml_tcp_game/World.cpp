@@ -134,6 +134,8 @@ void World::StartBuildScene()
 	root_node_.SetWorld(this);
 	BuildScene();
 	root_node_.Start();
+
+	win_condition_ = false;
 }
 void World::BuildScene() {
 }
@@ -209,4 +211,13 @@ void World::UpdateSounds()
 	// TODO: Set listener to center of level
 	// Remove unused sounds
 	sounds_.RemoveStoppedSounds();
+}
+
+void World::SetWinCondition(bool new_condition)
+{
+	win_condition_ = new_condition;
+}
+
+bool World::HasWon() const {
+	return win_condition_;
 }

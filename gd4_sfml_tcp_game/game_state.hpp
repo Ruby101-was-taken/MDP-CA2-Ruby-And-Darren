@@ -36,6 +36,12 @@ template <typename WorldClass>
 bool GameState<WorldClass>::Update(sf::Time dt) {
 	world_.Update(dt);
 	CommandQueue& commands = world_.GetCommandQueue();
+
+	if (world_.HasWon()) {
+		RequestStackPop();
+		RequestStackPush(StateID::kMenu);
+	}
+
 	return true;
 }
 
