@@ -8,7 +8,9 @@ PlayerAnimationBehaviour::PlayerAnimationBehaviour(PlayerMovementBehaviour* move
 
 void PlayerAnimationBehaviour::Update(sf::Time dt, CommandQueue& commands) {
 	if (!anim_) return;
-	if (movement_->GetVelocity().y != 0.f)
+	if (movement_->GetVelocity().y > 0.f)
+		anim_->Play("fall");
+	else if (movement_->GetVelocity().y != 0.f)
 		anim_->Play("jump");
 	else if (movement_->GetVelocity().x != 0.f)
 		anim_->Play("run");

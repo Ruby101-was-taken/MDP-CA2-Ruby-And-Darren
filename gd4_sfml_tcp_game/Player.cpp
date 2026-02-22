@@ -38,6 +38,7 @@ Player::Player(const TextureHolder& textures, const FontHolder& fonts, float x, 
 
 	anim->AddAnimation("run", { {16, 16}, 3, sf::seconds(0.2f), true, 1 });
 	anim->AddAnimation("jump", { {16, 16}, 3, sf::seconds(0.2f), false, 2 });
+	anim->AddAnimation("fall", { {16, 16}, 1, sf::seconds(0.1f), true, 3 });
 	AddBehaviour(anim);
 
 	AddBehaviour(new HealthBehaviour(20));
