@@ -3,10 +3,12 @@ enum class TextureID
 {
 	kPlayerOne,
 	kPlayerOneSheet,
-
+	kPlayerOneVictory,
+	
 
 	kPlayerTwo,
 	kPlayerTwoSheet,
+	kPlayerTwoVictory,
 
 	kTitleScreen,
 

@@ -13,6 +13,7 @@ public:
 
 private:
     sf::Sprite background_sprite_;
+    sf::Sprite victory_sprite_;
     sf::Text winner_text_;
     sf::Text instruction_text_;
     gui::Container gui_container_;
@@ -25,6 +26,7 @@ private:
 PlayerTwoWinState::PlayerTwoWinState(StateStack& stack, Context context)
     :State(stack, context)
     , background_sprite_(context.textures->Get(TextureID::kTitleScreen))
+    , victory_sprite_(context.textures->Get(TextureID::kPlayerTwoVictory))
     , winner_text_(context.fonts->Get(Font::kMain))
     , instruction_text_(context.fonts->Get(Font::kMain)) {
     //sf::Font& font = context.fonts->Get(Font::kMain);
@@ -64,6 +66,7 @@ void PlayerTwoWinState::Draw() {
     backgroundShape.setSize(window.getView().getSize());
 
     window.draw(backgroundShape);
+    window.draw(victory_sprite_);
     window.draw(winner_text_);
     window.draw(instruction_text_);
     window.draw(gui_container_);
