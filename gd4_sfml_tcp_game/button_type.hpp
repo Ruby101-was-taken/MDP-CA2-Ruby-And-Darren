@@ -4,5 +4,7 @@ enum class ButtonType
 	kNormal,
 	kSelected,
 	kPressed,
-	kButtonCount
+	kButtonCount,
+	kSmallNormal,
+	kSmallSelected,
 };

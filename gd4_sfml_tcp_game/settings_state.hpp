@@ -1,3 +1,4 @@
+// Darren - D00255479
 #pragma once
 #include "state.hpp"
 #include "menu_options.hpp"
@@ -43,6 +44,7 @@ SettingsState<WorldClass>::SettingsState(StateStack& stack, Context context)
     });
 
     auto subtract_sound_volume_button = std::make_shared<gui::Button>(context);
+    subtract_sound_volume_button->SetSmall(true);
     subtract_sound_volume_button->setPosition({ 300, 500 });
     subtract_sound_volume_button->SetText("-");
     subtract_sound_volume_button->SetCallback([this, context]() {
@@ -50,6 +52,7 @@ SettingsState<WorldClass>::SettingsState(StateStack& stack, Context context)
     });
 
     auto add_sound_volume_button = std::make_shared<gui::Button>(context);
+    add_sound_volume_button->SetSmall(true);
     add_sound_volume_button->setPosition({ 500, 500 });
     add_sound_volume_button->SetText("+");
     add_sound_volume_button->SetCallback([this, context]() {

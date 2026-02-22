@@ -31,6 +31,7 @@ Application::Application() :
 	textures_.Load(TextureID::kButtonSelected, "Media/Textures/Interface/ButtonSelected.png");
 	//textures_.Load(TextureID::kButtonActivated, "Media/Textures/ButtonPressed.png");
 	textures_.Load(TextureID::kButtons, "Media/Textures/Interface/Buttons.png");
+	textures_.Load(TextureID::kSmallButtons, "Media/Textures/Interface/SmallButtons.png");
 
 	textures_.Load(TextureID::kPlayerOneVictory, "Media/Textures/Interface/VictoryPlayerOne.png");
 	textures_.Load(TextureID::kPlayerTwoVictory, "Media/Textures/Interface/VictoryPlayerTwo.png");

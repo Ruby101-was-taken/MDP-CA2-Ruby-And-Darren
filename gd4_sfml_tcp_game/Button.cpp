@@ -5,8 +5,10 @@
 
 gui::Button::Button(State::Context context)
     : sprite_(context.textures->Get(TextureID::kButtons))
+    , small_sprite_(context.textures->Get(TextureID::kSmallButtons)) // Darren - D00255479
     , text_(context.fonts->Get(Font::kMain), "", 16)
     , is_toggle_(false)
+    , is_small_(false) // Darren - D00255479
     , sounds_(*context.sounds)
 {
     ChangeTexture(ButtonType::kNormal);
@@ -30,6 +32,14 @@ void gui::Button::SetToggle(bool flag)
 {
     is_toggle_ = flag;
 }
+// Darren - D00255479
+void gui::Button::SetSmall(bool flag) {
+    is_small_ = flag;
+    sprite_ = small_sprite_;
+    ChangeTexture(ButtonType::kSmallNormal);
+    sf::FloatRect bounds = sprite_.getLocalBounds();
+    text_.setPosition({ bounds.size.x / 2, bounds.size.y / 2 });   
+}
 
 bool gui::Button::IsSelectable() const
 {
@@ -39,31 +49,35 @@ bool gui::Button::IsSelectable() const
 void gui::Button::Select()
 {
     Component::Select();
-    ChangeTexture(ButtonType::kSelected);
+    // Darren - D00255479
+    if (is_small_)
+        ChangeTexture(ButtonType::kSmallSelected);
+    else
+        ChangeTexture(ButtonType::kSelected);
     sounds_.Play(SoundEffect::kButtonSelected);
 }
 
 void gui::Button::Deselect()
 {
     Component::Deselect();
-    ChangeTexture(ButtonType::kNormal);
+    if (is_small_)
+        ChangeTexture(ButtonType::kSmallNormal);
+    else
+        ChangeTexture(ButtonType::kNormal);
 }
 
 void gui::Button::Activate()
 {
     Component::Activate();
-
     //If toggle button then show the button is activated
-    if (is_toggle_)
-    {
-        ChangeTexture(ButtonType::kPressed);
+    if (is_toggle_) {
+        if (!is_small_) // Darren - D00255479
+            ChangeTexture(ButtonType::kPressed);
     }
-    if (callback_)
-    {
+    if (callback_) {
         callback_();
     }
-    if (!is_toggle_)
-    {
+    if (!is_toggle_) {
         Deactivate();
     }
     sounds_.Play(SoundEffect::kButtonClicked);
@@ -96,17 +110,27 @@ void gui::Button::draw(sf::RenderTarget& target, sf::RenderStates states) const
     target.draw(text_, states);
 }
 
-// Darren
+// Darren - D00255479
 void gui::Button::ChangeTexture(ButtonType buttonType)
 {
     sf::IntRect textureRect; // Account for the different dimensions of each button type
-    if (buttonType == ButtonType::kNormal)
-        textureRect = sf::IntRect({ 0, 0 }, { 160, 50 });
-    else if (buttonType == ButtonType::kSelected)
-        textureRect = sf::IntRect({ 0, 50 }, { 160, 70 });
-    else
-        textureRect = sf::IntRect({ 0, 100 }, { 160, 50 });
-
+    if (!is_small_) {
+        if (buttonType == ButtonType::kNormal)
+            textureRect = sf::IntRect({ 0, 0 }, { 160, 50 });
+        else if (buttonType == ButtonType::kSelected)
+            textureRect = sf::IntRect({ 0, 50 }, { 160, 70 });
+        else
+            textureRect = sf::IntRect({ 0, 100 }, { 160, 50 });
+    }
+    else {
+        if (buttonType == ButtonType::kSmallNormal)
+            textureRect = sf::IntRect({ 10, 0 }, { 50, 50 });
+        else if (buttonType == ButtonType::kSmallSelected)
+            textureRect = sf::IntRect({ 0, 50 }, { 70, 70 });
+        else
+            textureRect = sf::IntRect({ 10, 130 }, { 50, 50 });
+    }
+   
     sprite_.setTextureRect(textureRect);
 
     // Re-center text

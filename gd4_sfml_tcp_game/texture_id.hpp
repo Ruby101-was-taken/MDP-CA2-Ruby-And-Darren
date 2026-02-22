@@ -20,6 +20,7 @@ enum class TextureID
 	kButtonSelected,
 	kButtonActivated,
 	kButtons,
+	kSmallButtons,
 
 
 	kLevelTile

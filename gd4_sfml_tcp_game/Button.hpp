@@ -19,6 +19,7 @@ namespace gui
 		void SetCallback(Callback callback);
 		void SetText(const std::string& text);
 		void SetToggle(bool flag);
+		void SetSmall(bool flag); // Darren - D00255479
 
 		virtual bool IsSelectable() const override;
 		virtual void Select() override;
@@ -34,8 +35,10 @@ namespace gui
 	private:
 		Callback callback_;
 		sf::Sprite sprite_;
+		sf::Sprite small_sprite_; // Darren - D00255479
 		sf::Text text_;
 		bool is_toggle_;
+		bool is_small_; // Darren - D00255479
 		SoundPlayer& sounds_;
 	};
 }
