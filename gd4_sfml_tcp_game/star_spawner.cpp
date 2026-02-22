@@ -36,19 +36,22 @@ void StarSpawner::SpawnStar(int force_position_index) {
 		spawn_point = Level::GetStarSpawnSpots()[rand() % Level::GetStarSpawnSpots().size()];
 	else
 		spawn_point = Level::GetStarSpawnSpots()[force_position_index];
-	std::cout << spawn_point.x << ", " << spawn_point.y << std::endl;
-	std::unique_ptr<Star> new_star = std::make_unique<Star>(textures_, this, spawn_point.x, spawn_point.y, count_);
-	AttachChild(std::move(new_star));
+	AddStar(false, spawn_point);
 
 }
 
 void StarSpawner::SpawnStar(sf::Vector2f spawn_point) {
-	std::unique_ptr<Star> new_star = std::make_unique<Star>(textures_, this, spawn_point.x, spawn_point.y, 1, true);
+	AddStar(true, spawn_point);
+}
+
+void StarSpawner::AddStar(bool dropped_star, sf::Vector2f spawn_point) {
+	std::unique_ptr<Star> new_star = std::make_unique<Star>(textures_, this, spawn_point.x, spawn_point.y, 1, dropped_star);
 	AttachChild(std::move(new_star));
 }
 
 ReceiverCategories StarSpawner::GetCategoryEnum() const {
 	return ReceiverCategories::kStarSpawner;
 }
+
 
 
