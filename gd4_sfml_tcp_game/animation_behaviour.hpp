@@ -1,4 +1,4 @@
-// Darren Meidl - D00255479
+// Darren Meidl - D00255479 - Whole Class
 #pragma once
 #include "attachable_behaviour.hpp"
 #include <SFML/System/Time.hpp>

@@ -1,4 +1,4 @@
-// Ruby White - D00255322
+// Ruby White - D00255322 - Whole Class
 #pragma once
 
 #include "attachable_behaviour.hpp"

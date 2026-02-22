@@ -49,6 +49,3 @@ void MusicPlayer::IncrementVolume(float volume) {
 	volume_ = std::clamp(volume_, 0.f, 200.f);
 	music_.setVolume(volume_);
 }
-float MusicPlayer::GetVolume() {
-	return volume_;
-}
