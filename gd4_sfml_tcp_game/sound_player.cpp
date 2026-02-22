@@ -22,7 +22,7 @@ SoundPlayer::SoundPlayer()
 	sound_buffers_.Load(SoundEffect::kPlayerJump, "Media/Sound/Player/Player-Jump.ogg");
 	sound_buffers_.Load(SoundEffect::kPlayerCollide, "Media/Sound/Player/Player-Collide.ogg");
 
-	sound_buffers_.Load(SoundEffect::kVictory, "Media/Sound/Victory.mp3");
+	sound_buffers_.Load(SoundEffect::kVictory, "Media/Sound/UI/Victory.wav");
 
 
 	sound_buffers_.Load(SoundEffect::kStarGet, "Media/Sound/Star/Star-Get.ogg");
