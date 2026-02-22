@@ -73,7 +73,7 @@ void PlayerMovementBehaviour::OnCollision(SceneNode* other) {
         if (star->CanBeCollected()) {
             std::cout << "get star!!!" << std::endl;
             star->Collect();
-            PlayLocalSound(node_->GetWorld()->GetCommandQueue(), SoundEffect::kCollectStar);
+            PlayLocalSound(node_->GetWorld()->GetCommandQueue(), SoundEffect::kStarGet);
             node_->GetWorld()->GetCommandQueue().Push(get_score_);
 
             HealthBehaviour* star_health = star->FindAttachable<HealthBehaviour>(); //get star health

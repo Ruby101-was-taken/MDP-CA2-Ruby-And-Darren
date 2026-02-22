@@ -16,6 +16,8 @@ public:
 
 	ReceiverCategories GetCategoryEnum() const override;
 private:
+	void AddStar(bool dropped_star, sf::Vector2f spawn_point);
+private:
 	float time_until_spawn_;
 	float default_time_until_spawn;
 

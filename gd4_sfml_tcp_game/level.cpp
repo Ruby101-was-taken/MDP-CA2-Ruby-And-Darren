@@ -10,6 +10,9 @@ std::vector<sf::FloatRect> Level::level_tiles_;
 std::vector<sf::Vector2f> Level::star_spawn_spots_;
 sf::RenderTexture Level::level_texture_;
 
+sf::Vector2f Level::player_one_spawn_;
+sf::Vector2f Level::player_two_spawn_;
+
 void Level::LoadLevel(const std::string& filename, const sf::Texture& tile_texture) {
     std::ifstream file(filename);
     if (!file.is_open()) {
@@ -46,31 +49,124 @@ void Level::LoadLevel(const std::string& filename, const sf::Texture& tile_textu
 
     level_tiles_.clear();
 
-    for (const auto& row : data) {
-        for (const auto& cell : row) {
-            AddTile(x, y, tile_size, std::stoi(cell), tile);
-            x += 1;
+    for (int y = 0; y < data.size(); ++y) {
+        const auto& row = data[y];
+        for (int x = 0; x < row.size(); ++x) {
+            const auto& cell = row[x];
+            AddTile(x, y, tile_size, std::stoi(cell), tile, data);
         }
-        y += 1;
-        x = 0;
     }
 }
 
-void Level::AddTile(int x, int y, int size, int id, sf::Sprite tile) {
+sf::Vector2i Level::GetTileSlicePosition(int x, int y, int size, int id, const std::vector<std::vector<std::string>>& data) {
+    int slice = 0;
+    if (y > 0)
+        if (std::stoi(data[y - 1][x]) == id)
+            slice = slice | 8;
+    if (y < data.size() - 1)
+        if (std::stoi(data[y + 1][x]) == id)
+            slice = slice | 4;;
+
+    if (x > 0)
+        if (std::stoi(data[y][x - 1]) == id)
+            slice = slice | 2;
+    if (x < data[y].size() - 1)
+        if (std::stoi(data[y][x + 1]) == id)
+            slice = slice | 1;
+
+    switch (slice) {
+    case 0: // no tiles around
+        return sf::Vector2i(6 * size, 0);
+    case 1: // 0001
+        return sf::Vector2i(6 * size, 2*size);
+    case 2: // 0010
+        return sf::Vector2i(8 * size, 2 * size);
+    case 3: // 0011
+        return sf::Vector2i(7 * size, 2 * size);
+    case 4: // 0100
+        return sf::Vector2i(4 * size, 0);
+    case 5: // 0101
+        return sf::Vector2i(0, 0);
+    case 6: // 0110
+        return sf::Vector2i(2 * size, 0);
+    case 7: // 0111
+        return sf::Vector2i(size, 0);
+    case 8: // 1000
+        return sf::Vector2i(4 * size, 2 * size);
+    case 9: // 1001
+        return sf::Vector2i(0, 2 * size);
+    case 10: // 1010
+        return sf::Vector2i(2 * size, 2 * size);
+    case 11: // 1011
+        return sf::Vector2i(size, 2 * size);
+    case 12: // 1100
+        return sf::Vector2i(4 * size, size);
+    case 13: // 1101
+        return sf::Vector2i(0, size);
+    case 14: // 1110
+        return sf::Vector2i(2 * size, size);
+    case 15: // 1111
+        return sf::Vector2i(size, size);
+    default:
+        return sf::Vector2i(0, 0);;
+    }
+}
+
+void Level::PrepareTileForRender(int x, int y, int size, sf::Sprite& tile, sf::Vector2<float>& position, sf::Vector2i slice_position) {
+
+    tile.setPosition({ position.x, level_texture_.getSize().y - size - position.y });
+    tile.setScale({ 1, -1 });
+    tile.setOrigin({ 0, size * 1.f });
+
+    sf::IntRect rect;
+    rect.position = slice_position;
+    rect.size = sf::Vector2(size, size);
+
+    tile.setTextureRect(rect);
+}
+
+sf::Vector2f Level::GetPlayerSpawn(int player) {
+    if (player == 1) return player_one_spawn_;
+    else if (player == 2) return player_two_spawn_;
+    else return sf::Vector2f(0,0);
+}
+
+void Level::AddTile(int x, int y, int size, int id, sf::Sprite& tile, std::vector<std::vector<std::string>>& data) {
     sf::Vector2 position = { x * size * 1.f, y * size * 1.f };
-    if (id == 0) {
+    if (id == 0) { // ground tile
         
-        level_tiles_.emplace_back(sf::FloatRect(position, {size * 1.f, size * 1.f }));
+        sf::Vector2i slice_position = GetTileSlicePosition(x, y, size, id, data);
+
+        if (slice_position != sf::Vector2i(size, size))
                                                     /// offset the top rendering by tile size 
-        tile.setPosition({ position.x, level_texture_.getSize().y - size - position.y });
+            level_tiles_.emplace_back(sf::FloatRect(position, {size * 1.f, size * 1.f }));
+                                                   
+
+        PrepareTileForRender(x, y, size, tile, position, slice_position);
+
         level_texture_.draw(tile);
     }
-    else if (id == 1) {
-        if (x != 0 and y != 0) {
+    else if (id == 1) { // star spawn spot
+        if (x != 0 and y != 0) { // ignore 0,0 cuz it kept spawning a star there idk why
             star_spawn_spots_.emplace_back(position);
-            std::cout << star_spawn_spots_.size() << std::endl;
-            std::cout << position.x << ", " << position.y << "-" << id << std::endl;
         }
+    }
+    else if (id == 2) { // first star spawn spot
+        if (x != 0 and y != 0) {
+            if (star_spawn_spots_.size() < 1)
+                AddTile(x, y, size, 1, tile, data); // if there are no star spawn spots yet just add this as a normal one
+            else { // otherwise replace the first one
+                sf::Vector2f old_first = star_spawn_spots_[0];
+                star_spawn_spots_.emplace_back(old_first);
+                star_spawn_spots_[0] = position;
+            }
+        }
+    }
+    else if (id == 3 or id == 4) { // player spawn
+        if (id == 3)
+            player_one_spawn_ = position;
+        else
+            player_two_spawn_ = position;
     }
 }
 

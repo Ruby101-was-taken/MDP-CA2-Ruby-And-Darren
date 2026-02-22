@@ -18,7 +18,6 @@ private:
 	sf::Text instruction_text_;
 };
 
-#include "pause_state.hpp"
 #include "resource_holder.hpp"
 #include <SFML/Graphics/RenderWindow.hpp>
 #include "Utility.hpp"

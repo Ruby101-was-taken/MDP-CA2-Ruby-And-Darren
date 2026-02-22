@@ -19,7 +19,7 @@ public:
 
 public:
 	SceneNode(float x=0, float y=0, ReceiverCategories cateogry = ReceiverCategories::kNone);
-	~SceneNode();
+
 	void AttachChild(Ptr child);
 	Ptr DetachChild(const SceneNode& node);
 	

@@ -31,6 +31,9 @@ public:
 
 	void SetWinCondition(bool new_condition);
 	bool HasWon() const;
+	void SetState(State* state);
+
+	State* GetState();
 
 protected:
 	void SetCameraPosition(sf::Vector2f position);
@@ -73,6 +76,7 @@ protected:
 	BloomEffect bloom_effect_;
 
 	State::Context* context_;
+	State* state_;
 
 	bool has_level_;
 	std::string level_path_;

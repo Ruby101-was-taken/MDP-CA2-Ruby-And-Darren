@@ -3,14 +3,10 @@
 #include "state_stack.hpp"
 #include <iostream>
 
-State::Context::Context(sf::RenderWindow& window, TextureHolder& textures, FontHolder& fonts, MusicPlayer& music, SoundPlayer& sounds) : window(&window), textures(&textures), fonts(&fonts), music(&music), sounds(&sounds), level(nullptr)
+State::Context::Context(sf::RenderWindow& window, TextureHolder& textures, FontHolder& fonts, MusicPlayer& music, SoundPlayer& sounds) : window(&window), textures(&textures), fonts(&fonts), music(&music), sounds(&sounds)
 {
 }
 
-void State::Context::SetLevel(Level* lvl) {
-    level = lvl;
-    std::cout << "start" << std::endl;
-}
 
 State::State(StateStack& stack, Context context) : stack_(&stack), context_(context)
 {
