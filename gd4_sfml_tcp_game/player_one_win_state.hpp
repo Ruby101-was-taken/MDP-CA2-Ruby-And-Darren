@@ -15,6 +15,7 @@ private:
     sf::Sprite background_sprite_;
     sf::Text winner_text_;
     sf::Text instruction_text_;
+    gui::Container gui_container_;
 };
 
 #include "resource_holder.hpp"
@@ -36,9 +37,19 @@ PlayerOneWinState::PlayerOneWinState(StateStack& stack, Context context)
     winner_text_.setPosition({ 0.5f * view_size.x, 0.4f * view_size.y });
 
     //instruction_text_.setFont(font);
-    instruction_text_.setString("Player ONE Wins! Press Enter to return to main menu.");
+    instruction_text_.setString("Player ONE Wins!");
     Utility::CentreOrigin(instruction_text_);
-    instruction_text_.setPosition({ 0.5f * view_size.x, 0.6f * view_size.y });
+    instruction_text_.setPosition({ 0.5f * view_size.x, 0.5f * view_size.y });
+
+    auto exit_button = std::make_shared<gui::Button>(context);
+    exit_button->setPosition({ 0.5f * view_size.x - 80, 0.6f * view_size.y });
+    exit_button->SetText("Return to Menu");
+    exit_button->SetCallback([this]() {
+        RequestStackClear();
+        RequestStackPush(StateID::kMenu);
+    });
+
+    gui_container_.Pack(exit_button);
 
     //Pause the music
     GetContext().music->SetPaused(true);
@@ -55,6 +66,7 @@ void PlayerOneWinState::Draw() {
     window.draw(backgroundShape);
     window.draw(winner_text_);
     window.draw(instruction_text_);
+    window.draw(gui_container_);
 }
 
 bool PlayerOneWinState::Update(sf::Time dt) {
@@ -62,15 +74,7 @@ bool PlayerOneWinState::Update(sf::Time dt) {
 }
 
 bool PlayerOneWinState::HandleEvent(const sf::Event& event) {
-    const auto* keyPressed = event.getIf<sf::Event::KeyPressed>();
-    if (!keyPressed)
-        return false;
-
-    if (keyPressed->code == sf::Keyboard::Key::Enter) {
-        RequestStackClear();
-        RequestStackPush(StateID::kMenu);
-    }
-
+    gui_container_.HandleEvent(event);
     return false;
 }
 

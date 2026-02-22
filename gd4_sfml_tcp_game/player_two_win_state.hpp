@@ -38,8 +38,8 @@ PlayerTwoWinState::PlayerTwoWinState(StateStack& stack, Context context)
     //instruction_text_.setFont(font);
     instruction_text_.setString("Player TWO Wins! Press Enter to return to main menu.");
     Utility::CentreOrigin(instruction_text_);
-    instruction_text_.setPosition({ 0.5f * view_size.x, 0.6f * view_size.y });
-
+    instruction_text_.setPosition({ 0.5f * view_size.x, 0.6f * view_size.y });   
+    
     //Pause the music
     GetContext().music->SetPaused(true);
 }
