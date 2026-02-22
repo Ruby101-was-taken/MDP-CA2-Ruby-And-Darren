@@ -74,7 +74,9 @@ sf::Vector2f SoundPlayer::GetListenerPosition() const
 // Darren
 void SoundPlayer::SetVolume(float volume) {
 	volume_ = volume;
+	volume_ = std::clamp(volume_, 0.f, 200.f);
 }
 void SoundPlayer::IncrementVolume(float volume) {
 	volume_ += volume;
+	volume_ = std::clamp(volume_, 0.f, 200.f);
 }
