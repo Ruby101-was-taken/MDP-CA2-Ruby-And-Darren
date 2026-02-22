@@ -42,6 +42,7 @@ bool GameState<WorldClass>::Update(sf::Time dt) {
 			RequestStackPush(StateID::kPlayerOneWin);
 		else if (world_.GetWinningPlayer() == ReceiverCategories::kPlayerTwo)
 			RequestStackPush(StateID::kPlayerTwoWin);
+		GetContext().sounds->Play(SoundEffect::kVictory);
 	}	
 
 	return true;
