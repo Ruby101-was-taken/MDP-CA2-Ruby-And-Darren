@@ -1,11 +1,7 @@
 #include "sound_player.hpp"
-
 #include "sound_effect.hpp"
-
 #include <SFML/Audio/Listener.hpp>
-
 #include <cmath>
-
 
 namespace
 {
@@ -18,6 +14,7 @@ namespace
 }
 
 SoundPlayer::SoundPlayer()
+	: volume_(100.f)
 {
 	sound_buffers_.Load(SoundEffect::kPlayerJump, "Media/Sound/Player/Player-Jump.ogg");
 	sound_buffers_.Load(SoundEffect::kPlayerCollide, "Media/Sound/Player/Player-Collide.ogg");
@@ -50,7 +47,7 @@ void SoundPlayer::Play(SoundEffect effect, sf::Vector2f position)
 	sound.setPosition({ position.x, -position.y, 0.f });
 	sound.setAttenuation(Attenuation);
 	sound.setMinDistance(MinDistance3D);
-	sound.setVolume(100.f);
+	sound.setVolume(volume_);
 
 	sound.play();
 }
@@ -72,4 +69,12 @@ sf::Vector2f SoundPlayer::GetListenerPosition() const
 {
 	sf::Vector3f position = sf::Listener::getPosition();
 	return sf::Vector2f(position.x, -position.y);
+}
+
+// Darren
+void SoundPlayer::SetVolume(float volume) {
+	volume_ = volume;
+}
+void SoundPlayer::IncrementVolume(float volume) {
+	volume_ += volume;
 }

@@ -19,6 +19,7 @@ public:
 
 	void SetPaused(bool paused);
 	void SetVolume(float volume);
+	void IncrementVolume(float volume);
 
 
 private:

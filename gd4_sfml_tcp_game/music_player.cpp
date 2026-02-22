@@ -36,3 +36,7 @@ void MusicPlayer::SetPaused(bool paused)
 	else
 		music_.play();
 }
+// Darren
+void MusicPlayer::IncrementVolume(float volume) {
+	volume_ += volume;
+}
