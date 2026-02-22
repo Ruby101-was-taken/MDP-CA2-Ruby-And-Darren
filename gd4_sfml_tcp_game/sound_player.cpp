@@ -21,14 +21,10 @@ SoundPlayer::SoundPlayer()
 {
 	sound_buffers_.Load(SoundEffect::kPlayerJump, "Media/Sound/Player/Player-Jump.ogg");
 	sound_buffers_.Load(SoundEffect::kPlayerCollide, "Media/Sound/Player/Player-Collide.ogg");
-	sound_buffers_.Load(SoundEffect::kCollectStar, "Media/Sound/CollectPickup.wav");
 
-
-	sound_buffers_.Load(SoundEffect::kAlliedGunfire, "Media/Sound/AlliedGunfire.wav");
-	sound_buffers_.Load(SoundEffect::kEnemyGunfire, "Media/Sound/EnemyGunfire.wav");
-	sound_buffers_.Load(SoundEffect::kExplosion1, "Media/Sound/Explosion1.wav");
-	sound_buffers_.Load(SoundEffect::kExplosion2, "Media/Sound/Explosion2.wav");
-	sound_buffers_.Load(SoundEffect::kLaunchMissile, "Media/Sound/LaunchMissile.wav");	
+	sound_buffers_.Load(SoundEffect::kStarGet, "Media/Sound/Star/Star-Get.ogg");
+	sound_buffers_.Load(SoundEffect::kStarSpawn, "Media/Sound/Star/Star-Spawn.ogg");
+	sound_buffers_.Load(SoundEffect::kStarLose, "Media/Sound/Star/Star-Lose.ogg");
 
 	sound_buffers_.Load(SoundEffect::kButtonClicked, "Media/Sound/UI/ButtonClick.wav");
 	sound_buffers_.Load(SoundEffect::kButtonSelected, "Media/Sound/UI/ButtonHover.wav");
