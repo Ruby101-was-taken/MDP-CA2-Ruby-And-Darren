@@ -10,6 +10,9 @@ std::vector<sf::FloatRect> Level::level_tiles_;
 std::vector<sf::Vector2f> Level::star_spawn_spots_;
 sf::RenderTexture Level::level_texture_;
 
+sf::Vector2f Level::player_one_spawn_;
+sf::Vector2f Level::player_two_spawn_;
+
 void Level::LoadLevel(const std::string& filename, const sf::Texture& tile_texture) {
     std::ifstream file(filename);
     if (!file.is_open()) {
@@ -122,9 +125,15 @@ void Level::PrepareTileForRender(int x, int y, int size, sf::Sprite& tile, sf::V
     tile.setTextureRect(rect);
 }
 
+sf::Vector2f Level::GetPlayerSpawn(int player) {
+    if (player == 1) return player_one_spawn_;
+    else if (player == 2) return player_two_spawn_;
+    else return sf::Vector2f(0,0);
+}
+
 void Level::AddTile(int x, int y, int size, int id, sf::Sprite& tile, std::vector<std::vector<std::string>>& data) {
     sf::Vector2 position = { x * size * 1.f, y * size * 1.f };
-    if (id == 0) {
+    if (id == 0) { // ground tile
         
         sf::Vector2i slice_position = GetTileSlicePosition(x, y, size, id, data);
 
@@ -137,10 +146,27 @@ void Level::AddTile(int x, int y, int size, int id, sf::Sprite& tile, std::vecto
 
         level_texture_.draw(tile);
     }
-    else if (id == 1) {
-        if (x != 0 and y != 0) {
+    else if (id == 1) { // star spawn spot
+        if (x != 0 and y != 0) { // ignore 0,0 cuz it kept spawning a star there idk why
             star_spawn_spots_.emplace_back(position);
         }
+    }
+    else if (id == 2) { // first star spawn spot
+        if (x != 0 and y != 0) {
+            if (star_spawn_spots_.size() < 1)
+                AddTile(x, y, size, 1, tile, data); // if there are no star spawn spots yet just add this as a normal one
+            else { // otherwise replace the first one
+                sf::Vector2f old_first = star_spawn_spots_[0];
+                star_spawn_spots_.emplace_back(old_first);
+                star_spawn_spots_[0] = position;
+            }
+        }
+    }
+    else if (id == 3 or id == 4) { // player spawn
+        if (id == 3)
+            player_one_spawn_ = position;
+        else
+            player_two_spawn_ = position;
     }
 }
 

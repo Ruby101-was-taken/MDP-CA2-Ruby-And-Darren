@@ -84,24 +84,26 @@ void GameWorld::BuildScene() {
     textures_.Get(TextureID::kLevelBackdrop).setRepeated(true);
     sf::Vector2 level_size_bigger = sf::Vector2((int)background_texture_.getTexture().getSize().x * 2, (int)background_texture_.getTexture().getSize().y * 2);
     background_texture_.setTextureRect(sf::IntRect({ 0,0 }, level_size_bigger));
-
+    
     // Add player 1 node
+    sf::Vector2f spawn = Level::GetPlayerSpawn(1);
     auto player_one = std::make_unique<Player>(
         textures_,
         fonts_,
-        PLAYER_ONE_START_POSITION_X,
-        PLAYER_ONE_START_POSITION_Y,
+        spawn.x,
+        spawn.y,
         PlayerType::kPlayerOne
     );
     player_one_ = player_one.get();
     root_node_.AttachChild(std::move(player_one));
 
     // Add player 2 node
+    spawn = Level::GetPlayerSpawn(2);
     auto player_two = std::make_unique<Player>(
         textures_,
         fonts_,
-        PLAYER_TWO_START_POSITION_X,
-        PLAYER_TWO_START_POSITION_Y,
+        spawn.x,
+        spawn.y,
         PlayerType::kPlayerTwo
     );
     player_two_ = player_two.get();

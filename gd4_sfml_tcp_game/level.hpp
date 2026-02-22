@@ -15,6 +15,8 @@ public:
 
     static sf::RenderTexture level_texture_;
 
+    static sf::Vector2f GetPlayerSpawn(int player);
+
 private:
     static void AddTile(int x, int y, int size, int id, sf::Sprite& tile, std::vector<std::vector<std::string>>& data);
     static sf::Vector2i GetTileSlicePosition(int x, int y, int size, int id, const std::vector<std::vector<std::string>>& data);
@@ -23,5 +25,7 @@ private:
 private:
     static std::vector<sf::FloatRect> level_tiles_;
     static std::vector<sf::Vector2f> star_spawn_spots_;
-    
+
+    static sf::Vector2f player_one_spawn_;
+    static sf::Vector2f player_two_spawn_;
 };
