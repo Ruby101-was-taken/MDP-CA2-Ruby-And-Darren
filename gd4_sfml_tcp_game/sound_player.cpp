@@ -71,11 +71,12 @@ sf::Vector2f SoundPlayer::GetListenerPosition() const
 	return sf::Vector2f(position.x, -position.y);
 }
 
-// Darren
+// Darren - D00255479
 void SoundPlayer::SetVolume(float volume) {
 	volume_ = volume;
 	volume_ = std::clamp(volume_, 0.f, 200.f);
 }
+// Darren - D00255479
 void SoundPlayer::IncrementVolume(float volume) {
 	volume_ += volume;
 	volume_ = std::clamp(volume_, 0.f, 200.f);

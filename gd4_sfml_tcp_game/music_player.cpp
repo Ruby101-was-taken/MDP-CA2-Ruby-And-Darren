@@ -24,9 +24,10 @@ void MusicPlayer::Stop()
 	music_.stop();
 }
 
-void MusicPlayer::SetVolume(float volume)
-{
+void MusicPlayer::SetVolume(float volume) {
 	volume_ = volume;
+	volume_ = std::clamp(volume_, 0.f, 200.f);
+	music_.setVolume(volume_);
 }
 
 void MusicPlayer::SetPaused(bool paused)
@@ -39,4 +40,6 @@ void MusicPlayer::SetPaused(bool paused)
 // Darren
 void MusicPlayer::IncrementVolume(float volume) {
 	volume_ += volume;
+	volume_ = std::clamp(volume_, 0.f, 200.f);
+	music_.setVolume(volume_);
 }

@@ -18,6 +18,8 @@ public:
 
 private:
     sf::Sprite background_sprite_;
+    sf::Text text_volume_music;
+    sf::Text text_volume_sound;
     gui::Container gui_container_;
 };
 
@@ -30,11 +32,9 @@ template <typename WorldClass>
 SettingsState<WorldClass>::SettingsState(StateStack& stack, Context context)
     :State(stack, context)
     , background_sprite_(context.textures->Get(TextureID::kTitleScreen))
+    , text_volume_music(context.fonts->Get(Font::kMain))
+    , text_volume_sound(context.fonts->Get(Font::kMain))
 {
-    //sf::Texture& texture = context.textures->Get(TextureID::kTitleScreen);
-
-    //background_sprite_.setTexture(texture);
-
     auto back_button = std::make_shared<gui::Button>(context);
     back_button->setPosition({ 100, 500 });
     back_button->SetText("Back");
@@ -43,29 +43,64 @@ SettingsState<WorldClass>::SettingsState(StateStack& stack, Context context)
         RequestStackPush(StateID::kMenu);
     });
 
+
+    // Sound Volume
     auto subtract_sound_volume_button = std::make_shared<gui::Button>(context);
     subtract_sound_volume_button->SetSmall(true);
-    subtract_sound_volume_button->setPosition({ 300, 500 });
+    subtract_sound_volume_button->setPosition({ 500, 500 });
     subtract_sound_volume_button->SetText("-");
     subtract_sound_volume_button->SetCallback([this, context]() {
-        context.sounds->IncrementVolume(-20.f);
+        context.sounds->IncrementVolume(-10.f);
     });
+
+    text_volume_sound.setString("Sound Volume");
+    Utility::CentreOrigin(text_volume_sound);
+    text_volume_sound.setCharacterSize(15);
+    text_volume_sound.setPosition({ 628, 500 });
+
 
     auto add_sound_volume_button = std::make_shared<gui::Button>(context);
     add_sound_volume_button->SetSmall(true);
-    add_sound_volume_button->setPosition({ 500, 500 });
+    add_sound_volume_button->setPosition({ 700, 500 });
     add_sound_volume_button->SetText("+");
     add_sound_volume_button->SetCallback([this, context]() {
-        context.sounds->IncrementVolume(20.f);
-        });
+        context.sounds->IncrementVolume(10.f);
+    });
 
+
+    // Music Volume
+    auto subtract_music_volume_button = std::make_shared<gui::Button>(context);
+    subtract_music_volume_button->SetSmall(true);
+    subtract_music_volume_button->setPosition({ 800, 500 });
+    subtract_music_volume_button->SetText("-");
+    subtract_music_volume_button->SetCallback([this, context]() {
+        context.music->IncrementVolume(-10.f);
+    });
+
+    text_volume_music.setString("Music Volume");
+    Utility::CentreOrigin(text_volume_sound);
+    text_volume_music.setCharacterSize(15);
+    text_volume_music.setPosition({ 878, 500 });
+
+
+    auto add_music_volume_button = std::make_shared<gui::Button>(context);
+    add_music_volume_button->SetSmall(true);
+    add_music_volume_button->setPosition({ 1000, 500 });
+    add_music_volume_button->SetText("+");
+    add_music_volume_button->SetCallback([this, context]() {
+        context.music->IncrementVolume(10.f);
+    });
+
+
+    // Add buttons to container
     gui_container_.Pack(back_button);
     gui_container_.Pack(subtract_sound_volume_button);
     gui_container_.Pack(add_sound_volume_button);
+    gui_container_.Pack(subtract_music_volume_button);
+    gui_container_.Pack(add_music_volume_button);    
 
     // TODO: Add a unique theme for this menu and settings
     context.music->Play(MusicThemes::kMenuTheme);
-    //context.sounds->SetVolume(0.f);
 }
 
 template <typename WorldClass>
@@ -81,6 +116,8 @@ void SettingsState<WorldClass>::Draw()
     window.draw(background_sprite_);
     window.draw(backgroundShape);
     window.draw(gui_container_);
+    window.draw(text_volume_sound);
+    window.draw(text_volume_music);
 }
 
 template <typename WorldClass>
