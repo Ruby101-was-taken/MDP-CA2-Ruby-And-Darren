@@ -1,4 +1,4 @@
-# MDP-CA1-Ruby-And-Darren
+# MDP-CA2-Ruby-And-Darren
 The repo for our mdp game :3
 
 ## NOTE:
