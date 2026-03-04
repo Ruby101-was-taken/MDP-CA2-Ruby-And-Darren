@@ -111,7 +111,7 @@
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>$(ProjectDir)/SFML-3.0.1/lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>sfml-system-d.lib;sfml-window-d.lib;sfml-graphics-d.lib;sfml-audio-d.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>sfml-system-d.lib;sfml-window-d.lib;sfml-graphics-d.lib;sfml-audio-d.lib;sfml-network-d.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
       <Command>xcopy /y /d /s /i "$(ProjectDir)\SFML-3.0.1\bin\*.dll" "$(TargetDir)"</Command>
@@ -134,7 +134,7 @@
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>$(ProjectDir)/SFML-3.0.1/lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>sfml-system-d.lib;sfml-window-d.lib;sfml-graphics-d.lib;sfml-audio-d.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>sfml-system.lib;sfml-window.lib;sfml-graphics.lib;sfml-audio.lib;sfml-network.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
       <Command>xcopy /y /d /s /i "$(ProjectDir)\SFML-3.0.1\bin\*.dll" "$(TargetDir)"</Command>
@@ -159,6 +159,7 @@
     <ClCompile Include="entity.cpp" />
     <ClCompile Include="game.cpp" />
     <ClCompile Include="game_over_state.cpp" />
+    <ClCompile Include="game_server.cpp" />
     <ClCompile Include="game_state.cpp" />
     <ClCompile Include="game_world.cpp" />
     <ClCompile Include="health_behaviour.cpp" />
@@ -223,6 +224,7 @@
     <ClInclude Include="entity.hpp" />
     <ClInclude Include="font.hpp" />
     <ClInclude Include="game.hpp" />
+    <ClInclude Include="game_server.hpp" />
     <ClInclude Include="game_state.hpp" />
     <ClInclude Include="game_world.hpp" />
     <ClInclude Include="health_behaviour.hpp" />
@@ -239,6 +241,7 @@
     <ClInclude Include="multiplayer_world.hpp" />
     <ClInclude Include="music_player.hpp" />
     <ClInclude Include="music_themes.hpp" />
+    <ClInclude Include="network_protocol.hpp" />
     <ClInclude Include="pause_state.hpp" />
     <ClInclude Include="physic_body.hpp" />
     <ClInclude Include="player.hpp" />
