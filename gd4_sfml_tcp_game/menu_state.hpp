@@ -47,11 +47,11 @@ MenuState<WorldClass>::MenuState(StateStack& stack, Context context)
 
     auto settings_button = std::make_shared<gui::Button>(context);
     settings_button->setPosition({ 680, 530 });
-    settings_button->SetText("Settings");
+    settings_button->SetText("Host");
     settings_button->SetCallback([this]()
         {
             RequestStackPop();
-            RequestStackPush(StateID::kSettings);
+            RequestStackPush(StateID::kHost);
         });
     // Darren - D00255479
     auto tutorial_button = std::make_shared<gui::Button>(context);

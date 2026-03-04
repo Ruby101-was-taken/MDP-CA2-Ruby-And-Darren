@@ -10,18 +10,28 @@ public:
 
     void RenderLogic() override;
 
+    virtual void BuildScene() override;
 private:
-    void BuildScene() override;
+
     sf::Vector2f GetBackgroundPosition();
 
     void KeepCameraInBounds();
 
-private:
+protected:
+
+    void MakeBaseScene();
+
+    void MakeTwoPlayer();
+
+protected:
     Player* player_one_;
     Player* player_two_;
 
+private:
     sf::RectangleShape split_screen_splitter_;
 
     sf::Sprite background_texture_;
+
+    bool is_two_player_;
 };
 

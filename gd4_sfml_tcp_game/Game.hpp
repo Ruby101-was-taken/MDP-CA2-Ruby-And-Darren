@@ -1,6 +1,6 @@
 #pragma once
 #include <SFML/Graphics.hpp>
-#include "game_world.hpp"
+#include "local_game_world.hpp"
 
 class Game
 {
@@ -18,5 +18,5 @@ class Game
 		
 		static const sf::Time kTimePerFrame;
 		sf::RenderWindow window_;
-		GameWorld world_;
+		LocalGameWorld world_;
 };

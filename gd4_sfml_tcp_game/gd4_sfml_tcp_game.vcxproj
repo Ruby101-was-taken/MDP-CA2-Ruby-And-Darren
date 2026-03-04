@@ -165,9 +165,12 @@
     <ClCompile Include="input_manager.cpp" />
     <ClCompile Include="label.cpp" />
     <ClCompile Include="level.cpp" />
+    <ClCompile Include="local_game_world.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="menu_state.cpp" />
     <ClCompile Include="menu_world.cpp" />
+    <ClCompile Include="multiplayer_game_state.cpp" />
+    <ClCompile Include="multiplayer_world.cpp" />
     <ClCompile Include="music_player.cpp" />
     <ClCompile Include="pause_state.cpp" />
     <ClCompile Include="physic_body.cpp" />
@@ -227,10 +230,13 @@
     <ClInclude Include="input_types.hpp" />
     <ClInclude Include="label.hpp" />
     <ClInclude Include="level.hpp" />
+    <ClInclude Include="local_game_world.hpp" />
     <ClInclude Include="menu_options.hpp" />
     <ClInclude Include="menu_state.hpp" />
     <ClInclude Include="menu_world.hpp" />
     <ClInclude Include="mission_status.hpp" />
+    <ClInclude Include="multiplayer_game_state.hpp" />
+    <ClInclude Include="multiplayer_world.hpp" />
     <ClInclude Include="music_player.hpp" />
     <ClInclude Include="music_themes.hpp" />
     <ClInclude Include="pause_state.hpp" />

@@ -11,12 +11,12 @@
 GameWorld::GameWorld(sf::RenderTarget& output_target, FontHolder& font, SoundPlayer& sounds, State::Context* context) : 
     World(output_target, font, sounds, context),
     split_screen_splitter_({640, 16}),
-    background_texture_(textures_.Get(TextureID::kLevelBackdrop))
+    background_texture_(textures_.Get(TextureID::kLevelBackdrop)),
+    is_two_player_(false)
 {
     has_level_ = true;
     level_path_ = "Media/Levels/1.csv";
-	StartBuildScene();
-    SetCameraSize({ 640, 180 });
+    SetCameraSize({ 640, 360 });
 
     split_screen_splitter_.setFillColor(sf::Color::White);
     split_screen_splitter_.setPosition({ 0.f, 82.f });
@@ -31,21 +31,34 @@ void GameWorld::RenderLogic() {
     ClearScreen();
 
 
-    SetCameraPosition(player_one_->getPosition());
-    KeepCameraInBounds();
-    camera_.setViewport(sf::FloatRect({ 0.f, 0.f }, { 1.f, 0.5f }));
-    background_texture_.setPosition(GetBackgroundPosition());
-    Draw(background_texture_);
-    DrawWorld();
+    if (is_two_player_) {
+        SetCameraPosition(player_one_->getPosition());
+        KeepCameraInBounds();
+        camera_.setViewport(sf::FloatRect({ 0.f, 0.f }, { 1.f, 0.5f }));
+        background_texture_.setPosition(GetBackgroundPosition());
+        Draw(background_texture_);
+        DrawWorld();
 
-    SetCameraPosition(player_two_->getPosition());
-    KeepCameraInBounds();
-    camera_.setViewport(sf::FloatRect({ 0.f, 0.5f }, { 1.f, 0.5f }));
-    background_texture_.setPosition(GetBackgroundPosition());
-    Draw(background_texture_);
-    DrawWorld();
+        SetCameraPosition(player_two_->getPosition());
+        KeepCameraInBounds();
+        camera_.setViewport(sf::FloatRect({ 0.f, 0.5f }, { 1.f, 0.5f }));
+        background_texture_.setPosition(GetBackgroundPosition());
+        Draw(background_texture_);
+        DrawWorld();
+    }
+    else {
+        SetCameraPosition(player_one_->getPosition());
+        KeepCameraInBounds();
+        camera_.setViewport(sf::FloatRect({ 0.f, 0.f }, { 1.f, 1.f }));
+        background_texture_.setPosition(GetBackgroundPosition());
+        Draw(background_texture_);
+        DrawWorld();
+    }
 
     ApplyPostEffects();
+}
+
+void GameWorld::BuildScene() {
 }
 
 sf::Vector2f GameWorld::GetBackgroundPosition() {
@@ -80,7 +93,12 @@ void GameWorld::KeepCameraInBounds() {
         SetCameraPosition({ cam_center.x, level_size.y - half_cam_size.y });
 }
 
-void GameWorld::BuildScene() {
+void GameWorld::MakeTwoPlayer() {
+    SetCameraSize({ 640, 180 });
+    is_two_player_ = true;
+}
+
+void GameWorld::MakeBaseScene() {
     textures_.Get(TextureID::kLevelBackdrop).setRepeated(true);
     sf::Vector2 level_size_bigger = sf::Vector2((int)background_texture_.getTexture().getSize().x * 2, (int)background_texture_.getTexture().getSize().y * 2);
     background_texture_.setTextureRect(sf::IntRect({ 0,0 }, level_size_bigger));
@@ -97,18 +115,7 @@ void GameWorld::BuildScene() {
     player_one_ = player_one.get();
     root_node_.AttachChild(std::move(player_one));
 
-    // Add player 2 node
-    spawn = Level::GetPlayerSpawn(2);
-    auto player_two = std::make_unique<Player>(
-        textures_,
-        fonts_,
-        spawn.x,
-        spawn.y,
-        PlayerType::kPlayerTwo
-    );
-    player_two_ = player_two.get();
-    root_node_.AttachChild(std::move(player_two));
-
+    
 
     // Darren - D00255479 thanks :3
     // Add sound effect node
