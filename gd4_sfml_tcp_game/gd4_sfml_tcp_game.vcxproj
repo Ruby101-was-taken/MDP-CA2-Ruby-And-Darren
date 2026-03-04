@@ -169,6 +169,7 @@
     <ClCompile Include="menu_state.cpp" />
     <ClCompile Include="menu_world.cpp" />
     <ClCompile Include="music_player.cpp" />
+    <ClCompile Include="pause_state.cpp" />
     <ClCompile Include="physic_body.cpp" />
     <ClCompile Include="player.cpp" />
     <ClCompile Include="player_animation_behaviour.cpp" />
@@ -177,6 +178,7 @@
     <ClCompile Include="player_type.cpp" />
     <ClCompile Include="post_effect.cpp" />
     <ClCompile Include="scene_node.cpp" />
+    <ClCompile Include="settings_state.cpp" />
     <ClCompile Include="settings_world.cpp" />
     <ClCompile Include="sound_node.cpp" />
     <ClCompile Include="sound_player.cpp" />
@@ -231,6 +233,7 @@
     <ClInclude Include="mission_status.hpp" />
     <ClInclude Include="music_player.hpp" />
     <ClInclude Include="music_themes.hpp" />
+    <ClInclude Include="pause_state.hpp" />
     <ClInclude Include="physic_body.hpp" />
     <ClInclude Include="player.hpp" />
     <ClInclude Include="player_animation_behaviour.hpp" />
@@ -245,6 +248,7 @@
     <ClInclude Include="resource_identifiers.hpp" />
     <ClInclude Include="scene_layers.hpp" />
     <ClInclude Include="scene_node.hpp" />
+    <ClInclude Include="settings_state.hpp" />
     <ClInclude Include="settings_world.hpp" />
     <ClInclude Include="shader_types.hpp" />
     <ClInclude Include="sound_effect.hpp" />
