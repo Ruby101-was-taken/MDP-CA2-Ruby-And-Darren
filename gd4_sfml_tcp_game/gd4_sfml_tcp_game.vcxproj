@@ -169,8 +169,6 @@
     <ClCompile Include="menu_state.cpp" />
     <ClCompile Include="menu_world.cpp" />
     <ClCompile Include="music_player.cpp" />
-    <ClCompile Include="pause_state.cpp" />
-    <ClCompile Include="pause_state.hpp" />
     <ClCompile Include="physic_body.cpp" />
     <ClCompile Include="player.cpp" />
     <ClCompile Include="player_animation_behaviour.cpp" />
@@ -179,7 +177,6 @@
     <ClCompile Include="player_type.cpp" />
     <ClCompile Include="post_effect.cpp" />
     <ClCompile Include="scene_node.cpp" />
-    <ClCompile Include="settings_state.cpp" />
     <ClCompile Include="settings_world.cpp" />
     <ClCompile Include="sound_node.cpp" />
     <ClCompile Include="sound_player.cpp" />
@@ -248,7 +245,6 @@
     <ClInclude Include="resource_identifiers.hpp" />
     <ClInclude Include="scene_layers.hpp" />
     <ClInclude Include="scene_node.hpp" />
-    <ClInclude Include="settings_state.hpp" />
     <ClInclude Include="settings_world.hpp" />
     <ClInclude Include="shader_types.hpp" />
     <ClInclude Include="sound_effect.hpp" />

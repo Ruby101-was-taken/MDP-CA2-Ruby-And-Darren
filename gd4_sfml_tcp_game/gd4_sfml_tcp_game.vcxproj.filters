@@ -243,20 +243,11 @@
     <ClCompile Include="settings_world.cpp">
       <Filter>Source Files\Worlds</Filter>
     </ClCompile>
-    <ClCompile Include="pause_state.cpp">
-      <Filter>Source Files\States</Filter>
-    </ClCompile>
     <ClCompile Include="tutorial_world.cpp">
       <Filter>Source Files\Worlds</Filter>
     </ClCompile>
     <ClCompile Include="tutorial_state.hpp">
       <Filter>Header Files\States</Filter>
-    </ClCompile>
-    <ClCompile Include="pause_state.hpp">
-      <Filter>Header Files\States</Filter>
-    </ClCompile>
-    <ClCompile Include="settings_state.cpp">
-      <Filter>Source Files\States</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -454,9 +445,6 @@
     </ClInclude>
     <ClInclude Include="player_score_manager.hpp">
       <Filter>Header Files\Attachables</Filter>
-    </ClInclude>
-    <ClInclude Include="settings_state.hpp">
-      <Filter>Header Files\States</Filter>
     </ClInclude>
     <ClInclude Include="settings_world.hpp">
       <Filter>Header Files\Worlds</Filter>
