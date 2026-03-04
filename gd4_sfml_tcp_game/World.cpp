@@ -154,7 +154,6 @@ void World::StartBuildScene()
 void World::BuildScene() {
 }
 
-
 sf::FloatRect World::GetViewBounds() const
 {
 	return sf::FloatRect(camera_.getCenter() - camera_.getSize()/2.f, camera_.getSize());

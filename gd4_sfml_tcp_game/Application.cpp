@@ -4,7 +4,7 @@
 #include "menu_state.hpp"
 #include "game_over_state.hpp"
 #include "pause_state.hpp"
-#include "game_world.hpp"
+#include "local_game_world.hpp"
 #include "title_world.hpp"
 #include "menu_world.hpp"
 #include "constants.hpp"
@@ -16,6 +16,9 @@
 #include "settings_world.hpp"
 #include "player_one_win_state.hpp"
 #include "player_two_win_state.hpp"
+
+#include "multiplayer_game_state.hpp"
+#include "multiplayer_world.hpp"
 
 
 const sf::Time Application::kTimePerFrame = sf::seconds(1.f/60.f);
@@ -99,7 +102,10 @@ void Application::RegisterStates()
 {
 	stack_.RegisterState<TitleState<TitleWorld>>(StateID::kTitle);
 	stack_.RegisterState<MenuState<MenuWorld>>(StateID::kMenu);
-	stack_.RegisterState<GameState<GameWorld>>(StateID::kGame);
+
+	stack_.RegisterState<GameState<LocalGameWorld>>(StateID::kGame);
+	stack_.RegisterState<GameState<MultiplayerWorld>>(StateID::kHost);
+
 	stack_.RegisterState<PauseState>(StateID::kPause);
 	stack_.RegisterState<TutorialState<TutorialWorld>>(StateID::kTutorial);
 	stack_.RegisterState<SettingsState<TutorialWorld>>(StateID::kSettings);
