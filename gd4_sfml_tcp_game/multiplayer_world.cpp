@@ -3,6 +3,7 @@
 #include <SFML/Network/IpAddress.hpp>
 #include <fstream>
 #include "network_protocol.hpp"
+#include "level.hpp"
 
 sf::IpAddress GetAddressFromFile() {
 	{
@@ -34,6 +35,10 @@ MultiplayerWorld::MultiplayerWorld(sf::RenderTarget& output_target, FontHolder& 
 
 void MultiplayerWorld::BuildScene() {
 	MakeBaseScene();
+
+	// Add player 1 node
+	sf::Vector2f spawn = Level::GetPlayerSpawn(1);
+	AddPlayer(PlayerType::kOnlineLocalPlayer, spawn);
 
 	//If this is the host, create a server
 	std::optional<sf::IpAddress> ip;

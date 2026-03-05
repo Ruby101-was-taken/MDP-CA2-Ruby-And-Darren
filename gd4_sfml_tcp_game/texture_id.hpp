@@ -10,6 +10,9 @@ enum class TextureID
 	kPlayerTwoSheet,
 	kPlayerTwoVictory,
 
+	kOnlinePlayerSheet,
+	kOnlinePlayerEyesSheet,
+
 	kTitleScreen,
 
 	kLevelBackdrop,

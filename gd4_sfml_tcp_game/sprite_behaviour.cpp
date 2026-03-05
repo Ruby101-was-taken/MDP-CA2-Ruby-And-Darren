@@ -14,8 +14,9 @@ SpriteBehaviour::SpriteBehaviour(const sf::Texture& texture)
 }
 
 void SpriteBehaviour::Draw(sf::RenderTarget& target, sf::RenderStates states) const {
-    if(show_)
+    if (show_) {        
         target.draw(sprite_, states);
+    }
 }
 
 sf::Sprite& SpriteBehaviour::GetSprite() {
@@ -62,3 +63,27 @@ void SpriteBehaviour::SetFlipY(bool flip) {
     if (flip_y_ != flip)
         ToggleFlipY();
 }
+
+void SpriteBehaviour::ColourSprite(sf::Color colour) {
+    sprite_.setColor(colour);
+}
+
+// renders a texture onto the sprite
+void SpriteBehaviour::BlitToSprite(const sf::Texture& texture, sf::Vector2f position) {
+    sf::RenderTexture target;
+    target.resize(sf::Vector2u(sprite_.getTexture().getSize().x, sprite_.getTexture().getSize().y));
+    target.draw(sprite_);
+
+    sf::Sprite sprite(texture);
+    sprite.setPosition(position);
+    target.draw(sprite);
+
+    target.display();
+    texture_ = target.getTexture();
+    
+    sprite_.setTexture(texture_);
+
+    // if the sprite has been coloured before we need to reset their colour
+    sprite_.setColor(sf::Color::White);
+}
+

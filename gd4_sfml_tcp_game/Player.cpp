@@ -16,12 +16,19 @@ Player::Player(const TextureHolder& textures, const FontHolder& fonts, float x, 
 	: SceneNode(x, y) ,
 	type_(type)
 {
+	SpriteBehaviour* sprite;
 	switch (type) {
 	case PlayerType::kPlayerOne:
 		AddBehaviour(new SpriteBehaviour(textures.Get(TextureID::kPlayerOneSheet)));
 		break;
 	case PlayerType::kPlayerTwo:
 		AddBehaviour(new SpriteBehaviour(textures.Get(TextureID::kPlayerTwoSheet)));
+		break;
+	case PlayerType::kOnlineLocalPlayer:
+		sprite = new SpriteBehaviour(textures.Get(TextureID::kOnlinePlayerSheet));
+		AddBehaviour(sprite);
+		sprite->ColourSprite(sf::Color(rand()%255, rand() % 255, rand() % 255));
+		sprite->BlitToSprite(textures.Get(TextureID::kOnlinePlayerEyesSheet));
 		break;
 	default:
 		AddBehaviour(new SpriteBehaviour(textures.Get(TextureID::kPlayerOneSheet)));

@@ -131,7 +131,7 @@ sf::Vector2f PlayerMovementBehaviour::HandlePlayerInput() {
     sf::Vector2f velocity(0.f, 0.f);
 
     //creates the unit vector of movement
-    if (type_ == PlayerType::kPlayerOne) {
+    if (type_ == PlayerType::kPlayerOne or type_ == PlayerType::kOnlineLocalPlayer) {
         if (InputManager::InputIsPressed(InputTypes::kPlayerOneUp)) {
             if (CanJump())
                 PerformJump();

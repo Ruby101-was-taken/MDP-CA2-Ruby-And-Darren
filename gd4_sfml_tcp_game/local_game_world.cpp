@@ -9,17 +9,13 @@ LocalGameWorld::LocalGameWorld(sf::RenderTarget& output_target, FontHolder& font
 void LocalGameWorld::BuildScene() {
     MakeBaseScene();
 
+    // Add player 1 node
+    sf::Vector2f spawn = Level::GetPlayerSpawn(1);
+    AddPlayer(PlayerType::kPlayerOne, spawn);
+
     // Add player 2 node
-    sf::Vector2f spawn = Level::GetPlayerSpawn(2);
-    auto player_two = std::make_unique<Player>(
-        textures_,
-        fonts_,
-        spawn.x,
-        spawn.y,
-        PlayerType::kPlayerTwo
-    );
-    player_two_ = player_two.get();
-    root_node_.AttachChild(std::move(player_two));
+    spawn = Level::GetPlayerSpawn(2);
+    AddPlayer(PlayerType::kPlayerTwo, spawn);
 
 
     //alows for the game to keep split screen on local play
