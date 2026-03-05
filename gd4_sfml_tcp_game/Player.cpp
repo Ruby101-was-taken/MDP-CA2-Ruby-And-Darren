@@ -11,6 +11,7 @@
 #include <iostream>
 #include "star_spawner.hpp"
 #include "text_node_behaviour.hpp"
+#include "utility.hpp"
 
 Player::Player(const TextureHolder& textures, const FontHolder& fonts, float x, float y, PlayerType type)
 	: SceneNode(x, y) ,
@@ -27,7 +28,8 @@ Player::Player(const TextureHolder& textures, const FontHolder& fonts, float x, 
 	case PlayerType::kOnlineLocalPlayer:
 		sprite = new SpriteBehaviour(textures.Get(TextureID::kOnlinePlayerSheet));
 		AddBehaviour(sprite);
-		sprite->ColourSprite(sf::Color(rand()%255, rand() % 255, rand() % 255));
+		// using hsv to get better colours                    // saturation is made higher to keep colours vibrant, value is always kept at max
+		sprite->ColourSprite(Utility::HSVToRGB(rand() % 255, (rand() % 50)+50, 100));
 		sprite->BlitToSprite(textures.Get(TextureID::kOnlinePlayerEyesSheet));
 		break;
 	default:

@@ -18,5 +18,6 @@ class Utility
 		static int Length(sf::Vector2f vector);
 		// Ruby White - D00255322
 		static int sign(float num, int edge_case=0);
+		static sf::Color HSVToRGB(float h, float s, float v);
 };
 
