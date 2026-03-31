@@ -23,6 +23,24 @@ sf::IpAddress GetAddressFromFile() {
 	return local_address;
 }
 
+std::string GetUserNameFromFile() {
+
+	//Try to open existing file
+	std::ifstream input_file("username.txt");
+	std::string name;
+	if (input_file >> name) {
+		if(name.length() > 0)
+			return name;
+	}
+
+	//If the open/read failed or name too short, create a new file
+	std::ofstream output_file("username.txt");
+	std::string player = "Player";
+	std::string new_name = player + std::to_string(rand());
+	output_file << new_name;
+	return new_name;
+}
+
 MultiplayerWorld::MultiplayerWorld(sf::RenderTarget& output_target, FontHolder& font, SoundPlayer& sounds, State::Context* context, bool is_host) : 
 	GameWorld(output_target, font, sounds, context) ,
 	game_server_(nullptr),
@@ -34,6 +52,8 @@ MultiplayerWorld::MultiplayerWorld(sf::RenderTarget& output_target, FontHolder& 
 
 void MultiplayerWorld::BuildScene() {
 	MakeBaseScene();
+
+	std::cout << GetUserNameFromFile() << std::endl;
 
 	// Add player 1 node
 	sf::Vector2f spawn = Level::GetPlayerSpawn(1);
@@ -63,11 +83,13 @@ void MultiplayerWorld::BuildScene() {
 		failed_connection_clock_.restart();
 	}
 
+	std::cout << sizeof(PlayerType::kMaxPlayerCount) << " is the size" << std::endl;
+
 	if (!is_connected_) {
 		std::printf("No Server");
 	}
 	else if(!is_host_) {
-		std::array<char, 100> data = {'r', 'a', 't'};
+		std::array<char, 3> data = {'r', 'a', 't'};
 		if (socket_.send(data.data(), data.size()) != sf::Socket::Status::Done) {
 			std::printf("No rat deployment");
 		}
