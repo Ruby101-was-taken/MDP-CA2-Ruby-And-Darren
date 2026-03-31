@@ -8,7 +8,7 @@
 sf::IpAddress GetAddressFromFile() {
 
 	//Try to open existing file
-	std::ifstream input_file("ip.txt");
+	std::ifstream input_file("Data/IP.txt");
 	std::string ip_address;
 	if (input_file >> ip_address) {
 		if (auto address = sf::IpAddress::resolve(ip_address)) {
@@ -17,7 +17,7 @@ sf::IpAddress GetAddressFromFile() {
 	}
 
 	//If the open/read failed, create a new file
-	std::ofstream output_file("ip.txt");
+	std::ofstream output_file("Data/IP.txt");
 	sf::IpAddress local_address = sf::IpAddress::LocalHost;
 	output_file << local_address.toString(); 
 	return local_address;
@@ -26,7 +26,7 @@ sf::IpAddress GetAddressFromFile() {
 std::string GetUserNameFromFile() {
 
 	//Try to open existing file
-	std::ifstream input_file("username.txt");
+	std::ifstream input_file("Data/Username.txt");
 	std::string name;
 	if (input_file >> name) {
 		if(name.length() > 0)
@@ -34,7 +34,7 @@ std::string GetUserNameFromFile() {
 	}
 
 	//If the open/read failed or name too short, create a new file
-	std::ofstream output_file("username.txt");
+	std::ofstream output_file("Data/Username.txt");
 	std::string player = "Player";
 	std::string new_name = player + std::to_string(rand());
 	output_file << new_name;
