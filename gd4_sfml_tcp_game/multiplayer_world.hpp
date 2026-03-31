@@ -20,6 +20,7 @@ protected:
 	bool is_host_;
 	bool is_connected_;
 
+	std::string username;
 
 	std::unique_ptr<GameServer> game_server_;
 	sf::TcpSocket socket_;

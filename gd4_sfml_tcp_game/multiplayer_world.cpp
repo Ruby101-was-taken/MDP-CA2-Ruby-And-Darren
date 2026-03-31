@@ -53,7 +53,7 @@ MultiplayerWorld::MultiplayerWorld(sf::RenderTarget& output_target, FontHolder& 
 void MultiplayerWorld::BuildScene() {
 	MakeBaseScene();
 
-	std::cout << GetUserNameFromFile() << std::endl;
+	username = GetUserNameFromFile();
 
 	// Add player 1 node
 	sf::Vector2f spawn = Level::GetPlayerSpawn(1);
@@ -89,8 +89,8 @@ void MultiplayerWorld::BuildScene() {
 		std::printf("No Server");
 	}
 	else if(!is_host_) {
-		sf::Packet packet = CreatePacket(Server::PacketType::kInitialState);
-		packet << "Join";
+		sf::Packet packet = CreatePacket(Server::PacketType::kPlayerJoin);
+		packet << username;
 		SendPacket(packet);
 	}
 
@@ -128,10 +128,4 @@ sf::Socket::Status MultiplayerWorld::SendPacket(sf::Packet& packet) {
 
 void MultiplayerWorld::UpdateCurrent() {
 
-
-	if (!is_host_ ) {
-		sf::Packet packet = CreatePacket(Server::PacketType::kInitialState);
-		packet << "rat";
-		SendPacket(packet);
-	}
 }
