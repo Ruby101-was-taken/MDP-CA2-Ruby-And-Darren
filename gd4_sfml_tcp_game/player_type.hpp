@@ -6,6 +6,9 @@ enum class PlayerType {
 	kPlayerOne,
 	kPlayerTwo,
 
+	kOnlineLocalPlayer,
+	kOnlineNetworkedPlayer,
+
 	kMaxPlayerCount
 };
 

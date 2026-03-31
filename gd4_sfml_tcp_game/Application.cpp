@@ -18,7 +18,8 @@
 #include "player_two_win_state.hpp"
 
 #include "multiplayer_game_state.hpp"
-#include "multiplayer_world.hpp"
+#include "host_world.hpp"
+#include "join_world.hpp"
 
 
 const sf::Time Application::kTimePerFrame = sf::seconds(1.f/60.f);
@@ -104,7 +105,8 @@ void Application::RegisterStates()
 	stack_.RegisterState<MenuState<MenuWorld>>(StateID::kMenu);
 
 	stack_.RegisterState<GameState<LocalGameWorld>>(StateID::kGame);
-	stack_.RegisterState<GameState<MultiplayerWorld>>(StateID::kHost);
+	stack_.RegisterState<GameState<HostWorld>>(StateID::kHost);
+	stack_.RegisterState<GameState<JoinWorld>>(StateID::kJoin);
 
 	stack_.RegisterState<PauseState>(StateID::kPause);
 	stack_.RegisterState<TutorialState<TutorialWorld>>(StateID::kTutorial);

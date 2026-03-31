@@ -17,7 +17,7 @@ World::World(sf::RenderTarget& output_target, FontHolder& font, SoundPlayer& sou
 	, scrollspeed_(-50.f)
 	, scene_texture_({ target_.getSize().x, target_.getSize().y }),
 	context_(context),
-	level_path_("data.csv")
+	level_path_("Media/Levels/1.csv")
 {
 	SetCameraSize({ 640, 360});
 	LoadTextures();
@@ -110,6 +110,10 @@ State* World::GetState() {
 	return state_;
 }
 
+bool World::IsStillInPlay() {
+	return true;
+}
+
 // Ruby White - D00255322
 void World::SetCameraPosition(sf::Vector2f position) {
 	camera_.setCenter(position);
@@ -123,8 +127,13 @@ void World::LoadTextures()
 {
 	textures_.Load(TextureID::kPlayerOne, "Media/Textures/Player/One/Idle.png");
 	textures_.Load(TextureID::kPlayerOneSheet, "Media/Textures/Player/One/Sheet.png");
+
 	textures_.Load(TextureID::kPlayerTwo, "Media/Textures/Player/Two/Idle.png");
 	textures_.Load(TextureID::kPlayerTwoSheet, "Media/Textures/Player/Two/Sheet.png");
+
+	textures_.Load(TextureID::kOnlinePlayerSheet, "Media/Textures/Player/Default/Sheet.png");
+	textures_.Load(TextureID::kOnlinePlayerEyesSheet, "Media/Textures/Player/Default/Sheet-Eyes.png");
+
 	textures_.Load(TextureID::kItemStar, "Media/Textures/Item/Star.png");
 	textures_.Load(TextureID::kLevelTile, "Media/Textures/Level/Tile.png");
 	textures_.Load(TextureID::kLevelBackdrop, "Media/Textures/Level/Backdrop.png");

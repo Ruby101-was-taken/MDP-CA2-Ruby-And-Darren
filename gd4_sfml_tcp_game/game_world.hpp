@@ -23,6 +23,8 @@ protected:
 
     void MakeTwoPlayer();
 
+    void AddPlayer(PlayerType type, sf::Vector2f spawn);
+
 protected:
     Player* player_one_;
     Player* player_two_;

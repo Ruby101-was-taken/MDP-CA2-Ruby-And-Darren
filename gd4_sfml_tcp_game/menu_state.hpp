@@ -56,11 +56,11 @@ MenuState<WorldClass>::MenuState(StateStack& stack, Context context)
     // Darren - D00255479
     auto tutorial_button = std::make_shared<gui::Button>(context);
     tutorial_button->setPosition({ 830, 530 });
-    tutorial_button->SetText("How to Play");
+    tutorial_button->SetText("Join");
     tutorial_button->SetCallback([this]()
         {
             RequestStackPop();
-            RequestStackPush(StateID::kTutorial);
+            RequestStackPush(StateID::kJoin);
         });
 
     auto exit_button = std::make_shared<gui::Button>(context);

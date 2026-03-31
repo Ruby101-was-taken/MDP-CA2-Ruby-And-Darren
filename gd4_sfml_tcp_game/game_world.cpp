@@ -98,22 +98,27 @@ void GameWorld::MakeTwoPlayer() {
     is_two_player_ = true;
 }
 
+void GameWorld::AddPlayer(PlayerType type, sf::Vector2f spawn) {
+    auto player = std::make_unique<Player>(
+        textures_,
+        fonts_,
+        spawn.x,
+        spawn.y,
+        type
+    );
+    if(type == PlayerType::kPlayerOne or type == PlayerType::kOnlineLocalPlayer)
+        player_one_ = player.get();
+    if (type == PlayerType::kPlayerTwo)
+        player_two_ = player.get();
+    root_node_.AttachChild(std::move(player));
+}
+
 void GameWorld::MakeBaseScene() {
     textures_.Get(TextureID::kLevelBackdrop).setRepeated(true);
     sf::Vector2 level_size_bigger = sf::Vector2((int)background_texture_.getTexture().getSize().x * 2, (int)background_texture_.getTexture().getSize().y * 2);
     background_texture_.setTextureRect(sf::IntRect({ 0,0 }, level_size_bigger));
     
-    // Add player 1 node
-    sf::Vector2f spawn = Level::GetPlayerSpawn(1);
-    auto player_one = std::make_unique<Player>(
-        textures_,
-        fonts_,
-        spawn.x,
-        spawn.y,
-        PlayerType::kPlayerOne
-    );
-    player_one_ = player_one.get();
-    root_node_.AttachChild(std::move(player_one));
+
 
     
 

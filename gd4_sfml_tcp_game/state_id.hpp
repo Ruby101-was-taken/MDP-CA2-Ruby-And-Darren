@@ -6,6 +6,7 @@ enum class StateID
 	kMenu,
 	kGame,
 	kHost,
+	kJoin,
 	kPause,
 	kSettings,
 	kTutorial,

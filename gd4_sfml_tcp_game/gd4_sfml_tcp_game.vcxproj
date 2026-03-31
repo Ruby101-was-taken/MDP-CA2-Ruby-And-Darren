@@ -163,7 +163,9 @@
     <ClCompile Include="game_state.cpp" />
     <ClCompile Include="game_world.cpp" />
     <ClCompile Include="health_behaviour.cpp" />
+    <ClCompile Include="host_world.cpp" />
     <ClCompile Include="input_manager.cpp" />
+    <ClCompile Include="join_world.cpp" />
     <ClCompile Include="label.cpp" />
     <ClCompile Include="level.cpp" />
     <ClCompile Include="local_game_world.cpp" />
@@ -228,8 +230,10 @@
     <ClInclude Include="game_state.hpp" />
     <ClInclude Include="game_world.hpp" />
     <ClInclude Include="health_behaviour.hpp" />
+    <ClInclude Include="host_world.hpp" />
     <ClInclude Include="input_manager.hpp" />
     <ClInclude Include="input_types.hpp" />
+    <ClInclude Include="join_world.hpp" />
     <ClInclude Include="label.hpp" />
     <ClInclude Include="level.hpp" />
     <ClInclude Include="local_game_world.hpp" />

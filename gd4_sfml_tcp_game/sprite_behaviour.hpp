@@ -2,7 +2,7 @@
 // Ruby White - D00255322
 #pragma once
 #include "attachable_behaviour.hpp"
-#include <SFML/Graphics/Sprite.hpp>
+#include <SFML/Graphics.hpp>
 
 class SpriteBehaviour : public AttachableBehaviour {
 public:
@@ -23,9 +23,14 @@ public:
     void SetFlipX(bool flip);
     void SetFlipY(bool flip);
 
+    void ColourSprite(sf::Color colour);
+
+    void BlitToSprite(const sf::Texture& texture, sf::Vector2f position = sf::Vector2f(0,0));
+
 private:
     sf::Sprite sprite_;
-
+    sf::Texture texture_;
+    
     bool show_;
 
     bool flip_x_;
