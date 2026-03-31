@@ -104,13 +104,26 @@ sf::Packet MultiplayerWorld::CreatePacket(Server::PacketType type) {
 	return packet;
 }
 
-void MultiplayerWorld::SendPacket(sf::Packet& packet) {
-	if (socket_.send(packet) != sf::Socket::Status::Done) {
-		std::printf("No rat deployment");
+sf::Socket::Status MultiplayerWorld::SendPacket(sf::Packet& packet) {
+	sf::Socket::Status status = socket_.send(packet);
+	//error message D:
+	switch (status) {
+	case sf::Socket::Status::NotReady:
+		std::cout << "Socket not ready." << std::endl;
+		break;
+	case sf::Socket::Status::Partial:
+		std::cout << "Partial." << std::endl; //idk what this error means and I haven't gotten yet :D
+		break;
+	case sf::Socket::Status::Disconnected:
+		std::cout << "Socket disconnected." << std::endl;
+		break;
+	case sf::Socket::Status::Error:
+		std::cout << "Something went wrong while sending packet." << std::endl;
+		break;
+	default:
+		break;
 	}
-	else {
-		std::printf("rat has been deployed");
-	}
+	return status;
 }
 
 void MultiplayerWorld::UpdateCurrent() {

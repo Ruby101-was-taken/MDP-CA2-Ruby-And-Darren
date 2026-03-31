@@ -62,7 +62,7 @@ void GameServer::ExecutionThread() {
                     sf::Packet data;
                     std::size_t received;
 
-                    auto status = client->receive(data);
+                    sf::Socket::Status status = client->receive(data);
 
                     if (status == sf::Socket::Status::Done) {
                         std::cout << "Received: " << data.getDataSize() << std::endl;

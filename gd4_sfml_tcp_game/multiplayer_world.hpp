@@ -12,7 +12,7 @@ public:
 
 protected:
 	sf::Packet CreatePacket(Server::PacketType type);
-	void SendPacket(sf::Packet& packet);
+	sf::Socket::Status SendPacket(sf::Packet& packet);
 
 	void UpdateCurrent() override;
 
