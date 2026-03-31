@@ -10,7 +10,7 @@ GameServer::GameServer()
     : thread_(&GameServer::ExecutionThread, this)
 {
     listener_socket_.setBlocking(false);
-    listener_socket_.listen(50000);
+    listener_socket_.listen(SERVER_PORT);
 
 
     selector_.add(listener_socket_);
@@ -59,13 +59,18 @@ void GameServer::ExecutionThread() {
             // loop through every client to see if they have data
             for (auto& client : clients_) {
                 if (selector_.isReady(*client)) {
-                    std::array<char, 100> data = {};
+                    sf::Packet data;
                     std::size_t received;
 
-                    auto status = client->receive(data.data(), data.size(), received);
+                    auto status = client->receive(data);
 
                     if (status == sf::Socket::Status::Done) {
-                        std::cout << "Received: " << data.data() << std::endl;
+                        std::cout << "Received: " << data.getDataSize() << std::endl;
+                        uint8_t type;
+                        data >> type;
+                        std::string message;
+                        data >> message;
+                        std::cout << message << std::endl;
                     }
                 }
             }

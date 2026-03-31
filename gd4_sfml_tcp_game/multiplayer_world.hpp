@@ -1,6 +1,7 @@
 #pragma once
 #include "game_world.hpp"
 #include "game_server.hpp"
+#include "network_protocol.hpp"
 
 class MultiplayerWorld : public GameWorld {
 public:
@@ -8,9 +9,17 @@ public:
 
 	void BuildScene() override;
 
+
+protected:
+	sf::Packet CreatePacket(Server::PacketType type);
+	void SendPacket(sf::Packet& packet);
+
+	void UpdateCurrent() override;
+
 protected:
 	bool is_host_;
 	bool is_connected_;
+
 
 	std::unique_ptr<GameServer> game_server_;
 	sf::TcpSocket socket_;

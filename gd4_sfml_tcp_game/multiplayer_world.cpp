@@ -36,7 +36,7 @@ std::string GetUserNameFromFile() {
 	//If the open/read failed or name too short, create a new file
 	std::ofstream output_file("Data/Username.txt");
 	std::string player = "Player";
-	std::string new_name = player + std::to_string(rand());
+	std::string new_name = player + std::to_string(rand()); // makes it so each random name is set to be Player{random numbers}
 	output_file << new_name;
 	return new_name;
 }
@@ -89,15 +89,36 @@ void MultiplayerWorld::BuildScene() {
 		std::printf("No Server");
 	}
 	else if(!is_host_) {
-		std::array<char, 3> data = {'r', 'a', 't'};
-		if (socket_.send(data.data(), data.size()) != sf::Socket::Status::Done) {
-			std::printf("No rat deployment");
-		}
-		else {
-			std::printf("rat has been deployed");
-		}
+		sf::Packet packet = CreatePacket(Server::PacketType::kInitialState);
+		packet << "Join";
+		SendPacket(packet);
 	}
 
 	//Set socket to non-blocking
 	socket_.setBlocking(false);
+}
+
+sf::Packet MultiplayerWorld::CreatePacket(Server::PacketType type) {
+	sf::Packet packet;
+	packet << static_cast<uint8_t>(type);
+	return packet;
+}
+
+void MultiplayerWorld::SendPacket(sf::Packet& packet) {
+	if (socket_.send(packet) != sf::Socket::Status::Done) {
+		std::printf("No rat deployment");
+	}
+	else {
+		std::printf("rat has been deployed");
+	}
+}
+
+void MultiplayerWorld::UpdateCurrent() {
+
+
+	if (!is_host_ ) {
+		sf::Packet packet = CreatePacket(Server::PacketType::kInitialState);
+		packet << "rat";
+		SendPacket(packet);
+	}
 }

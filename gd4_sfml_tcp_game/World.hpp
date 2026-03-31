@@ -62,6 +62,8 @@ protected:
 	void StartBuildScene();
 	virtual void BuildScene();
 
+	virtual void UpdateCurrent();
+
 protected:
 	SceneNode root_node_;
 	TextureHolder textures_;

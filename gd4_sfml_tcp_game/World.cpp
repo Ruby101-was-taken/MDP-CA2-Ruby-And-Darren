@@ -35,6 +35,7 @@ void World::Update(sf::Time dt)
 	}
 
 	HandleCollisions();
+	UpdateCurrent();
 
 	// Ruby White - D00255322
 	root_node_.Update(dt, command_queue_);
@@ -161,6 +162,9 @@ void World::StartBuildScene()
 }
 // Ruby White - D00255322
 void World::BuildScene() {
+}
+
+void World::UpdateCurrent() {
 }
 
 sf::FloatRect World::GetViewBounds() const
