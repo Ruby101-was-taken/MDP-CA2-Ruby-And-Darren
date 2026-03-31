@@ -17,7 +17,7 @@ sf::Vector2f Level::player_two_spawn_;
 void Level::LoadLevel(const std::string& filename, const sf::Texture& tile_texture) {
     std::ifstream file(filename);
     if (!file.is_open()) {
-        std::cerr << "Could not open the file!\n";
+        std::cerr << "Could not open the file!\n" << filename << "\n";
     }
 
     std::string line;
@@ -41,7 +41,7 @@ void Level::LoadLevel(const std::string& filename, const sf::Texture& tile_textu
     int tile_size = 16;
 
     file.close();
-    level_texture_.clear();
+    level_texture_.clear(sf::Color::Transparent);
     level_texture_.resize({ 
         static_cast<unsigned int>(data[0].size() * tile_size),
         static_cast<unsigned int>(data.size() * tile_size) 
@@ -132,7 +132,7 @@ sf::Vector2f Level::GetPlayerSpawn(int player) {
     else return sf::Vector2f(0,0);
 }
 
-void Level::AddTile(int x, int y, int size, int id, sf::Sprite& tile, std::vector<std::vector<std::string>>& data) {
+void Level::AddTile(int x, int y, int size, int id, sf::Sprite& tile, std::vector<std::vector<std::string>>& data) {    
     sf::Vector2 position = { x * size * 1.f, y * size * 1.f };
     if (id == 0) { // ground tile
         

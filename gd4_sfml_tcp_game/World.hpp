@@ -38,6 +38,8 @@ public:
 
 	State* GetState();
 
+	virtual bool IsStillInPlay();
+
 protected:
 	void SetCameraPosition(sf::Vector2f position);
 	void SetCameraSize(sf::Vector2f position);

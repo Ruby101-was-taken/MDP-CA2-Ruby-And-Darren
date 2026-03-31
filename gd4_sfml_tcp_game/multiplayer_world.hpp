@@ -4,11 +4,11 @@
 
 class MultiplayerWorld : public GameWorld {
 public:
-	MultiplayerWorld(sf::RenderTarget& output_target, FontHolder& font, SoundPlayer& sounds, State::Context* context);
+	MultiplayerWorld(sf::RenderTarget& output_target, FontHolder& font, SoundPlayer& sounds, State::Context* context, bool is_host);
 
 	void BuildScene() override;
 
-private:
+protected:
 	bool is_host_;
 	bool is_connected_;
 

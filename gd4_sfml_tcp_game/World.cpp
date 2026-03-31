@@ -17,7 +17,7 @@ World::World(sf::RenderTarget& output_target, FontHolder& font, SoundPlayer& sou
 	, scrollspeed_(-50.f)
 	, scene_texture_({ target_.getSize().x, target_.getSize().y }),
 	context_(context),
-	level_path_("data.csv")
+	level_path_("Media/Levels/1.csv")
 {
 	SetCameraSize({ 640, 360});
 	LoadTextures();
@@ -108,6 +108,10 @@ void World::SetState(State* state) {
 }
 State* World::GetState() {
 	return state_;
+}
+
+bool World::IsStillInPlay() {
+	return true;
 }
 
 // Ruby White - D00255322

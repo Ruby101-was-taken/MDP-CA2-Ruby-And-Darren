@@ -6,28 +6,27 @@
 #include "level.hpp"
 
 sf::IpAddress GetAddressFromFile() {
-	{
-		//Try to open existing file
-		std::ifstream input_file("ip.txt");
-		std::string ip_address;
-		if (input_file >> ip_address) {
-			if (auto address = sf::IpAddress::resolve(ip_address)) {
-				return *address;
-			}
+
+	//Try to open existing file
+	std::ifstream input_file("ip.txt");
+	std::string ip_address;
+	if (input_file >> ip_address) {
+		if (auto address = sf::IpAddress::resolve(ip_address)) {
+			return *address;
 		}
 	}
 
 	//If the open/read failed, create a new file
 	std::ofstream output_file("ip.txt");
 	sf::IpAddress local_address = sf::IpAddress::LocalHost;
-	output_file << local_address.toString();
+	output_file << local_address.toString(); 
 	return local_address;
 }
 
-MultiplayerWorld::MultiplayerWorld(sf::RenderTarget& output_target, FontHolder& font, SoundPlayer& sounds, State::Context* context) : 
+MultiplayerWorld::MultiplayerWorld(sf::RenderTarget& output_target, FontHolder& font, SoundPlayer& sounds, State::Context* context, bool is_host) : 
 	GameWorld(output_target, font, sounds, context) ,
 	game_server_(nullptr),
-	is_host_(true),
+	is_host_(is_host),
 	is_connected_(false)
 {
 	StartBuildScene();
@@ -43,7 +42,7 @@ void MultiplayerWorld::BuildScene() {
 	//If this is the host, create a server
 	std::optional<sf::IpAddress> ip;
 	if (is_host_) {
-		game_server_.reset(new GameServer(sf::Vector2f(context_->window->getSize())));
+		game_server_.reset(new GameServer());
 		ip = sf::IpAddress::LocalHost;
 	}
 	else {
@@ -62,6 +61,19 @@ void MultiplayerWorld::BuildScene() {
 	}
 	else {
 		failed_connection_clock_.restart();
+	}
+
+	if (!is_connected_) {
+		std::printf("No Server");
+	}
+	else if(!is_host_) {
+		std::array<char, 100> data = {'r', 'a', 't'};
+		if (socket_.send(data.data(), data.size()) != sf::Socket::Status::Done) {
+			std::printf("No rat deployment");
+		}
+		else {
+			std::printf("rat has been deployed");
+		}
 	}
 
 	//Set socket to non-blocking
