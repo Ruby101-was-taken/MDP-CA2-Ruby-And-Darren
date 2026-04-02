@@ -21,6 +21,8 @@
 #include "host_world.hpp"
 #include "join_world.hpp"
 
+#include <filesystem>
+
 
 const sf::Time Application::kTimePerFrame = sf::seconds(1.f/60.f);
 
@@ -49,6 +51,11 @@ Application::Application() :
 	window_.setIcon(icon);
 
 	InputManager::SetUpInputs();
+
+	//ensure the data folder exists
+	if (not Utility::CheckIfFolderExists("Data")) {
+		std::filesystem::create_directories("Data");
+	}
 
 	//ensure all randomness is random
 	srand(time(NULL));

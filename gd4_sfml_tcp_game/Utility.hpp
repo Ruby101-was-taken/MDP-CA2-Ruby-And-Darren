@@ -24,5 +24,8 @@ class Utility
 		static sf::Color HSVToRGB(float h, float s, float v);
 		static std::string GetUserNameFromFile();
 		static sf::Packet CreatePacket(Server::PacketType type);
+
+
+		static bool CheckIfFolderExists(const char* dir);
 };
 

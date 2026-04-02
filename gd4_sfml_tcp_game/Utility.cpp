@@ -242,3 +242,15 @@ sf::Packet Utility::CreatePacket(Server::PacketType type) {
 	packet << static_cast<uint8_t>(type);
 	return packet;
 }
+
+//https://www.geeksforgeeks.org/cpp/how-to-check-a-file-or-directory-exists-in-cpp/
+bool Utility::CheckIfFolderExists(const char* dir) {
+
+	// Structure which would store the metadata
+	struct stat sb;
+
+	// Calls the function with path as argument
+	// If the file/directory exists at the path returns 0
+	// If block executes if path exists
+	return stat(dir, &sb) == 0;
+}
