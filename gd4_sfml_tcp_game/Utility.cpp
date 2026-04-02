@@ -1,6 +1,7 @@
 #define _USE_MATH_DEFINES
 #include "Utility.hpp"
 #include <math.h>
+#include <fstream>
 #include <iostream>
 
 namespace
@@ -218,3 +219,26 @@ sf::Color Utility::HSVToRGB(float h, float s, float v) {
 	return sf::Color(r * 255, g * 255, b * 255);
 }
 
+std::string Utility::GetUserNameFromFile() {
+
+	//Try to open existing file
+	std::ifstream input_file("Data/Username.txt");
+	std::string name;
+	if (input_file >> name) {
+		if (name.length() > 0)
+			return name;
+	}
+
+	//If the open/read failed or name too short, create a new file
+	std::ofstream output_file("Data/Username.txt");
+	std::string player = "Player";
+	std::string new_name = player + std::to_string(rand()); // makes it so each random name is set to be Player{random numbers}
+	output_file << new_name;
+	return new_name;
+}
+
+sf::Packet Utility::CreatePacket(Server::PacketType type) {
+	sf::Packet packet;
+	packet << static_cast<uint8_t>(type);
+	return packet;
+}

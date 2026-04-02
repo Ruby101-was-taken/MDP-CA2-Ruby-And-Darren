@@ -24,6 +24,7 @@ protected:
     void MakeTwoPlayer();
 
     void AddPlayer(PlayerType type, sf::Vector2f spawn);
+    void AddPlayer(PlayerType type, sf::Vector2f spawn, std::string name);
 
 protected:
     Player* player_one_;

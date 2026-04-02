@@ -5,6 +5,7 @@
 #include <SFML/Network/SocketSelector.hpp>
 #include <SFML/System/Clock.hpp>
 #include <SFML/Graphics/Rect.hpp>
+#include "network_protocol.hpp"
 #include <thread>
 #include <cstdint>
 #include <map>
@@ -19,6 +20,15 @@ public:
 private:
 	void ExecutionThread();
 	void Tick();
+
+	void SendPacketToAll(sf::Packet& data);
+
+	void HandlePacketType(Server::PacketType type, sf::Packet& data);
+
+#pragma region PacketHandlers
+	void HandlePlayerJoin(sf::Packet& data);
+#pragma endregion
+
 
 private:
 	std::thread thread_;

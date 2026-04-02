@@ -4,6 +4,7 @@
 #include <fstream>
 #include "network_protocol.hpp"
 #include "level.hpp"
+#include "utility.hpp"
 
 sf::IpAddress GetAddressFromFile() {
 
@@ -23,24 +24,6 @@ sf::IpAddress GetAddressFromFile() {
 	return local_address;
 }
 
-std::string GetUserNameFromFile() {
-
-	//Try to open existing file
-	std::ifstream input_file("Data/Username.txt");
-	std::string name;
-	if (input_file >> name) {
-		if(name.length() > 0)
-			return name;
-	}
-
-	//If the open/read failed or name too short, create a new file
-	std::ofstream output_file("Data/Username.txt");
-	std::string player = "Player";
-	std::string new_name = player + std::to_string(rand()); // makes it so each random name is set to be Player{random numbers}
-	output_file << new_name;
-	return new_name;
-}
-
 MultiplayerWorld::MultiplayerWorld(sf::RenderTarget& output_target, FontHolder& font, SoundPlayer& sounds, State::Context* context, bool is_host) : 
 	GameWorld(output_target, font, sounds, context) ,
 	game_server_(nullptr),
@@ -53,7 +36,6 @@ MultiplayerWorld::MultiplayerWorld(sf::RenderTarget& output_target, FontHolder& 
 void MultiplayerWorld::BuildScene() {
 	MakeBaseScene();
 
-	username = GetUserNameFromFile();
 
 	// Add player 1 node
 	sf::Vector2f spawn = Level::GetPlayerSpawn(1);
@@ -83,14 +65,13 @@ void MultiplayerWorld::BuildScene() {
 		failed_connection_clock_.restart();
 	}
 
-	std::cout << sizeof(PlayerType::kMaxPlayerCount) << " is the size" << std::endl;
-
 	if (!is_connected_) {
 		std::printf("No Server");
 	}
 	else if(!is_host_) {
-		sf::Packet packet = CreatePacket(Server::PacketType::kPlayerJoin);
-		packet << username;
+		sf::Packet packet = Utility::CreatePacket(Server::PacketType::kPlayerJoin);
+		username_ = Utility::GetUserNameFromFile();
+		packet << username_;
 		SendPacket(packet);
 	}
 
@@ -98,11 +79,6 @@ void MultiplayerWorld::BuildScene() {
 	socket_.setBlocking(false);
 }
 
-sf::Packet MultiplayerWorld::CreatePacket(Server::PacketType type) {
-	sf::Packet packet;
-	packet << static_cast<uint8_t>(type);
-	return packet;
-}
 
 sf::Socket::Status MultiplayerWorld::SendPacket(sf::Packet& packet) {
 	sf::Socket::Status status = socket_.send(packet);
@@ -127,5 +103,23 @@ sf::Socket::Status MultiplayerWorld::SendPacket(sf::Packet& packet) {
 }
 
 void MultiplayerWorld::UpdateCurrent() {
+	sf::Packet data;
+	std::size_t received;
 
+	sf::Socket::Status status = socket_.receive(data);
+
+	if (status == sf::Socket::Status::Done) {
+		std::cout << "Received: " << data.getDataSize() << std::endl;
+		uint8_t type;
+		data >> type;
+		std::string name;
+		data >> name;
+		if (name != Utility::GetUserNameFromFile()) {
+			sf::Vector2f spawn = Level::GetPlayerSpawn(1);
+			std::cout << name << std::endl;
+			AddPlayer(PlayerType::kOnlineNetworkedPlayer, spawn, name);
+		}
+	}
+	else {
+	}
 }

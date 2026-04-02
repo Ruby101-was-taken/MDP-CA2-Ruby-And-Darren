@@ -29,10 +29,10 @@ void Level::LoadLevel(const std::string& filename, const sf::Texture& tile_textu
         std::vector<std::string> row;
 
         while (std::getline(ss, cell, ',')) {
-            row.push_back(cell);
+            row.emplace_back(cell);
         }
 
-        data.push_back(row);
+        data.emplace_back(row);
     }
 
 

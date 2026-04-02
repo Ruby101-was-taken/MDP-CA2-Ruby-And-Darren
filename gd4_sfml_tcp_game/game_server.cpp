@@ -1,5 +1,4 @@
 #include "game_server.hpp"
-#include "network_protocol.hpp"
 #include "utility.hpp"
 #include <SFML/Network/Packet.hpp>
 #include <SFML/System/Sleep.hpp>
@@ -60,7 +59,6 @@ void GameServer::ExecutionThread() {
             for (auto& client : clients_) {
                 if (selector_.isReady(*client)) {
                     sf::Packet data;
-                    std::size_t received;
 
                     sf::Socket::Status status = client->receive(data);
 
@@ -68,9 +66,7 @@ void GameServer::ExecutionThread() {
                         std::cout << "Received: " << data.getDataSize() << std::endl;
                         uint8_t type;
                         data >> type;
-                        std::string message;
-                        data >> message;
-                        std::cout << message << std::endl;
+                        HandlePacketType(static_cast<Server::PacketType>(type), data);
                     }
                 }
             }
@@ -82,6 +78,35 @@ void GameServer::ExecutionThread() {
 }
 
 void GameServer::Tick() {
-    
 }
+
+void GameServer::SendPacketToAll(sf::Packet& data) {
+    for (auto& client : clients_) {
+        client->send(data);
+    }
+}
+
+void GameServer::HandlePacketType(Server::PacketType type, sf::Packet& data) {
+    switch (type) {
+    case Server::PacketType::kPlayerJoin:
+        HandlePlayerJoin(data);
+        break;
+    default:
+        std::cout << "unknown type" << std::endl;
+        break;
+    }
+}
+
+#pragma region PacketHandlers
+void GameServer::HandlePlayerJoin(sf::Packet& data) {
+    // get username
+    std::string name;
+    data >> name;
+    std::cout << name << " has joined the game!" << std::endl;
+
+    sf::Packet packet = Utility::CreatePacket(Server::PacketType::kPlayerJoin);
+    packet << name;
+    SendPacketToAll(packet);
+}
+#pragma endregion
 

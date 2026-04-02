@@ -3,6 +3,9 @@
 #include <random>
 #include "Animation.hpp"
 #include "collision_layer.hpp"
+#include "network_protocol.hpp"
+#include <SFML/Network/Packet.hpp>
+#include <SFML/Network/IpAddress.hpp>
 
 class Utility
 {
@@ -19,5 +22,7 @@ class Utility
 		// Ruby White - D00255322
 		static int sign(float num, int edge_case=0);
 		static sf::Color HSVToRGB(float h, float s, float v);
+		static std::string GetUserNameFromFile();
+		static sf::Packet CreatePacket(Server::PacketType type);
 };
 

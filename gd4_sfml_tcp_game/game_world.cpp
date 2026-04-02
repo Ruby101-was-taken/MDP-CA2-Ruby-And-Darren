@@ -99,14 +99,19 @@ void GameWorld::MakeTwoPlayer() {
 }
 
 void GameWorld::AddPlayer(PlayerType type, sf::Vector2f spawn) {
+    AddPlayer(type, spawn, "No Name");
+}
+
+void GameWorld::AddPlayer(PlayerType type, sf::Vector2f spawn, std::string name) {
     auto player = std::make_unique<Player>(
         textures_,
         fonts_,
         spawn.x,
         spawn.y,
-        type
+        type,
+        name
     );
-    if(type == PlayerType::kPlayerOne or type == PlayerType::kOnlineLocalPlayer)
+    if (type == PlayerType::kPlayerOne or type == PlayerType::kOnlineLocalPlayer)
         player_one_ = player.get();
     if (type == PlayerType::kPlayerTwo)
         player_two_ = player.get();

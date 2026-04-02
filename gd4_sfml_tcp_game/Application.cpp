@@ -84,6 +84,12 @@ void Application::ProcessInput()
 		if (event->is<sf::Event::Closed>()) {
 			window_.close();
 		}
+		else if (event->is<sf::Event::FocusGained>()) {
+			InputManager::SetFocused(true);
+		}
+		else if (event->is<sf::Event::FocusLost>()) {
+			InputManager::SetFocused(false);
+		}
 	}
 }
 

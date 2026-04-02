@@ -15,7 +15,11 @@ public:
 
 	static bool InputIsPressed(InputTypes input);
 
+	static void SetFocused(bool focus);
+
 private:
 	static std::map<InputTypes, sf::Keyboard::Scancode> input_map_;
+
+	static bool window_focused_;
 };
 

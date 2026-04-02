@@ -13,7 +13,7 @@
 #include "text_node_behaviour.hpp"
 #include "utility.hpp"
 
-Player::Player(const TextureHolder& textures, const FontHolder& fonts, float x, float y, PlayerType type)
+Player::Player(const TextureHolder& textures, const FontHolder& fonts, float x, float y, PlayerType type, std::string name)
 	: SceneNode(x, y) ,
 	type_(type)
 {
@@ -66,6 +66,17 @@ Player::Player(const TextureHolder& textures, const FontHolder& fonts, float x, 
 	AddBehaviour(new PlayerScoreManager());
 
 	AddBehaviour(new TextNodeBehaviour(fonts, "0", {8, -10}));
+
+	switch (type) {
+	case PlayerType::kOnlineLocalPlayer:
+		AddBehaviour(new TextNodeBehaviour(fonts, Utility::GetUserNameFromFile(), { 8, -22 }));
+		break;
+	case PlayerType::kOnlineNetworkedPlayer:
+		AddBehaviour(new TextNodeBehaviour(fonts, name, { 8, -22 }));
+		break;
+	default:
+		break;
+	}
 }
 
 void Player::UpdateCurrent(sf::Time dt, CommandQueue& commands) {
