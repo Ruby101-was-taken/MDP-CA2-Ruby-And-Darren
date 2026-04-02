@@ -63,10 +63,9 @@ void GameServer::ExecutionThread() {
                     sf::Socket::Status status = client->receive(data);
 
                     if (status == sf::Socket::Status::Done) {
-                        std::cout << "Received: " << data.getDataSize() << std::endl;
                         uint8_t type;
                         data >> type;
-                        HandlePacketType(static_cast<Server::PacketType>(type), data);
+                        HandlePacketType(static_cast<Server::PacketType>(type), data, client.get());
                     }
                 }
             }
@@ -82,17 +81,60 @@ void GameServer::Tick() {
 
 void GameServer::SendPacketToAll(sf::Packet& data) {
     for (auto& client : clients_) {
-        client->send(data);
+        sf::Socket::Status status = client->send(data);
+        //error message D:
+        switch (status) {
+        case sf::Socket::Status::NotReady:
+            std::cout << "Socket not ready." << std::endl;
+            break;
+        case sf::Socket::Status::Partial:
+            std::cout << "Partial." << std::endl; //idk what this error means and I haven't gotten yet :D
+            break;
+        case sf::Socket::Status::Disconnected:
+            std::cout << "Socket disconnected." << std::endl;
+            break;
+        case sf::Socket::Status::Error:
+            std::cout << "Something went wrong while sending packet." << std::endl;
+            break;
+        default:
+            break;
+        }
     }
 }
 
-void GameServer::HandlePacketType(Server::PacketType type, sf::Packet& data) {
+void GameServer::SendPacketToHost(sf::Packet& data) {
+    sf::Socket::Status status = host_socket_->send(data);
+    //error message D:
+    switch (status) {
+    case sf::Socket::Status::NotReady:
+        std::cout << "Socket not ready." << std::endl;
+        break;
+    case sf::Socket::Status::Partial:
+        std::cout << "Partial." << std::endl; //idk what this error means and I haven't gotten yet :D
+        break;
+    case sf::Socket::Status::Disconnected:
+        std::cout << "Socket disconnected." << std::endl;
+        break;
+    case sf::Socket::Status::Error:
+        std::cout << "Something went wrong while sending packet." << std::endl;
+        break;
+    default:
+        break;
+    }
+}
+
+void GameServer::HandlePacketType(Server::PacketType type, sf::Packet& data, sf::TcpSocket *client_socket) {
     switch (type) {
     case Server::PacketType::kPlayerJoin:
         HandlePlayerJoin(data);
         break;
+    case Server::PacketType::kIAmHost:
+        host_socket_ = std::unique_ptr<sf::TcpSocket>(client_socket);
+        break;
+    case Server::PacketType::kAddPlayer:
+        HandleSpawnPlayer(data);
     default:
-        std::cout << "unknown type" << std::endl;
+        std::cout << "unknown type or missing break" << std::endl;
         break;
     }
 }
@@ -106,7 +148,10 @@ void GameServer::HandlePlayerJoin(sf::Packet& data) {
 
     sf::Packet packet = Utility::CreatePacket(Server::PacketType::kPlayerJoin);
     packet << name;
-    SendPacketToAll(packet);
+    SendPacketToHost(packet);
+}
+void GameServer::HandleSpawnPlayer(sf::Packet& data) {
+    SendPacketToAll(data);
 }
 #pragma endregion
 

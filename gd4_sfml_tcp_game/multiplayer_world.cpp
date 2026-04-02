@@ -74,6 +74,10 @@ void MultiplayerWorld::BuildScene() {
 		packet << username_;
 		SendPacket(packet);
 	}
+	else if (is_host_) {
+		sf::Packet packet = Utility::CreatePacket(Server::PacketType::kIAmHost);
+		SendPacket(packet);
+	}
 
 	//Set socket to non-blocking
 	socket_.setBlocking(false);
@@ -109,17 +113,52 @@ void MultiplayerWorld::UpdateCurrent() {
 	sf::Socket::Status status = socket_.receive(data);
 
 	if (status == sf::Socket::Status::Done) {
-		std::cout << "Received: " << data.getDataSize() << std::endl;
 		uint8_t type;
 		data >> type;
+		HandlePacketType(static_cast<Server::PacketType>(type), data);
+	}
+	else {
+	}
+}
+
+void MultiplayerWorld::HandlePacketType(Server::PacketType type, sf::Packet& data) {
+	switch (type) {
+	case Server::PacketType::kPlayerJoin:
+		HandlePlayerJoin(data);
+		break;
+	default:
+		std::cout << "unknown type" << std::endl;
+		break;
+	}
+}
+
+void MultiplayerWorld::HandlePlayerJoin(sf::Packet& data) {
+	if (is_host_) { //this function should only ever run on the host
 		std::string name;
 		data >> name;
 		if (name != Utility::GetUserNameFromFile()) {
-			sf::Vector2f spawn = Level::GetPlayerSpawn(1);
-			std::cout << name << std::endl;
+			sf::Vector2f spawn = Level::GetNextNetworkPlayerSpawnPosition();
 			AddPlayer(PlayerType::kOnlineNetworkedPlayer, spawn, name);
+			// tells the server to tell clients to spawn this new player
+			sf::Packet new_player_info = Utility::CreatePacket(Server::PacketType::kAddPlayer);
+			new_player_info << name;
+			new_player_info << static_cast<uint16_t>(spawn.x);
+			new_player_info << static_cast<uint16_t>(spawn.y);
+			SendPacket(new_player_info);
 		}
 	}
-	else {
+}
+
+void MultiplayerWorld::HandleSpawnPlayer(sf::Packet& data) {
+	if (!is_host_) { //host should have already spawned this player
+		std::string name;
+		data >> name;
+		if (name != Utility::GetUserNameFromFile()) {
+			int x, y;
+			data >> x;
+			data >> y;
+			sf::Vector2f spawn(x, y);
+			AddPlayer(PlayerType::kOnlineNetworkedPlayer, spawn, name);
+		}
 	}
 }

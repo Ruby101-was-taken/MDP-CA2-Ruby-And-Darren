@@ -13,8 +13,13 @@ sf::RenderTexture Level::level_texture_;
 
 sf::Vector2f Level::player_one_spawn_;
 sf::Vector2f Level::player_two_spawn_;
+std::vector<sf::Vector2f> Level::network_spawn_points_;
+int Level::last_spawn_grabbed_;
 
 void Level::LoadLevel(const std::string& filename, const sf::Texture& tile_texture) {
+
+    last_spawn_grabbed_ = 0; // reset this index
+
     std::ifstream file(filename);
     if (!file.is_open()) {
         std::cerr << "Could not open the file!\n" << filename << "\n";
@@ -132,6 +137,27 @@ sf::Vector2f Level::GetPlayerSpawn(int player) {
     else return sf::Vector2f(0,0);
 }
 
+sf::Vector2f Level::GetNextNetworkPlayerSpawnPosition() {
+    if (last_spawn_grabbed_ >= network_spawn_points_.size()) {
+        last_spawn_grabbed_ = 0;
+    }
+    std::cout << network_spawn_points_.size() << std::endl;
+    return network_spawn_points_[last_spawn_grabbed_++];
+}
+
+sf::Vector2f Level::GetSpecificNetworkPlayerSpawnPosition(int index) {
+    SetLastNetworkSpawnIndex(index-1);
+    return GetNextNetworkPlayerSpawnPosition();
+}
+
+int Level::GetLastNetworkSpawnIndex() {
+    return last_spawn_grabbed_;
+}
+
+void Level::SetLastNetworkSpawnIndex(int index) {
+    last_spawn_grabbed_ = index;
+}
+
 void Level::AddTile(int x, int y, int size, int id, sf::Sprite& tile, std::vector<std::vector<std::string>>& data) {    
     sf::Vector2 position = { x * size * 1.f, y * size * 1.f };
     if (id == 0) { // ground tile
@@ -168,6 +194,9 @@ void Level::AddTile(int x, int y, int size, int id, sf::Sprite& tile, std::vecto
             player_one_spawn_ = position;
         else
             player_two_spawn_ = position;
+    }
+    else if (id == 5) { // networked player spawn
+        network_spawn_points_.emplace_back(position);
     }
 }
 

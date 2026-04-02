@@ -22,11 +22,13 @@ private:
 	void Tick();
 
 	void SendPacketToAll(sf::Packet& data);
+	void SendPacketToHost(sf::Packet& data);
 
-	void HandlePacketType(Server::PacketType type, sf::Packet& data);
+	void HandlePacketType(Server::PacketType type, sf::Packet& data, sf::TcpSocket* client_socket);
 
 #pragma region PacketHandlers
 	void HandlePlayerJoin(sf::Packet& data);
+	void HandleSpawnPlayer(sf::Packet& data);
 #pragma endregion
 
 
@@ -35,6 +37,7 @@ private:
 	sf::TcpListener listener_socket_;
 	sf::SocketSelector selector_;
 
+	std::unique_ptr<sf::TcpSocket> host_socket_;
 	std::vector<std::unique_ptr<sf::TcpSocket>> clients_;
 
 	bool waiting_thread_end_ = false;

@@ -3,7 +3,9 @@
 const unsigned short SERVER_PORT = 50000; //Greater than 49151, in dynamic port range
 namespace Server {
 	enum class PacketType {
-		kPlayerJoin // for when a player joins
+		kPlayerJoin, // for when a player joins
+		kIAmHost, // tells server which player is the host
+		kAddPlayer // used when the non host clients need to spawn a new player
 	};
 }
 

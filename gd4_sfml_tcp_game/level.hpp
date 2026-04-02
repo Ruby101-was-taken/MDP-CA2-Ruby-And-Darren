@@ -18,6 +18,11 @@ public:
 
     static sf::Vector2f GetPlayerSpawn(int player);
 
+    static sf::Vector2f GetNextNetworkPlayerSpawnPosition();
+    static sf::Vector2f GetSpecificNetworkPlayerSpawnPosition(int index);
+    static int GetLastNetworkSpawnIndex();
+    static void SetLastNetworkSpawnIndex(int index);
+
 private:
     static void AddTile(int x, int y, int size, int id, sf::Sprite& tile, std::vector<std::vector<std::string>>& data);
     static sf::Vector2i GetTileSlicePosition(int x, int y, int size, int id, const std::vector<std::vector<std::string>>& data);
@@ -29,4 +34,7 @@ private:
 
     static sf::Vector2f player_one_spawn_;
     static sf::Vector2f player_two_spawn_;
+
+    static std::vector<sf::Vector2f> network_spawn_points_;
+    static int last_spawn_grabbed_;
 };

@@ -16,6 +16,15 @@ protected:
 
 	void UpdateCurrent() override;
 
+private:	
+	
+	void HandlePacketType(Server::PacketType type, sf::Packet& data);
+
+#pragma region PacketHandlers
+	void HandlePlayerJoin(sf::Packet& data);
+	void HandleSpawnPlayer(sf::Packet& data);
+#pragma endregion
+
 protected:
 	bool is_host_;
 	bool is_connected_;
