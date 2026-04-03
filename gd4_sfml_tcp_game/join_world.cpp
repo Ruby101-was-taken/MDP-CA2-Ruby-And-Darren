@@ -6,7 +6,7 @@ JoinWorld::JoinWorld(sf::RenderTarget& output_target, FontHolder& font, SoundPla
 
 
 void JoinWorld::Start() {
-	GetState()->ShowNewName("Connected to host :D\n\People will see you as \"" + Utility::GetUserNameFromFile() + "\"\n\nHang Tight!!\nJust waiting for host to start the game!", false);
+	GetState()->ShowNewName("Connected to host :D\n\nPeople will see you as \"" + Utility::GetUserNameFromFile() + "\"\nChange this in \"Data/Username.txt\"\n\nHang Tight!!\nJust waiting for the host to start the game!", false);
 }
 
 bool JoinWorld::IsStillInPlay() {

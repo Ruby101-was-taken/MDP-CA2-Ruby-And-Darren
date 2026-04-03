@@ -88,7 +88,6 @@ inline void GameState<WorldClass>::ShowNewName(std::string name, bool is_host) {
 	text.setString(display_name);
 
 	text.setFillColor(sf::Color::White);
-	Utility::CentreOrigin(text);
-	text.setPosition(sf::Vector2f(360, 100 + names_.size() * 30));
+	text.setPosition(sf::Vector2f(50, 150 + names_.size() * 30));
 	names_.emplace_back(text);
 }

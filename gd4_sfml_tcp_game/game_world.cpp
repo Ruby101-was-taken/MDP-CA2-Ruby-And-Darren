@@ -54,6 +54,9 @@ void GameWorld::RenderLogic() {
         Draw(background_texture_);
         DrawWorld();
     }
+    else {
+        Draw(background_texture_);
+    }
 
     ApplyPostEffects();
 }
