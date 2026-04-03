@@ -46,7 +46,7 @@ void GameWorld::RenderLogic() {
         Draw(background_texture_);
         DrawWorld();
     }
-    else {
+    else if (player_one_) {
         SetCameraPosition(player_one_->getPosition());
         KeepCameraInBounds();
         camera_.setViewport(sf::FloatRect({ 0.f, 0.f }, { 1.f, 1.f }));

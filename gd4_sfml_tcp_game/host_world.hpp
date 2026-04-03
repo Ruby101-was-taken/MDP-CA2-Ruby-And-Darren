@@ -5,5 +5,6 @@
 class HostWorld : public MultiplayerWorld {
 public:
 	HostWorld(sf::RenderTarget& output_target, FontHolder& font, SoundPlayer& sounds, State::Context* context);
+	void Start() override;
 };
 

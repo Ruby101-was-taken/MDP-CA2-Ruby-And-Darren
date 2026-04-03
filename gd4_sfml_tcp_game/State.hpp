@@ -40,6 +40,8 @@ public:
 	virtual bool HandleEvent(const sf::Event& event) = 0;
 
 
+	virtual void ShowNewName(std::string name, bool is_host = true);
+
 protected:
 	void RequestStackPush(StateID state_id);
 	void RequestStackPop();

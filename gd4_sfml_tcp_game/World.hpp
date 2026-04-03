@@ -21,6 +21,7 @@ public:
 	typedef std::unique_ptr<SceneNode> Ptr;
 
 	explicit World(sf::RenderTarget& target, FontHolder& font, SoundPlayer& sounds, State::Context* context);
+	virtual void Start();
 	void Update(sf::Time dt);
 
 	virtual void RenderLogic();
@@ -34,8 +35,8 @@ public:
 	void SetWinningPlayer(ReceiverCategories payer_category);
 	ReceiverCategories GetWinningPlayer() const;
 	bool LevelHasEnded() const;
-	void SetState(State* state);
 
+	void SetState(State* state);
 	State* GetState();
 
 	virtual bool IsStillInPlay();

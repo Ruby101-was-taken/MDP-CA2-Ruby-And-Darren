@@ -5,6 +5,7 @@
 #include "network_protocol.hpp"
 #include "level.hpp"
 #include "utility.hpp"
+#include "game_state.hpp"
 
 sf::IpAddress GetAddressFromFile() {
 
@@ -39,7 +40,6 @@ void MultiplayerWorld::BuildScene() {
 
 	// Add player 1 node
 	sf::Vector2f spawn = Level::GetPlayerSpawn(1);
-	AddPlayer(PlayerType::kOnlineLocalPlayer, spawn);
 
 	//If this is the host, create a server
 	std::optional<sf::IpAddress> ip;
@@ -145,6 +145,8 @@ void MultiplayerWorld::HandlePlayerJoin(sf::Packet& data) {
 			new_player_info << static_cast<uint16_t>(spawn.x);
 			new_player_info << static_cast<uint16_t>(spawn.y);
 			SendPacket(new_player_info);
+
+			GetState()->ShowNewName(name);
 		}
 	}
 }

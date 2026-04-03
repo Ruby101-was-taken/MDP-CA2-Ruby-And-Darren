@@ -16,6 +16,9 @@ State::~State()
 {
 }
 
+void State::ShowNewName(std::string name, bool is_host) {
+}
+
 void State::RequestStackPush(StateID state_id)
 {
     stack_->PushState(state_id);

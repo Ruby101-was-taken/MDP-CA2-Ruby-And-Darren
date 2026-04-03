@@ -26,11 +26,13 @@ World::World(sf::RenderTarget& output_target, FontHolder& font, SoundPlayer& sou
 }
 
 
-void World::Update(sf::Time dt)
-{
+// Ruby White - D00255322
+void World::Start() {
+}
+
+void World::Update(sf::Time dt) {
 	//Forward commands to the scenegraph
-	while (!command_queue_.IsEmpty())
-	{
+	while (!command_queue_.IsEmpty()) {
 		root_node_.OnCommand(command_queue_.Pop(), dt);
 	}
 
