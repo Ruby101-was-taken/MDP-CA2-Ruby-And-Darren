@@ -29,7 +29,7 @@ Player::Player(const TextureHolder& textures, const FontHolder& fonts, float x, 
 		sprite = new SpriteBehaviour(textures.Get(TextureID::kOnlinePlayerSheet));
 		AddBehaviour(sprite);
 		// using hsv to get better colours                    // saturation is made higher to keep colours vibrant, value is always kept at max
-		sprite->ColourSprite(Utility::HSVToRGB(rand() % 255, (rand() % 50)+50, 100));
+		sprite->ColourSprite(Utility::GetUserColourFromFile());
 		sprite->BlitToSprite(textures.Get(TextureID::kOnlinePlayerEyesSheet));
 		break;
 	default:

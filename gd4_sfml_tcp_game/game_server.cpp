@@ -150,8 +150,19 @@ void GameServer::HandlePlayerJoin(sf::Packet& data) {
     data >> name;
     std::cout << name << " has joined the game!" << std::endl;
 
+    uint8_t r, g, b;
+
+    data >> r;
+    data >> g;
+    data >> b;
+
     sf::Packet packet = Utility::CreatePacket(Server::PacketType::kPlayerJoin);
     packet << name;
+
+    packet << static_cast<uint8_t>(r);
+    packet << static_cast<uint8_t>(g);
+    packet << static_cast<uint8_t>(b);
+
     SendPacketToHost(packet);
 }
 void GameServer::HandleSpawnPlayer(sf::Packet& data) {

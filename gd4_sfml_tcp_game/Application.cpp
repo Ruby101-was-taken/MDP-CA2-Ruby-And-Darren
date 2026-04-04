@@ -57,8 +57,15 @@ Application::Application() :
 		std::filesystem::create_directories("Data");
 	}
 
+	//make sure all files have been made
+	Utility::GetAddressFromFile();
+	Utility::GetUserNameFromFile();
+	Utility::GetUserColourFromFile();
+
+
 	//ensure all randomness is random
 	srand(time(NULL));
+
 }
 
 void Application::Run()

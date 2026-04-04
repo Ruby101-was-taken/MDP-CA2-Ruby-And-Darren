@@ -16,7 +16,7 @@ State::~State()
 {
 }
 
-void State::ShowNewName(std::string name, bool is_host) {
+void State::ShowNewName(PlayerInfo info, bool is_host) {
 }
 
 std::vector<PlayerInfo> State::GetNames() {

@@ -7,23 +7,6 @@
 #include "utility.hpp"
 #include "game_state.hpp"
 
-sf::IpAddress GetAddressFromFile() {
-
-	//Try to open existing file
-	std::ifstream input_file("Data/IP.txt");
-	std::string ip_address;
-	if (input_file >> ip_address) {
-		if (auto address = sf::IpAddress::resolve(ip_address)) {
-			return *address;
-		}
-	}
-
-	//If the open/read failed, create a new file
-	std::ofstream output_file("Data/IP.txt");
-	sf::IpAddress local_address = sf::IpAddress::LocalHost;
-	output_file << local_address.toString(); 
-	return local_address;
-}
 
 MultiplayerWorld::MultiplayerWorld(sf::RenderTarget& output_target, FontHolder& font, SoundPlayer& sounds, State::Context* context, bool is_host) : 
 	GameWorld(output_target, font, sounds, context) ,
@@ -46,7 +29,7 @@ void MultiplayerWorld::BuildScene() {
 		ip = sf::IpAddress::LocalHost;
 	}
 	else {
-		ip = GetAddressFromFile();
+		ip = Utility::GetAddressFromFile();
 	}
 
 	if (ip) {
@@ -71,6 +54,10 @@ void MultiplayerWorld::BuildScene() {
 		sf::Packet packet = Utility::CreatePacket(Server::PacketType::kPlayerJoin);
 		
 		packet << username_;
+		sf::Color colour = Utility::GetUserColourFromFile();
+		packet << static_cast<uint8_t>(colour.r);
+		packet << static_cast<uint8_t>(colour.g);
+		packet << static_cast<uint8_t>(colour.b);
 		SendPacket(packet);
 	}
 	else if (is_host_) {
@@ -161,9 +148,11 @@ void MultiplayerWorld::StartGame() {
 
 			sf::Packet new_player_packet = Utility::CreatePacket(Server::PacketType::kAddPlayer);
 			new_player_packet << info.username;
+			// send spawn position
 			new_player_packet << static_cast<uint16_t>(spawn.x);
 			new_player_packet << static_cast<uint16_t>(static_cast<int>(spawn.y));
-			std::cout << static_cast<uint16_t>(static_cast<int>(spawn.y)) << std::endl;
+			// send colour as RGB
+
 			SendPacket(new_player_packet);
 		}
 
@@ -177,11 +166,21 @@ void MultiplayerWorld::HandlePlayerJoin(sf::Packet& data) {
 		std::string name;
 		data >> name;
 		if (name != Utility::GetUserNameFromFile()) {
-			// tells the server to tell clients to spawn this new player
-			sf::Packet new_player_info = Utility::CreatePacket(Server::PacketType::kAddPlayer);
-			new_player_info << name;
+			sf::Color colour;
+			uint8_t r, g, b;
+			data >> r;
+			data >> g;
+			data >> b;
+			colour.r = static_cast<uint8_t>(r);
+			colour.g = static_cast<uint8_t>(g);
+			colour.b = static_cast<uint8_t>(b);
+			std::cout << Utility::RGBToHex(colour) << std::endl;
 
-			GetState()->ShowNewName(name);
+			std::cout << (int)colour.r << std::endl;
+			std::cout << (int)colour.g << std::endl;
+			std::cout << (int)colour.b << std::endl;
+
+			GetState()->ShowNewName(PlayerInfo(state_->GetNames().size(), name, GetState()->GetContext().fonts->Get(Font::kMain), colour));
 		}
 	}
 }

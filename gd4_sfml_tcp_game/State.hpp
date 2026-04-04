@@ -42,17 +42,17 @@ public:
 	virtual bool HandleEvent(const sf::Event& event) = 0;
 
 	//these really shouldn't be here but idk how else to do this help me
-	virtual void ShowNewName(std::string name, bool is_host = true);
+	virtual void ShowNewName(PlayerInfo info, bool is_host = true);
 	virtual std::vector<PlayerInfo> GetNames();
 	virtual void ExitLobbyState();
 	void SetIsHost(bool is_host);
 
+	Context GetContext() const;
 protected:
 	void RequestStackPush(StateID state_id);
 	void RequestStackPop();
 	void RequestStackClear();
 
-	Context GetContext() const;
 
 protected:
 	bool is_host_ = false;

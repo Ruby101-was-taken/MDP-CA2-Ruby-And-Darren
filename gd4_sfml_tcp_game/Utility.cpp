@@ -187,6 +187,10 @@ int Utility::sign(float num, int edge_case) {
 	return (num > 0) ? 1 : ((num < 0) ? -1 : edge_case);
 }
 
+sf::Color Utility::RandomHSVColour() {
+	return Utility::HSVToRGB(rand() % 255, (rand() % 50) + 50, 100);
+}
+
 //converts hsv to an sf::color
 //referencing https://axonflux.com/handy-rgb-to-hsl-and-rgb-to-hsv-color-model-c
 sf::Color Utility::HSVToRGB(float h, float s, float v) {
@@ -198,8 +202,6 @@ sf::Color Utility::HSVToRGB(float h, float s, float v) {
 	float r = 0;
 	float g = 0;
 	float b = 0;
-
-	std::cout << h << ", " << s << ", " << v << std::endl;
 
 	float i = floor(h * 6);
 	float f = h * 6 - i;
@@ -219,6 +221,33 @@ sf::Color Utility::HSVToRGB(float h, float s, float v) {
 	return sf::Color(r * 255, g * 255, b * 255);
 }
 
+sf::Color Utility::HexToRGB(std::string hexcode) {
+	if (hexcode[0] == '#') {
+		hexcode.erase(0, 1);
+	}
+	if (hexcode.length() == 6) {
+		sf::Color colour(HexToInt(hexcode.substr(0, 2)), HexToInt(hexcode.substr(2, 2)), HexToInt(hexcode.substr(4, 2)));
+		return colour;
+	}
+	else
+		return RandomHSVColour();
+}
+
+std::string Utility::RGBToHex(sf::Color& colour) {
+	std::string hex = std::format("{:x}", colour.r) + std::format("{:x}", colour.g) + std::format("{:x}", colour.b);
+
+	return hex;
+}
+
+uint8_t Utility::HexToInt(std::string hex) {
+	//https://stackoverflow.com/questions/1070497/c-convert-hex-string-to-signed-integer
+	unsigned int x;
+	std::stringstream ss;
+	ss << std::hex << hex;
+	ss >> x;
+	return (uint8_t)x;
+}
+
 std::string Utility::GetUserNameFromFile() {
 
 	//Try to open existing file
@@ -235,6 +264,39 @@ std::string Utility::GetUserNameFromFile() {
 	std::string new_name = player + std::to_string(rand()); // makes it so each random name is set to be Player{random numbers}
 	output_file << new_name;
 	return new_name;
+}
+
+sf::Color Utility::GetUserColourFromFile() {
+	//Try to open existing file
+	std::ifstream input_file("Data/Colour.txt");
+	std::string hexcode;
+	if (input_file >> hexcode) {
+		if (hexcode.length() == 6)
+			return HexToRGB(hexcode);
+	}
+
+	//If the open/read failed, create a new file and a random colour
+	std::ofstream output_file("Data/Colour.txt");
+	sf::Color new_colour= RandomHSVColour();
+	output_file << RGBToHex(new_colour);
+	return new_colour;
+}
+
+sf::IpAddress Utility::GetAddressFromFile() {
+	//Try to open existing file
+	std::ifstream input_file("Data/IP.txt");
+	std::string ip_address;
+	if (input_file >> ip_address) {
+		if (auto address = sf::IpAddress::resolve(ip_address)) {
+			return *address;
+		}
+	}
+
+	//If the open/read failed, create a new file
+	std::ofstream output_file("Data/IP.txt");
+	sf::IpAddress local_address = sf::IpAddress::LocalHost;
+	output_file << local_address.toString();
+	return local_address;
 }
 
 sf::Packet Utility::CreatePacket(Server::PacketType type) {

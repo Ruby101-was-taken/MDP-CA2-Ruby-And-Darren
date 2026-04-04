@@ -21,7 +21,7 @@ public:
 
 	void ExitLobbyState() override;
 
-	void ShowNewName(std::string name, bool is_host) override;
+	void ShowNewName(PlayerInfo info, bool is_host) override;
 private:
 	WorldClass world_;
 	sf::Font lobby_font_;
@@ -35,11 +35,10 @@ private:
 #include "player.hpp"
 
 template <typename WorldClass>
-GameState<WorldClass>::GameState(StateStack& stack, Context context) : 
-	State(stack, context), 
+GameState<WorldClass>::GameState(StateStack& stack, Context context) :
+	State(stack, context),
 	world_(*context.window, *context.fonts, *context.sounds, &context),
-	waiting_(true)
-{	
+	waiting_(true) {
 	//Play the music
 	// Darren Meidl - D00255479
 	//context.music->Play(MusicThemes::kLevelTheme); // REMEMBER TO TURN THIS BACK ON THANK YOU :3
@@ -109,10 +108,7 @@ inline void GameState<WorldClass>::ExitLobbyState() {
 
 
 template<typename WorldClass>
-inline void GameState<WorldClass>::ShowNewName(std::string name, bool is_host) {
-	lobby_font_ = GetContext().fonts->Get(Font::kMain);
-	
-	PlayerInfo new_info(players_.size(), name, lobby_font_, sf::Color::White);
+inline void GameState<WorldClass>::ShowNewName(PlayerInfo info, bool is_host) {
 
-	players_.emplace_back(new_info);
+	players_.emplace_back(info);
 }
