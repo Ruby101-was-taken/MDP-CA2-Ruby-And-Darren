@@ -1,0 +1,19 @@
+--- Game Pillars ---
+1. Synchronise States
+2. Optimize Data Amount
+3. Bandwidth Requirements
+4. Persistence
+5. Game Design
+
+
+
+
+Persistence:
+- Username
+- Colour
+- Number of wins
+- Stars collected?
+
+
+Player:
+- Animation clips -> request by string or int?
