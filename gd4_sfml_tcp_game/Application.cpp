@@ -27,10 +27,11 @@
 const sf::Time Application::kTimePerFrame = sf::seconds(1.f/60.f);
 
 Application::Application() : 
-	window_(sf::VideoMode({WINDOW_WIDTH, WINDOW_HEIGHT }),(std::string)WINDOW_TITLE, sf::Style::Close)
+	window_(sf::VideoMode({WINDOW_WIDTH, WINDOW_HEIGHT }),(std::string)WINDOW_TITLE, sf::Style::Default)
 	, stack_(State::Context(window_, textures_, fonts_, music_, sound_))
 {
 	window_.setKeyRepeatEnabled(false);
+	window_.setMinimumSize(sf::Vector2u(WINDOW_WIDTH, WINDOW_HEIGHT));
 	fonts_.Load(Font::kMain, "Media/Fonts/Sansation.ttf");
 	textures_.Load(TextureID::kTitleScreen, "Media/Textures/Interface/TitleScreen2.png");
 	textures_.Load(TextureID::kButtonNormal, "Media/Textures/Interface/ButtonNormal.png");
@@ -103,6 +104,8 @@ void Application::ProcessInput()
 		}
 		else if (event->is<sf::Event::FocusLost>()) {
 			InputManager::SetFocused(false);
+		}
+		else if (event->is<sf::Event::Resized>()) {
 		}
 	}
 }

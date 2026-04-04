@@ -30,18 +30,20 @@ GameWorld::~GameWorld() {
 void GameWorld::RenderLogic() {
     ClearScreen();
 
+    float horizontal_scale = (float)WINDOW_WIDTH / target_.getSize().x;
+    float vertical_scale = (float)WINDOW_HEIGHT / target_.getSize().y;
 
     if (is_two_player_) {
         SetCameraPosition(player_one_->getPosition());
         KeepCameraInBounds();
-        camera_.setViewport(sf::FloatRect({ 0.f, 0.f }, { 1.f, 0.5f }));
+        camera_.setViewport(sf::FloatRect({ 0.f, 0.f }, { horizontal_scale, vertical_scale / 2 }));
         background_texture_.setPosition(GetBackgroundPosition());
         Draw(background_texture_);
         DrawWorld();
 
         SetCameraPosition(player_two_->getPosition());
         KeepCameraInBounds();
-        camera_.setViewport(sf::FloatRect({ 0.f, 0.5f }, { 1.f, 0.5f }));
+        camera_.setViewport(sf::FloatRect({ 0.f, vertical_scale/2 }, { horizontal_scale, vertical_scale / 2 }));
         background_texture_.setPosition(GetBackgroundPosition());
         Draw(background_texture_);
         DrawWorld();
@@ -49,12 +51,13 @@ void GameWorld::RenderLogic() {
     else if (player_one_) {
         SetCameraPosition(player_one_->getPosition());
         KeepCameraInBounds();
-        camera_.setViewport(sf::FloatRect({ 0.f, 0.f }, { 1.f, 1.f }));
+        camera_.setViewport(sf::FloatRect({ 0.f, 0.f }, { horizontal_scale, vertical_scale }));
         background_texture_.setPosition(GetBackgroundPosition());
         Draw(background_texture_);
         DrawWorld();
     }
     else {
+        camera_.setViewport(sf::FloatRect({ 0.f, 0.f }, { horizontal_scale, vertical_scale }));
         Draw(background_texture_);
     }
 
