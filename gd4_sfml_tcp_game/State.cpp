@@ -23,6 +23,13 @@ std::vector<PlayerInfo> State::GetNames() {
     return std::vector<PlayerInfo>();
 }
 
+void State::ExitLobbyState() {
+}
+
+void State::SetIsHost(bool is_host) {
+    is_host_ = is_host;
+}
+
 void State::RequestStackPush(StateID state_id)
 {
     stack_->PushState(state_id);

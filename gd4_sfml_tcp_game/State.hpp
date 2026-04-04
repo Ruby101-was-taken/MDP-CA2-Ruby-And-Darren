@@ -44,6 +44,8 @@ public:
 	//these really shouldn't be here but idk how else to do this help me
 	virtual void ShowNewName(std::string name, bool is_host = true);
 	virtual std::vector<PlayerInfo> GetNames();
+	virtual void ExitLobbyState();
+	void SetIsHost(bool is_host);
 
 protected:
 	void RequestStackPush(StateID state_id);
@@ -52,8 +54,12 @@ protected:
 
 	Context GetContext() const;
 
+protected:
+	bool is_host_ = false;
+
 private:
 	StateStack* stack_;
 	Context context_;
+;
 };
 

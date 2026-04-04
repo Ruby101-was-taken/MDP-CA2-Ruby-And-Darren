@@ -18,7 +18,8 @@ public:
 	virtual bool HandleEvent(const sf::Event& event) override;
 
 	std::vector<PlayerInfo> GetNames() override;
-	
+
+	void ExitLobbyState() override;
 
 	void ShowNewName(std::string name, bool is_host) override;
 private:
@@ -86,9 +87,8 @@ bool GameState<WorldClass>::HandleEvent(const sf::Event& event) {
 	if (const auto* keyPressed = event.getIf<sf::Event::KeyPressed>()) {
 		if (keyPressed->scancode == sf::Keyboard::Scancode::Escape)
 			RequestStackPush(StateID::kPause);
-		if (keyPressed->scancode == sf::Keyboard::Scancode::Enter and waiting_) {
-			waiting_ = false;
-			world_.PassGameEvent(GameEvent::kGameStart);
+		if (keyPressed->scancode == sf::Keyboard::Scancode::Enter and waiting_ and is_host_) {
+			ExitLobbyState();
 		}
 	}
 	return true;
@@ -97,6 +97,14 @@ bool GameState<WorldClass>::HandleEvent(const sf::Event& event) {
 template<typename WorldClass>
 inline std::vector<PlayerInfo> GameState<WorldClass>::GetNames() {
 	return players_;
+}
+
+template<typename WorldClass>
+inline void GameState<WorldClass>::ExitLobbyState() {
+	if (waiting_) {
+		waiting_ = false;
+		world_.PassGameEvent(GameEvent::kGameStart);
+	}
 }
 
 

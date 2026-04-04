@@ -135,24 +135,40 @@ void MultiplayerWorld::HandlePacketType(Server::PacketType type, sf::Packet& dat
 	case Server::PacketType::kPlayerJoin:
 		HandlePlayerJoin(data);
 		break;
+	case Server::PacketType::kStartGame:
+		if(!is_host_)
+			GetState()->ExitLobbyState();
+		break;
+	case Server::PacketType::kAddPlayer:
+		if (!is_host_)
+			HandleSpawnPlayer(data);
+		break;
 	default:
-		std::cout << "unknown type" << std::endl;
+		std::cout << "[MultiplayerWorld]: unknown type" << std::endl;
 		break;
 	}
 }
 
 void MultiplayerWorld::StartGame() {
-	// Add player 1 node
-	sf::Vector2f spawn = Level::GetPlayerSpawn(1);
-	AddPlayer(PlayerType::kOnlineLocalPlayer, spawn);
+	if (is_host_) {
 
-	// spawn other nodes
-	for (PlayerInfo info : GetState()->GetNames()) {
-		if (username_ != info.username) {
-			spawn = Level::GetNextNetworkPlayerSpawnPosition();
+		// spawn other nodes
+		for (PlayerInfo info : GetState()->GetNames()) {
+			sf::Vector2f spawn = Level::GetNextNetworkPlayerSpawnPosition();
 			std::cout << info.username << std::endl;
-			AddPlayer(PlayerType::kOnlineNetworkedPlayer, spawn, info.username);
+
+			AddPlayer((username_ != info.username) ? PlayerType::kOnlineNetworkedPlayer : PlayerType::kOnlineLocalPlayer, spawn, info.username);
+
+			sf::Packet new_player_packet = Utility::CreatePacket(Server::PacketType::kAddPlayer);
+			new_player_packet << info.username;
+			new_player_packet << static_cast<uint16_t>(spawn.x);
+			new_player_packet << static_cast<uint16_t>(static_cast<int>(spawn.y));
+			std::cout << static_cast<uint16_t>(static_cast<int>(spawn.y)) << std::endl;
+			SendPacket(new_player_packet);
 		}
+
+		sf::Packet start_packet = Utility::CreatePacket(Server::PacketType::kStartGame);
+		SendPacket(start_packet);
 	}
 }
 
@@ -174,11 +190,14 @@ void MultiplayerWorld::HandleSpawnPlayer(sf::Packet& data) {
 	if (!is_host_) { //host should have already spawned this player
 		std::string name;
 		data >> name;
-		if (name != Utility::GetUserNameFromFile()) {
-			int x, y;
-			data >> x;
-			data >> y;
-			sf::Vector2f spawn(x, y);
+		uint16_t x, y;
+		data >> x;
+		data >> y;
+		sf::Vector2f spawn(x, y);
+		if (name == Utility::GetUserNameFromFile()) {
+			AddPlayer(PlayerType::kOnlineLocalPlayer, spawn, name);
+		}
+		else {
 			AddPlayer(PlayerType::kOnlineNetworkedPlayer, spawn, name);
 		}
 	}

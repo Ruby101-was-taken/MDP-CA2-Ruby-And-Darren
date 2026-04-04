@@ -133,6 +133,10 @@ void GameServer::HandlePacketType(Server::PacketType type, sf::Packet& data, sf:
         break;
     case Server::PacketType::kAddPlayer:
         HandleSpawnPlayer(data);
+        break;
+    case Server::PacketType::kStartGame:
+        SendPacketToAll(data);
+        break;
     default:
         std::cout << "unknown type or missing break" << std::endl;
         break;
