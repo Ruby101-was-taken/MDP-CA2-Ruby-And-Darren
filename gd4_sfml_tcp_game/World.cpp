@@ -113,8 +113,18 @@ State* World::GetState() {
 	return state_;
 }
 
+// Ruby White - D00255322
 bool World::IsStillInPlay() {
 	return true;
+}
+
+// Ruby White - D00255322
+void World::PassGameEvent(GameEvent event) {
+	HandleGameEvent(event);
+	root_node_.PassGameEvent(event);
+}
+// Ruby White - D00255322
+void World::HandleGameEvent(GameEvent event) {
 }
 
 // Ruby White - D00255322

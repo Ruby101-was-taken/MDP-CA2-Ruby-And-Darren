@@ -10,6 +10,7 @@ public:
 
 	void BuildScene() override;
 
+	void HandleGameEvent(GameEvent event) override;
 
 protected:
 	sf::Socket::Status SendPacket(sf::Packet& packet);
@@ -19,6 +20,8 @@ protected:
 private:	
 	
 	void HandlePacketType(Server::PacketType type, sf::Packet& data);
+
+	void StartGame();
 
 #pragma region PacketHandlers
 	void HandlePlayerJoin(sf::Packet& data);

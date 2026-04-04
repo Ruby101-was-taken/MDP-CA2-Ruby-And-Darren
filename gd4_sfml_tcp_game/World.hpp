@@ -13,6 +13,8 @@
 #include "sound_player.hpp"
 #include "state.hpp"
 
+#include "game_event.hpp"
+
 #include <array>
 
 class World 
@@ -40,6 +42,9 @@ public:
 	State* GetState();
 
 	virtual bool IsStillInPlay();
+
+	void PassGameEvent(GameEvent event);
+	virtual void HandleGameEvent(GameEvent event);
 
 protected:
 	void SetCameraPosition(sf::Vector2f position);

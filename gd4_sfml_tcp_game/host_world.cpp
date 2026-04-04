@@ -5,5 +5,5 @@ HostWorld::HostWorld(sf::RenderTarget& output_target, FontHolder& font, SoundPla
 }
 
 void HostWorld::Start() {
-	GetState()->ShowNewName(Utility::GetUserNameFromFile() + "(HOST)");
+	GetState()->ShowNewName(Utility::GetUserNameFromFile());
 }

@@ -82,6 +82,9 @@
     <Filter Include="Source Files\Worlds\Multiplayer Worlds">
       <UniqueIdentifier>{64c24f7c-23c9-46e1-8d50-e95a5c63e4dd}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\Structs">
+      <UniqueIdentifier>{9f6776f2-a2ec-4c22-bbab-9584d26d4dc6}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="entity.cpp">
@@ -278,6 +281,9 @@
     </ClCompile>
     <ClCompile Include="local_game_world.cpp">
       <Filter>Source Files\Worlds\Multiplayer Worlds</Filter>
+    </ClCompile>
+    <ClCompile Include="player_info.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -526,6 +532,12 @@
     </ClInclude>
     <ClInclude Include="local_game_world.hpp">
       <Filter>Header Files\Worlds\MulitplayerWorlds</Filter>
+    </ClInclude>
+    <ClInclude Include="game_event.hpp">
+      <Filter>Header Files\Enums</Filter>
+    </ClInclude>
+    <ClInclude Include="player_info.hpp">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -8,6 +8,7 @@
 #include "command.hpp"
 #include "attachable_behaviour.hpp"
 #include "base_collider_behaviour.hpp"
+#include "game_event.hpp"
 
 #include <set>
 #include <vector>
@@ -60,6 +61,9 @@ public:
 	template<typename Attachable>
 	Attachable* FindAttachable();
 
+
+	void PassGameEvent(GameEvent event);
+	virtual void HandleGameEvent(GameEvent event);
 
 	void AddBehaviour(AttachableBehaviour* behaviour);
 private:

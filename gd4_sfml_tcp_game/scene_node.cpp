@@ -262,6 +262,18 @@ CollisionLayer SceneNode::GetCollisionLayer() {
 }
 
 // Ruby White - D00255322
+void SceneNode::PassGameEvent(GameEvent event) {
+    HandleGameEvent(event);
+    for (const Ptr& child : children_) {
+        child->PassGameEvent(event);
+    }
+}
+
+// Ruby White - D00255322
+void SceneNode::HandleGameEvent(GameEvent event) {
+}
+
+// Ruby White - D00255322
 void SceneNode::AddBehaviour(AttachableBehaviour* behaviour) {
     behaviour->SetupBehaviour(this);
     behaviours_.emplace_back(behaviour);

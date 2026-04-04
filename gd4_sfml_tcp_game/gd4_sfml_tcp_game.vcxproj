@@ -179,6 +179,7 @@
     <ClCompile Include="physic_body.cpp" />
     <ClCompile Include="player.cpp" />
     <ClCompile Include="player_animation_behaviour.cpp" />
+    <ClCompile Include="player_info.cpp" />
     <ClCompile Include="player_movement_behaviour.cpp" />
     <ClCompile Include="player_score_manager.cpp" />
     <ClCompile Include="player_type.cpp" />
@@ -226,6 +227,7 @@
     <ClInclude Include="entity.hpp" />
     <ClInclude Include="font.hpp" />
     <ClInclude Include="game.hpp" />
+    <ClInclude Include="game_event.hpp" />
     <ClInclude Include="game_server.hpp" />
     <ClInclude Include="game_state.hpp" />
     <ClInclude Include="game_world.hpp" />
@@ -250,6 +252,7 @@
     <ClInclude Include="physic_body.hpp" />
     <ClInclude Include="player.hpp" />
     <ClInclude Include="player_animation_behaviour.hpp" />
+    <ClInclude Include="player_info.hpp" />
     <ClInclude Include="player_movement_behaviour.hpp" />
     <ClInclude Include="player_score_manager.hpp" />
     <ClInclude Include="player_two_win_state.hpp" />

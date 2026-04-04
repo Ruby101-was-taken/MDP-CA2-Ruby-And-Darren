@@ -6,6 +6,7 @@
 #include "world.hpp"
 #include <type_traits>
 #include "Utility.hpp"
+#include "game_event.hpp"
 
 template <typename WorldClass>
 class GameState : public State {
@@ -16,11 +17,16 @@ public:
 	virtual bool Update(sf::Time dt) override;
 	virtual bool HandleEvent(const sf::Event& event) override;
 
+	std::vector<PlayerInfo> GetNames() override;
+	
 
 	void ShowNewName(std::string name, bool is_host) override;
 private:
 	WorldClass world_;
-	std::vector<sf::Text> names_;
+	sf::Font lobby_font_;
+	std::vector<PlayerInfo> players_;
+
+	bool waiting_;
 };
 
 #include "game_state.hpp"
@@ -28,7 +34,11 @@ private:
 #include "player.hpp"
 
 template <typename WorldClass>
-GameState<WorldClass>::GameState(StateStack& stack, Context context) : State(stack, context), world_(*context.window, *context.fonts, *context.sounds, &context) {
+GameState<WorldClass>::GameState(StateStack& stack, Context context) : 
+	State(stack, context), 
+	world_(*context.window, *context.fonts, *context.sounds, &context),
+	waiting_(true)
+{	
 	//Play the music
 	// Darren Meidl - D00255479
 	//context.music->Play(MusicThemes::kLevelTheme); // REMEMBER TO TURN THIS BACK ON THANK YOU :3
@@ -43,8 +53,10 @@ void GameState<WorldClass>::Draw() {
 
 	sf::RenderWindow& window = *GetContext().window;
 
-	for (sf::Text text : names_) {
-		window.draw(text);
+	if (waiting_) {
+		for (PlayerInfo& info : players_) {
+			window.draw(info.lobby_label);
+		}
 	}
 }
 
@@ -74,20 +86,25 @@ bool GameState<WorldClass>::HandleEvent(const sf::Event& event) {
 	if (const auto* keyPressed = event.getIf<sf::Event::KeyPressed>()) {
 		if (keyPressed->scancode == sf::Keyboard::Scancode::Escape)
 			RequestStackPush(StateID::kPause);
+		if (keyPressed->scancode == sf::Keyboard::Scancode::Enter and waiting_) {
+			waiting_ = false;
+			world_.PassGameEvent(GameEvent::kGameStart);
+		}
 	}
 	return true;
+}
+
+template<typename WorldClass>
+inline std::vector<PlayerInfo> GameState<WorldClass>::GetNames() {
+	return players_;
 }
 
 
 template<typename WorldClass>
 inline void GameState<WorldClass>::ShowNewName(std::string name, bool is_host) {
-	sf::Text text(GetContext().fonts->Get(Font::kMain));
+	lobby_font_ = GetContext().fonts->Get(Font::kMain);
+	
+	PlayerInfo new_info(players_.size(), name, lobby_font_, sf::Color::White);
 
-	std::string display_name = ((is_host)? std::to_string(names_.size() + 1) + ": " : "") + name;
-	std::cout << display_name << std::endl;
-	text.setString(display_name);
-
-	text.setFillColor(sf::Color::White);
-	text.setPosition(sf::Vector2f(50, 150 + names_.size() * 30));
-	names_.emplace_back(text);
+	players_.emplace_back(new_info);
 }

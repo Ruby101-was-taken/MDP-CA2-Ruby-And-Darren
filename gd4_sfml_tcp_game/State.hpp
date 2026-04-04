@@ -3,9 +3,11 @@
 #include "state_id.hpp"
 #include <SFML/System/Time.hpp>
 #include <SFML/Window/Event.hpp>
+#include <SFML/Graphics.hpp>
 #include <memory>
 #include "music_player.hpp"
 #include "sound_player.hpp"
+#include "player_info.hpp"
 //#include "level.hpp"
 
 class Level;
@@ -39,8 +41,9 @@ public:
 	virtual bool Update(sf::Time dt) = 0;
 	virtual bool HandleEvent(const sf::Event& event) = 0;
 
-
+	//these really shouldn't be here but idk how else to do this help me
 	virtual void ShowNewName(std::string name, bool is_host = true);
+	virtual std::vector<PlayerInfo> GetNames();
 
 protected:
 	void RequestStackPush(StateID state_id);
