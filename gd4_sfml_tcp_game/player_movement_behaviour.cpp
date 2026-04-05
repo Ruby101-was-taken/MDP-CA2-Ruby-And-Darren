@@ -21,8 +21,10 @@ PlayerMovementBehaviour::PlayerMovementBehaviour(BoxColliderBehaviour* collider,
     jump_power_(6.5f),
     jump_held_(false),
     invincibility_time_(0.f),
-    sprite_(nullptr)
-{
+    sprite_(nullptr),
+    remote_left_(false),
+    remote_right_(false),
+    remote_jump_request_(false) {
 }
 
 void PlayerMovementBehaviour::Start() {
@@ -43,8 +45,34 @@ void PlayerMovementBehaviour::Start() {
         });
 }
 
+void PlayerMovementBehaviour::SetRemoteRealtime(Action action, bool started) {
+    switch (action) {
+    case Action::kMoveLeft:
+        remote_left_ = started;
+        break;
+    case Action::kMoveRight:
+        remote_right_ = started;
+        break;
+    case Action::kMoveUp:
+        if (started) // improbable for realtime up, but handle
+            remote_jump_request_ = true;
+        break;
+    default:
+        break;
+    }
+}
 
-
+void PlayerMovementBehaviour::ApplyRemoteEvent(Action action) {
+    switch (action) {
+    case Action::kMoveUp:
+        if (CanJump()) {
+            PerformJump();
+        }
+        break;
+    default:
+        break;
+    }
+}
 
 void PlayerMovementBehaviour::OnCollision(SceneNode* other) {
     if (other->GetCollisionLayer() == CollisionLayer::kPlayer) {
@@ -52,11 +80,11 @@ void PlayerMovementBehaviour::OnCollision(SceneNode* other) {
         if (other_player->CanBeHit()) {
             if (other_player->velocity_.y < velocity_.y) { // hit the other player
                 other_player->BouncePlayer(true);
-                BouncePlayer(false);                
+                BouncePlayer(false);
                 other_player->MakeInvincible(2.f);
                 MakeInvincible(0.01f);
                 PlayLocalSound(node_->GetWorld()->GetCommandQueue(), SoundEffect::kPlayerCollide);
-                std::cout << "I hit the other player!" << std::endl;               
+                std::cout << "I hit the other player!" << std::endl;
             }
             else if (other_player->velocity_.y == velocity_.y and other_player->CanBeHit() and CanBeHit()) { // both player hit eachother
                 other_player->BouncePlayer(true);
@@ -78,7 +106,7 @@ void PlayerMovementBehaviour::OnCollision(SceneNode* other) {
             node_->GetWorld()->GetCommandQueue().Push(get_score_);
 
             HealthBehaviour* star_health = star->FindAttachable<HealthBehaviour>(); //get star health
-            if(star_health != nullptr)
+            if (star_health != nullptr)
                 star_health->ChangeHealthBy(-1.f);
         }
     }
@@ -155,6 +183,22 @@ sf::Vector2f PlayerMovementBehaviour::HandlePlayerInput() {
         if (InputManager::InputIsPressed(InputTypes::kPlayerTwoLeft))
             velocity.x -= 1;
         if (InputManager::InputIsPressed(InputTypes::kPlayerTwoRight))
+            velocity.x += 1;
+    }
+    // Network-controlled player: use remote flags
+    else if (type_ == PlayerType::kOnlineNetworkedPlayer) {
+        // Jump requested remotely?
+        if (remote_jump_request_) {
+            if (CanJump()) {
+                PerformJump();
+            }
+            // consume request
+            remote_jump_request_ = false;
+        }
+
+        if (remote_left_)
+            velocity.x -= 1;
+        if (remote_right_)
             velocity.x += 1;
     }
 

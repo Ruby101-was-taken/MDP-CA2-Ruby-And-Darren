@@ -6,8 +6,7 @@
 #include <iostream>
 
 GameServer::GameServer()
-    : thread_(&GameServer::ExecutionThread, this)
-{
+    : thread_(&GameServer::ExecutionThread, this) {
     listener_socket_.setBlocking(false);
     listener_socket_.listen(SERVER_PORT);
 
@@ -21,14 +20,14 @@ GameServer::~GameServer() {
 }
 
 void GameServer::ExecutionThread() {
-        
-   
+
+
     sf::Time tick_rate = sf::seconds(1.f / 20.f);
     sf::Time tick_time = sf::Time::Zero;
     sf::Clock tick_clock;
 
     while (!waiting_thread_end_) {
-        
+
 
         tick_time += tick_clock.getElapsedTime();
         tick_clock.restart();
@@ -46,7 +45,7 @@ void GameServer::ExecutionThread() {
             // loooks for new clients
             if (selector_.isReady(listener_socket_)) {
                 auto client = std::make_unique<sf::TcpSocket>();
-                
+
                 if (listener_socket_.accept(*client) == sf::Socket::Status::Done) {
                     client->setBlocking(false);
                     selector_.add(*client);
@@ -123,7 +122,7 @@ void GameServer::SendPacketToHost(sf::Packet& data) {
     }
 }
 
-void GameServer::HandlePacketType(Server::PacketType type, sf::Packet& data, sf::TcpSocket *client_socket) {
+void GameServer::HandlePacketType(Server::PacketType type, sf::Packet& data, sf::TcpSocket* client_socket) {
     switch (type) {
     case Server::PacketType::kPlayerJoin:
         HandlePlayerJoin(data);
@@ -140,6 +139,42 @@ void GameServer::HandlePacketType(Server::PacketType type, sf::Packet& data, sf:
     case Server::PacketType::kSpawnStar:
         HandleStarSpawn(data);
         break;
+
+        // Forward input packets from client to host (reserialize to include packet type byte)
+    case Server::PacketType::kPlayerEvent: {
+        // payload layout from client: username (string), uint8 action
+        std::string name;
+        uint8_t action_u;
+        data >> name;
+        data >> action_u;
+
+        sf::Packet pkt = Utility::CreatePacket(Server::PacketType::kPlayerEvent);
+        pkt << name;
+        pkt << action_u;
+
+        if (host_socket_)
+            SendPacketToHost(pkt);
+        break;
+    }
+    case Server::PacketType::kPlayerRealtimeChange: {
+        // payload layout: username (string), uint8 action, uint8 started
+        std::string name;
+        uint8_t action_u;
+        uint8_t started_u;
+        data >> name;
+        data >> action_u;
+        data >> started_u;
+
+        sf::Packet pkt = Utility::CreatePacket(Server::PacketType::kPlayerRealtimeChange);
+        pkt << name;
+        pkt << action_u;
+        pkt << started_u;
+
+        if (host_socket_)
+            SendPacketToHost(pkt);
+        break;
+    }
+
     default:
         std::cout << "[Server]: unknown type or missing break" << std::endl;
         break;
@@ -183,4 +218,3 @@ void GameServer::HandleStarSpawn(sf::Packet& data) {
     SendPacketToAll(packet);
 }
 #pragma endregion
-

@@ -6,21 +6,23 @@
 #include "level.hpp"
 #include "utility.hpp"
 #include "game_state.hpp"
+#include "action.hpp"
+#include "player_movement_behaviour.hpp"
+#include "input_manager.hpp"
 
-
-MultiplayerWorld::MultiplayerWorld(sf::RenderTarget& output_target, FontHolder& font, SoundPlayer& sounds, State::Context* context, bool is_host) : 
-	GameWorld(output_target, font, sounds, context) ,
+MultiplayerWorld::MultiplayerWorld(sf::RenderTarget& output_target, FontHolder& font, SoundPlayer& sounds, State::Context* context, bool is_host) :
+	GameWorld(output_target, font, sounds, context),
 	game_server_(nullptr),
 	is_host_(is_host),
-	is_connected_(false)
-{
+	is_connected_(false),
+	prev_left_(false),
+	prev_right_(false),
+	prev_jump_(false) {
 	StartBuildScene();
 }
 
 void MultiplayerWorld::BuildScene() {
 	MakeBaseScene();
-
-
 
 	//If this is the host, create a server
 	std::optional<sf::IpAddress> ip;
@@ -52,7 +54,7 @@ void MultiplayerWorld::BuildScene() {
 	}
 	else if(!is_host_) {
 		sf::Packet packet = Utility::CreatePacket(Server::PacketType::kPlayerJoin);
-		
+        
 		packet << username_;
 		sf::Color colour = Utility::GetUserColourFromFile();
 		packet << static_cast<uint8_t>(colour.r);
@@ -111,6 +113,7 @@ sf::Socket::Status MultiplayerWorld::SendPacket(sf::Packet& packet) {
 }
 
 void MultiplayerWorld::UpdateCurrent() {
+	// Receive packets first
 	sf::Packet data;
 	std::size_t received;
 
@@ -122,6 +125,31 @@ void MultiplayerWorld::UpdateCurrent() {
 		HandlePacketType(static_cast<Server::PacketType>(type), data);
 	}
 	else {
+		// no incoming data this frame
+	}
+
+	// If this client is not the host and we are connected, sample input and send changes
+	if (!is_host_ && is_connected_) {
+		// realtime left/right; jump is a one-shot event
+		bool left = InputManager::InputIsPressed(InputTypes::kPlayerOneLeft);
+		bool right = InputManager::InputIsPressed(InputTypes::kPlayerOneRight);
+		bool jump_pressed = InputManager::InputIsPressed(InputTypes::kPlayerOneUp);
+
+		// Left change
+		if (left != prev_left_) {
+			SendRealtimeChange(Action::kMoveLeft, left);
+			prev_left_ = left;
+		}
+		// Right change
+		if (right != prev_right_) {
+			SendRealtimeChange(Action::kMoveRight, right);
+			prev_right_ = right;
+		}
+		// Jump: fire a one-shot event when pressed (edge detect)
+		if (jump_pressed && !prev_jump_) {
+			SendEvent(Action::kMoveUp);
+		}
+		prev_jump_ = jump_pressed;
 	}
 }
 
@@ -148,6 +176,50 @@ void MultiplayerWorld::HandlePacketType(Server::PacketType type, sf::Packet& dat
 		}
 		std::cout << "x <<  << y" << std::endl;
 		break;
+
+		// Incoming forwarded input from server (host will receive these)
+	case Server::PacketType::kPlayerEvent: {
+		std::string name;
+		uint8_t action_u;
+		data >> name;
+		data >> action_u;
+		Action action = static_cast<Action>(action_u);
+
+		auto it = network_players_.find(name);
+		if (it != network_players_.end()) {
+			Player* p = it->second;
+			if (p) {
+				auto pm = p->FindAttachable<PlayerMovementBehaviour>();
+				if (pm) {
+					pm->ApplyRemoteEvent(action);
+				}
+			}
+		}
+		break;
+	}
+	case Server::PacketType::kPlayerRealtimeChange: {
+		std::string name;
+		uint8_t action_u;
+		uint8_t started_u;
+		data >> name;
+		data >> action_u;
+		data >> started_u;
+		Action action = static_cast<Action>(action_u);
+		bool started = static_cast<bool>(started_u);
+
+		auto it = network_players_.find(name);
+		if (it != network_players_.end()) {
+			Player* p = it->second;
+			if (p) {
+				auto pm = p->FindAttachable<PlayerMovementBehaviour>();
+				if (pm) {
+					pm->SetRemoteRealtime(action, started);
+				}
+			}
+		}
+		break;
+	}
+
 	default:
 		std::cout << "[MultiplayerWorld]: unknown type" << std::endl;
 		break;
@@ -162,7 +234,9 @@ void MultiplayerWorld::StartGame() {
 			sf::Vector2f spawn = Level::GetNextNetworkPlayerSpawnPosition();
 			std::cout << info.username << std::endl;
 
-			AddPlayer((username_ != info.username) ? PlayerType::kOnlineNetworkedPlayer : PlayerType::kOnlineLocalPlayer, spawn, info.username);
+			Player* newPlayer = AddPlayer((username_ != info.username) ? PlayerType::kOnlineNetworkedPlayer : PlayerType::kOnlineLocalPlayer, spawn, info.username);
+
+			network_players_[info.username] = newPlayer; // keep mapping (host only)
 
 			sf::Packet new_player_packet = Utility::CreatePacket(Server::PacketType::kAddPlayer);
 			new_player_packet << info.username;
@@ -224,10 +298,31 @@ void MultiplayerWorld::HandleSpawnPlayer(sf::Packet& data) {
 		data >> y;
 		sf::Vector2f spawn(x, y);
 		if (name == Utility::GetUserNameFromFile()) {
-			AddPlayer(PlayerType::kOnlineLocalPlayer, spawn, name);
+			Player* p = AddPlayer(PlayerType::kOnlineLocalPlayer, spawn, name);
+			// local client: also include in map so host can target by name on this client if needed
+			network_players_[name] = p;
 		}
 		else {
-			AddPlayer(PlayerType::kOnlineNetworkedPlayer, spawn, name);
+			Player* p = AddPlayer(PlayerType::kOnlineNetworkedPlayer, spawn, name);
+			network_players_[name] = p;
 		}
 	}
+}
+
+// Send helpers (client side sends these packets to server)
+void MultiplayerWorld::SendRealtimeChange(Action action, bool started) {
+	if (!is_connected_) return;
+	sf::Packet packet = Utility::CreatePacket(Server::PacketType::kPlayerRealtimeChange);
+	packet << username_;
+	packet << static_cast<uint8_t>(action);
+	packet << static_cast<uint8_t>(started ? 1 : 0);
+	SendPacket(packet);
+}
+
+void MultiplayerWorld::SendEvent(Action action) {
+	if (!is_connected_) return;
+	sf::Packet packet = Utility::CreatePacket(Server::PacketType::kPlayerEvent);
+	packet << username_;
+	packet << static_cast<uint8_t>(action);
+	SendPacket(packet);
 }

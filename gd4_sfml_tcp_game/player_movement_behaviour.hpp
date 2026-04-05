@@ -4,10 +4,11 @@
 #include "box_collider_behaviour.hpp"
 #include "player_type.hpp"
 #include "sprite_behaviour.hpp"
+#include "action.hpp"
 
 class PlayerMovementBehaviour : public PhysicBody {
 public:
-	PlayerMovementBehaviour(BoxColliderBehaviour* collider, PlayerType type=PlayerType::kPlayerOne);
+	PlayerMovementBehaviour(BoxColliderBehaviour* collider, PlayerType type = PlayerType::kPlayerOne);
 	void Start() override;
 	void OnCollision(SceneNode* other) override;
 
@@ -15,6 +16,10 @@ public:
 
 	void MakeInvincible(float time);
 	bool CanBeHit();
+
+	// New: called by host when receiving input for networked players
+	void SetRemoteRealtime(Action action, bool started);
+	void ApplyRemoteEvent(Action action);
 
 private:
 	void PerformJump();
@@ -36,4 +41,9 @@ private:
 
 	Command get_score_;
 	Command lose_score_;
+
+	// Remote input state for network-controlled players
+	bool remote_left_ = false;
+	bool remote_right_ = false;
+	bool remote_jump_request_ = false;
 };

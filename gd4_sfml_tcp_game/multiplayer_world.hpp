@@ -4,6 +4,9 @@
 #include "network_protocol.hpp"
 #include <SFML/Network/SocketSelector.hpp>
 #include "star_spawner.hpp"
+#include <map>
+#include <string>
+#include "action.hpp" // Action enum
 
 class MultiplayerWorld : public GameWorld {
 public:
@@ -31,6 +34,10 @@ private:
 	void HandleSpawnPlayer(sf::Packet& data);
 #pragma endregion
 
+	// Networking input helpers
+	void SendRealtimeChange(Action action, bool started);
+	void SendEvent(Action action);
+
 protected:
 	bool is_host_;
 	bool is_connected_;
@@ -43,5 +50,13 @@ protected:
 	sf::Clock failed_connection_clock_;
 
 	StarSpawner* star_spawner_;
+
+	// Map usernames -> Player* (host and clients keep track)
+	std::map<std::string, Player*> network_players_;
+
+	// previous local input state (client) to avoid flooding
+	bool prev_left_ = false;
+	bool prev_right_ = false;
+	bool prev_jump_ = false;
 };
 
