@@ -13,8 +13,10 @@ public:
 
 	void StartStarTimer();
 
+	void AttemptDroppedStarSpawn(sf::Vector2f spawn_point, bool is_dropped = false, float bounce_direction = 0.f);
+
 	void SpawnStar(int force_position_index = -1);
-	void SpawnStar(sf::Vector2f spawn_point, bool is_dropped=false, float bounce_direction = 0.f);
+	void SpawnStar(sf::Vector2f spawn_point, bool is_dropped=false, float bounce_direction = 0.f, bool announce = true);
 
 	ReceiverCategories GetCategoryEnum() const override;
 
@@ -31,7 +33,7 @@ public:
 
 
 private:
-	void AddStar(bool dropped_star, sf::Vector2f spawn_point, float bounce_direction = 0.f);
+	void AddStar(bool dropped_star, sf::Vector2f spawn_point, float bounce_direction = 0.f, bool announce = true);
 private:
 	float time_until_spawn_;
 	float default_time_until_spawn;

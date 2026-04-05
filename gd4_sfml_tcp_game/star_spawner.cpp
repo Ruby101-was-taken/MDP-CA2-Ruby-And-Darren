@@ -32,6 +32,17 @@ void StarSpawner::StartStarTimer() {
 	time_until_spawn_ = default_time_until_spawn;
 }
 
+void StarSpawner::AttemptDroppedStarSpawn(sf::Vector2f spawn_point, bool is_dropped, float bounce_direction) {
+
+	if (is_host_) {
+		SpawnStar(spawn_point, is_dropped, bounce_direction);
+	}
+	else {
+		current_star_ = StarSpawner::StarInfo(spawn_point, (rand() % 2 == 0) ? -2 : 2, is_dropped);
+		GetWorld()->PassGameEvent(GameEvent::kClientStarSpawn);
+	}
+}
+
 void StarSpawner::SpawnStar(int force_position_index) {
 	++count_;
 	sf::Vector2f spawn_point;
@@ -44,13 +55,14 @@ void StarSpawner::SpawnStar(int force_position_index) {
 }
 
 // Darren Meidl - D00255479
-void StarSpawner::SpawnStar(sf::Vector2f spawn_point, bool is_dropped, float bounce_direction) {
-	AddStar(is_dropped, spawn_point, bounce_direction);
+void StarSpawner::SpawnStar(sf::Vector2f spawn_point, bool is_dropped, float bounce_direction, bool announce) {
+	AddStar(is_dropped, spawn_point, bounce_direction, announce);
 }
 
-void StarSpawner::AddStar(bool dropped_star, sf::Vector2f spawn_point, float bounce_direction) {
-	if (bounce_direction == 0) {
+void StarSpawner::AddStar(bool dropped_star, sf::Vector2f spawn_point, float bounce_direction, bool announce) {
+	if (bounce_direction == 0 and dropped_star) {
 		bounce_direction = 2.f;
+		std::printf("\n\nRANDOMISING STAR DIR");
 		if (rand() % 2 == 0)
 			bounce_direction *= -1;
 	}
@@ -70,8 +82,10 @@ void StarSpawner::AddStar(bool dropped_star, sf::Vector2f spawn_point, float bou
 
 	GetWorld()->GetCommandQueue().Push(command);
 
-	current_star_ = StarSpawner::StarInfo(spawn_point, bounce_direction, dropped_star);
-	GetWorld()->PassGameEvent(GameEvent::kStarSpawn);
+	if (announce) {
+		current_star_ = StarSpawner::StarInfo(spawn_point, bounce_direction, dropped_star);
+		GetWorld()->PassGameEvent(GameEvent::kStarSpawn);
+	}
 }
 
 ReceiverCategories StarSpawner::GetCategoryEnum() const {

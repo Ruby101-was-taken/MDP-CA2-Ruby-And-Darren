@@ -81,6 +81,11 @@ void MultiplayerWorld::HandleGameEvent(GameEvent event) {
 		break;
 	case GameEvent::kStarSpawn:
 		StarSpawned();
+		std::printf("kStarSpawn");
+		break;
+	case GameEvent::kClientStarSpawn:
+		TellHostToSpawnStar();
+		std::printf("kClientStarSpawn");
 		break;
 	default:
 		break;
@@ -143,6 +148,9 @@ void MultiplayerWorld::HandlePacketType(Server::PacketType type, sf::Packet& dat
 			HandleSpawnStar(data);
 		}
 		break;
+	case Server::PacketType::kClientDropStar:
+		HandleSpawnStar(data);
+		break;
 	default:
 		std::cout << "[MultiplayerWorld]: unknown type" << std::endl;
 		break;
@@ -187,7 +195,20 @@ void MultiplayerWorld::StarSpawned() {
 
 		SendPacket(star_info);
 	}
-}	
+}
+void MultiplayerWorld::TellHostToSpawnStar() {
+
+	sf::Vector2f pos = star_spawner_->GetCurrentStar().position;
+	sf::Packet star_info = Utility::CreatePacket(Server::PacketType::kClientDropStar);
+	star_info << static_cast<uint16_t>(pos.x);
+	star_info << static_cast<uint16_t>(pos.y);
+
+	star_info << star_spawner_->GetCurrentStar().is_dropped;
+	star_info << static_cast<int8_t>(star_spawner_->GetCurrentStar().bounce_direction);
+
+	SendPacket(star_info);
+}
+
 
 void MultiplayerWorld::HandlePlayerJoin(sf::Packet& data) {
 	if (is_host_) { //this function should only ever run on the host
@@ -238,5 +259,5 @@ void MultiplayerWorld::HandleSpawnStar(sf::Packet& data) {
 	data >> is_dropped;
 	int8_t bounce_direction;
 	data >> bounce_direction;
-	star_spawner_->SpawnStar(sf::Vector2f(x, y), is_dropped, bounce_direction);
+	star_spawner_->SpawnStar(sf::Vector2f(x, y), is_dropped, bounce_direction, false);
 }

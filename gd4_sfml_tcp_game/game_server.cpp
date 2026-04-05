@@ -140,6 +140,9 @@ void GameServer::HandlePacketType(Server::PacketType type, sf::Packet& data, sf:
     case Server::PacketType::kSpawnStar:
         SendPacketToAll(data);
         break;
+    case Server::PacketType::kClientDropStar:
+        SendPacketToAll(data);
+        break;
     default:
         std::cout << "[Server]: unknown type or missing break" << std::endl;
         break;

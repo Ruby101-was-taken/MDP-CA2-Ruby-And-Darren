@@ -26,6 +26,8 @@ private:
 
 	void StarSpawned();
 
+	void TellHostToSpawnStar();
+
 #pragma region PacketHandlers
 	void HandlePlayerJoin(sf::Packet& data);
 	void HandleSpawnPlayer(sf::Packet& data);
