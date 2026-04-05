@@ -21,7 +21,8 @@ private:
 	void ExecutionThread();
 	void Tick();
 
-	void SendPacketToAll(sf::Packet& data);
+	// Allow excluding one socket when broadcasting (useful to avoid echoing back to sender)
+	void SendPacketToAll(sf::Packet& data, sf::TcpSocket* exclude = nullptr);
 	void SendPacketToHost(sf::Packet& data);
 
 	void HandlePacketType(Server::PacketType type, sf::Packet& data, sf::TcpSocket* client_socket);
@@ -38,7 +39,8 @@ private:
 	sf::TcpListener listener_socket_;
 	sf::SocketSelector selector_;
 
-	std::unique_ptr<sf::TcpSocket> host_socket_;
+	// Do NOT take ownership of the socket stored in clients_. Just keep a raw pointer.
+	sf::TcpSocket* host_socket_ = nullptr;
 	std::vector<std::unique_ptr<sf::TcpSocket>> clients_;
 
 	bool waiting_thread_end_ = false;

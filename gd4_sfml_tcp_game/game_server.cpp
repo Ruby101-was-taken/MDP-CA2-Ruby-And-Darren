@@ -73,8 +73,13 @@ void GameServer::ExecutionThread() {
 void GameServer::Tick() {
 }
 
-void GameServer::SendPacketToAll(sf::Packet& data) {
+// Broadcast to all clients, optionally excluding one socket (e.g. the original sender)
+void GameServer::SendPacketToAll(sf::Packet& data, sf::TcpSocket* exclude) {
     for (auto& client : clients_) {
+        // skip excluded socket if provided
+        if (exclude != nullptr && client.get() == exclude)
+            continue;
+
         sf::Socket::Status status = client->send(data);
         //error message D:
         switch (status) {
@@ -97,6 +102,7 @@ void GameServer::SendPacketToAll(sf::Packet& data) {
 }
 
 void GameServer::SendPacketToHost(sf::Packet& data) {
+    if (!host_socket_) return;
     sf::Socket::Status status = host_socket_->send(data);
     //error message D:
     switch (status) {
@@ -123,12 +129,14 @@ void GameServer::HandlePacketType(Server::PacketType type, sf::Packet& data, sf:
         HandlePlayerJoin(data);
         break;
     case Server::PacketType::kIAmHost:
-        host_socket_ = std::unique_ptr<sf::TcpSocket>(client_socket);
+        // Do NOT take ownership; client_socket is owned by clients_ vector.
+        host_socket_ = client_socket;
         break;
     case Server::PacketType::kAddPlayer:
         HandleSpawnPlayer(data);
         break;
     case Server::PacketType::kStartGame:
+        // broadcast start to all clients (including origin)
         SendPacketToAll(data);
         break;
     case Server::PacketType::kSpawnStar:
@@ -147,10 +155,11 @@ void GameServer::HandlePacketType(Server::PacketType type, sf::Packet& data, sf:
         pkt << name;
         pkt << action_u;
 
-        if (host_socket_)
-            SendPacketToHost(pkt);
+        // Forward to host only (host is authoritative). Avoid sending back to the original sender.
+        SendPacketToHost(pkt);
         break;
     }
+
     case Server::PacketType::kPlayerRealtimeChange: {
         // payload layout: username (string), uint8 action, uint8 started
         std::string name;
@@ -165,28 +174,16 @@ void GameServer::HandlePacketType(Server::PacketType type, sf::Packet& data, sf:
         pkt << action_u;
         pkt << started_u;
 
-        if (host_socket_)
-            SendPacketToHost(pkt);
+        // Forward to host
+        SendPacketToHost(pkt);
         break;
     }
 
-    // New: forward state updates (username + float x + float y) to all clients (including host)
     case Server::PacketType::kStateUpdate: {
-        std::string name;
-        float x, y;
-        data >> name;
-        data >> x;
-        data >> y;
-
-        sf::Packet pkt = Utility::CreatePacket(Server::PacketType::kStateUpdate);
-        pkt << name;
-        pkt << x;
-        pkt << y;
-
-        SendPacketToAll(pkt);
-        
-        if (host_socket_)
-            SendPacketToHost(pkt);
+        // If the host sends state updates, broadcast to all clients (but you probably should exclude sender to avoid echo)
+        // We will broadcast to all except the sender.
+        // The data already has username + x + y extracted from the incoming packet header; we forward the original packet
+        SendPacketToAll(data, client_socket);
         break;
     }
 
