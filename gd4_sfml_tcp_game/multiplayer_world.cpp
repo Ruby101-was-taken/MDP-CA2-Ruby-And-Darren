@@ -164,10 +164,19 @@ void MultiplayerWorld::UpdateCurrent() {
 				if (!p) continue;
 				sf::Vector2f pos = p->getPosition();
 
+				// Attempt to include velocity so clients can animate jumps/falls instead of only using position
+				sf::Vector2f vel(0.f, 0.f);
+				if (auto pm = p->FindAttachable<PlayerMovementBehaviour>()) {
+					vel = pm->GetVelocity();
+				}
+
 				sf::Packet packet = Utility::CreatePacket(Server::PacketType::kStateUpdate);
 				packet << name;
 				packet << pos.x;
 				packet << pos.y;
+				// append velocity
+				packet << vel.x;
+				packet << vel.y;
 
 				SendPacket(packet);
 			}
@@ -253,9 +262,16 @@ void MultiplayerWorld::HandlePacketType(Server::PacketType type, sf::Packet& dat
 	case Server::PacketType::kStateUpdate: {
 		std::string name;
 		float x, y;
+		// read position
 		data >> name;
 		data >> x;
 		data >> y;
+
+		// Read optional velocity fields (added to state update). If packet doesn't contain them,
+		// extraction will fail silently; provide defaults.
+		float vx = 0.f, vy = 0.f;
+		if (!(data >> vx)) { vx = 0.f; }
+		if (!(data >> vy)) { vy = 0.f; }
 
 		// Ignore updates for our local player (we are authoritative for local)
 		if (name == username_)
@@ -265,7 +281,17 @@ void MultiplayerWorld::HandlePacketType(Server::PacketType type, sf::Packet& dat
 		if (it != network_players_.end()) {
 			Player* p = it->second;
 			if (p) {
-				p->setPosition({ x, y }); // immediate apply
+				// Apply a small smoothing to reduce jitter on clients (lerp rather than teleport)
+				const float lerp_factor = 0.6f; // tune between 0 (no move) and 1 (teleport)
+				sf::Vector2f current = p->getPosition();
+				sf::Vector2f target(x, y);
+				sf::Vector2f newpos = current + (target - current) * lerp_factor;
+				p->setPosition(newpos); // apply smoothed position
+
+				// Apply velocity to the PlayerMovementBehaviour so animation (jump/fall) can react
+				if (auto pm = p->FindAttachable<PlayerMovementBehaviour>()) {
+					pm->GetVelocity() = { vx, vy };
+				}
 			}
 		}
 		break;

@@ -147,10 +147,10 @@ void PlayerMovementBehaviour::PerformJump() {
 bool PlayerMovementBehaviour::CanJump() {
     // if the player is yet to let go of jump then they can't jump unless they press it again
     if (jump_held_) return false;
-    //if the player has c-time left they can always jump
+    // if the player has c-time left they can always jump
     if (coyote_time_ > 0) return true;
     // if the player is on the ground you can always jump
-    //if (IsOnGround()) return true; probs doesn't need to be checked since I don't think the above code covers all cases (c-time is always default on ground)
+    if (IsOnGround()) return true;
     return false; // <- for safety :3
 }
 
@@ -217,6 +217,15 @@ sf::Vector2f PlayerMovementBehaviour::CustomPhysicsUpdate(sf::Time dt, CommandQu
 
     if (velocity_.x != 0)
         sprite_->SetFlipX(velocity_.x < 0);
+
+    // Ensure remote/networked players can clear the "jump held" lock when they land.
+    // Remote clients don't send a jump-release realtime packet currently, so without this
+    // the remote player's jump_held_ can remain true and block future jumps.
+    if (type_ == PlayerType::kOnlineNetworkedPlayer) {
+        if (IsOnGround()) {
+            jump_held_ = false;
+        }
+    }
 
     return HandlePlayerInput() * acceleration_speed_;
 }

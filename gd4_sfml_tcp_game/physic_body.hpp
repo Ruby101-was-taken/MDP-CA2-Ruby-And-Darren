@@ -10,15 +10,18 @@ public:
 	void Update(sf::Time dt, CommandQueue& commands) override;
 
 	sf::Vector2f& GetVelocity();
-private:
+
+protected:
+	// allow derived classes to query ground contact
+	bool IsOnGround();
+
+	// allow derived classes to provide custom physics behaviour
+	virtual sf::Vector2f CustomPhysicsUpdate(sf::Time dt, CommandQueue& commands) = 0;
+
+	// movement helpers available to derived classes if needed
 	void PerformGravity();
 	float MoveInDirection(float speed, sf::Vector2f direction);
 	void PerformDeceleration();
-
-	bool IsOnGround();
-
-protected:
-	virtual sf::Vector2f CustomPhysicsUpdate(sf::Time dt, CommandQueue& commands) = 0;
 
 protected:
 
