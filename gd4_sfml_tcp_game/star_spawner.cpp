@@ -44,12 +44,18 @@ void StarSpawner::SpawnStar(int force_position_index) {
 }
 
 // Darren Meidl - D00255479
-void StarSpawner::SpawnStar(sf::Vector2f spawn_point, bool is_dropped) {
-	AddStar(is_dropped, spawn_point);
+void StarSpawner::SpawnStar(sf::Vector2f spawn_point, bool is_dropped, float bounce_direction) {
+	AddStar(is_dropped, spawn_point, bounce_direction);
 }
 
-void StarSpawner::AddStar(bool dropped_star, sf::Vector2f spawn_point) {
-	std::unique_ptr<Star> new_star = std::make_unique<Star>(textures_, this, spawn_point.x, spawn_point.y, 1, dropped_star);
+void StarSpawner::AddStar(bool dropped_star, sf::Vector2f spawn_point, float bounce_direction) {
+	if (bounce_direction == 0) {
+		bounce_direction = 2.f;
+		if (rand() % 2 == 0)
+			bounce_direction *= -1;
+	}
+
+	std::unique_ptr<Star> new_star = std::make_unique<Star>(textures_, this, spawn_point.x, spawn_point.y, 1, dropped_star, bounce_direction);
 	AttachChild(std::move(new_star));
 
 	sf::Vector2f world_position = GetWorldPosition();
@@ -64,7 +70,7 @@ void StarSpawner::AddStar(bool dropped_star, sf::Vector2f spawn_point) {
 
 	GetWorld()->GetCommandQueue().Push(command);
 
-	current_star_point_ = spawn_point;
+	current_star_ = StarSpawner::StarInfo(spawn_point, bounce_direction, dropped_star);
 	GetWorld()->PassGameEvent(GameEvent::kStarSpawn);
 }
 
@@ -72,9 +78,20 @@ ReceiverCategories StarSpawner::GetCategoryEnum() const {
 	return ReceiverCategories::kStarSpawner;
 }
 
-sf::Vector2f& StarSpawner::GetCurrentStarPoint() {
-	return current_star_point_;
+StarSpawner::StarInfo& StarSpawner::GetCurrentStar() {
+	return current_star_;
 }
 
+StarSpawner::StarInfo::StarInfo() :
+	position(sf::Vector2f(0,0)),
+	bounce_direction(2.f),
+	is_dropped(false) 
+{
+}
 
-
+StarSpawner::StarInfo::StarInfo(sf::Vector2f position, float bounce_direction, bool is_dropped):
+position(position),
+bounce_direction(bounce_direction),
+is_dropped(is_dropped)
+{
+}

@@ -7,7 +7,7 @@
 #include <iostream>
 #include "dropped_star_behaviour.hpp"
 
-Star::Star(const TextureHolder& textures, StarSpawner* star_spawner, int x, int y, int count, bool dropped) : 
+Star::Star(const TextureHolder& textures, StarSpawner* star_spawner, int x, int y, int count, bool dropped, float bounce_direction) :
 	star_spawner_(star_spawner),
 	dropped_(dropped),
 	can_be_collected_(0.2f)
@@ -20,7 +20,7 @@ Star::Star(const TextureHolder& textures, StarSpawner* star_spawner, int x, int 
 	AddBehaviour(collider);
 	
 	if (dropped_) {
-		AddBehaviour(new DroppedStarBehaviour(collider));
+		AddBehaviour(new DroppedStarBehaviour(collider, bounce_direction));
 		can_be_collected_ *= 2; // feels better for dropped stars to take a little bit before they can be picked up
 	}
 

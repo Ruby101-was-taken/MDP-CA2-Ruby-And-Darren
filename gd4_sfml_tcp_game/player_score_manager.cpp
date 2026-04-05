@@ -38,7 +38,7 @@ bool PlayerScoreManager::DecrementScore() {
 		Command spawnCommand;
 		spawnCommand.category = static_cast<int>(ReceiverCategories::kStarSpawner);
 		spawnCommand.action = DerivedAction<StarSpawner>([dropped_star_spawn_point](StarSpawner& ss, sf::Time) {
-			ss.SpawnStar(dropped_star_spawn_point);
+			ss.SpawnStar(dropped_star_spawn_point, true);
 			});
 		node_->GetWorld()->GetCommandQueue().Push(spawnCommand);
 		return true;

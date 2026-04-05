@@ -29,6 +29,7 @@ private:
 #pragma region PacketHandlers
 	void HandlePlayerJoin(sf::Packet& data);
 	void HandleSpawnPlayer(sf::Packet& data);
+	void HandleSpawnStar(sf::Packet& data);
 #pragma endregion
 
 protected:

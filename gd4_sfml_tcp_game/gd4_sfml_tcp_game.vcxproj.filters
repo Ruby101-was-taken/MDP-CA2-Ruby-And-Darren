@@ -533,11 +533,11 @@
     <ClInclude Include="game_event.hpp">
       <Filter>Header Files\Enums</Filter>
     </ClInclude>
-    <ClInclude Include="player_info.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="game_state.hpp">
       <Filter>Header Files\States</Filter>
+    </ClInclude>
+    <ClInclude Include="player_info.hpp">
+      <Filter>Header Files\Structs</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

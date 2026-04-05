@@ -5,7 +5,7 @@
 
 class DroppedStarBehaviour : public PhysicBody {
 public:
-	DroppedStarBehaviour(BoxColliderBehaviour* collider);
+	DroppedStarBehaviour(BoxColliderBehaviour* collider, float bounce_direction);
 
 	void Start() override;
 protected:
