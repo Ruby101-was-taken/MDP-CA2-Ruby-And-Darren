@@ -107,16 +107,16 @@ void GameServer::SendPacketToHost(sf::Packet& data) {
     //error message D:
     switch (status) {
     case sf::Socket::Status::NotReady:
-        std::cout << "Socket not ready." << std::endl;
+        std::cout << "[Server]: Socket not ready." << std::endl;
         break;
     case sf::Socket::Status::Partial:
-        std::cout << "Partial." << std::endl; //idk what this error means and I haven't gotten yet :D
+        std::cout << "[Server]: Partial." << std::endl; //idk what this error means and I haven't gotten yet :D
         break;
     case sf::Socket::Status::Disconnected:
-        std::cout << "Socket disconnected." << std::endl;
+        std::cout << "[Server]: Socket disconnected." << std::endl;
         break;
     case sf::Socket::Status::Error:
-        std::cout << "Something went wrong while sending packet." << std::endl;
+        std::cout << "[Server]: Something went wrong while sending packet." << std::endl;
         break;
     default:
         break;
@@ -137,8 +137,11 @@ void GameServer::HandlePacketType(Server::PacketType type, sf::Packet& data, sf:
     case Server::PacketType::kStartGame:
         SendPacketToAll(data);
         break;
+    case Server::PacketType::kSpawnStar:
+        HandleStarSpawn(data);
+        break;
     default:
-        std::cout << "unknown type or missing break" << std::endl;
+        std::cout << "[Server]: unknown type or missing break" << std::endl;
         break;
     }
 }
@@ -148,7 +151,7 @@ void GameServer::HandlePlayerJoin(sf::Packet& data) {
     // get username
     std::string name;
     data >> name;
-    std::cout << name << " has joined the game!" << std::endl;
+    std::cout << "[Server]:" << name << " has joined the game!" << std::endl;
 
     uint8_t r, g, b;
 
@@ -167,6 +170,17 @@ void GameServer::HandlePlayerJoin(sf::Packet& data) {
 }
 void GameServer::HandleSpawnPlayer(sf::Packet& data) {
     SendPacketToAll(data);
+}
+void GameServer::HandleStarSpawn(sf::Packet& data) {
+    uint16_t x, y;
+    data >> x;
+    data >> y;
+
+    sf::Packet packet = Utility::CreatePacket(Server::PacketType::kSpawnStar);
+    packet << x;
+    packet << y;
+
+    SendPacketToAll(packet);
 }
 #pragma endregion
 

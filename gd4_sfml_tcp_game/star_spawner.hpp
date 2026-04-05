@@ -6,7 +6,7 @@
 
 class StarSpawner : public SceneNode {
 public:
-	StarSpawner(TextureHolder& textures);
+	StarSpawner(TextureHolder& textures, bool is_host=true);
 
 	void StartCurrent() override;
 	void UpdateCurrent(sf::Time dt, CommandQueue& commands) override;
@@ -14,9 +14,11 @@ public:
 	void StartStarTimer();
 
 	void SpawnStar(int force_position_index = -1);
-	void SpawnStar(sf::Vector2f spawn_point);
+	void SpawnStar(sf::Vector2f spawn_point, bool is_dropped=false);
 
 	ReceiverCategories GetCategoryEnum() const override;
+
+	sf::Vector2f& GetCurrentStarPoint();
 private:
 	void AddStar(bool dropped_star, sf::Vector2f spawn_point);
 private:
@@ -26,5 +28,8 @@ private:
 	TextureHolder& textures_;
 
 	int count_;
+	bool is_host_;
+
+	sf::Vector2f current_star_point_;
 };
 

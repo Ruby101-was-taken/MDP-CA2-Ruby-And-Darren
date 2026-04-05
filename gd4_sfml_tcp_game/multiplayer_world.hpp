@@ -3,6 +3,7 @@
 #include "game_server.hpp"
 #include "network_protocol.hpp"
 #include <SFML/Network/SocketSelector.hpp>
+#include "star_spawner.hpp"
 
 class MultiplayerWorld : public GameWorld {
 public:
@@ -23,6 +24,8 @@ private:
 
 	void StartGame();
 
+	void StarSpawned();
+
 #pragma region PacketHandlers
 	void HandlePlayerJoin(sf::Packet& data);
 	void HandleSpawnPlayer(sf::Packet& data);
@@ -38,5 +41,7 @@ protected:
 	sf::TcpSocket socket_;
 
 	sf::Clock failed_connection_clock_;
+
+	StarSpawner* star_spawner_;
 };
 

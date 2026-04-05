@@ -30,6 +30,10 @@ Application::Application() :
 	window_(sf::VideoMode({WINDOW_WIDTH, WINDOW_HEIGHT }),(std::string)WINDOW_TITLE, sf::Style::Default)
 	, stack_(State::Context(window_, textures_, fonts_, music_, sound_))
 {
+
+	//ensure all randomness is random
+	srand(time(NULL));
+
 	window_.setKeyRepeatEnabled(false);
 	window_.setMinimumSize(sf::Vector2u(WINDOW_WIDTH, WINDOW_HEIGHT));
 	fonts_.Load(Font::kMain, "Media/Fonts/Sansation.ttf");
@@ -62,11 +66,6 @@ Application::Application() :
 	Utility::GetAddressFromFile();
 	Utility::GetUserNameFromFile();
 	Utility::GetUserColourFromFile();
-
-
-	//ensure all randomness is random
-	srand(time(NULL));
-
 }
 
 void Application::Run()

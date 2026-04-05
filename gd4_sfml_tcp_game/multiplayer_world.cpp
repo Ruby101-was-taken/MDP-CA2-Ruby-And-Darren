@@ -59,11 +59,16 @@ void MultiplayerWorld::BuildScene() {
 		packet << static_cast<uint8_t>(colour.g);
 		packet << static_cast<uint8_t>(colour.b);
 		SendPacket(packet);
+
 	}
 	else if (is_host_) {
 		sf::Packet packet = Utility::CreatePacket(Server::PacketType::kIAmHost);
 		SendPacket(packet);
 	}
+	//add star spawner
+	std::unique_ptr<StarSpawner> spawner = std::make_unique<StarSpawner>(textures_, is_host_);
+	star_spawner_ = spawner.get();
+	root_node_.AttachChild(std::move(spawner));
 
 	//Set socket to non-blocking
 	socket_.setBlocking(false);
@@ -73,6 +78,9 @@ void MultiplayerWorld::HandleGameEvent(GameEvent event) {
 	switch (event) {
 	case GameEvent::kGameStart:
 		StartGame();
+		break;
+	case GameEvent::kStarSpawn:
+		StarSpawned();
 		break;
 	default:
 		break;
@@ -85,16 +93,16 @@ sf::Socket::Status MultiplayerWorld::SendPacket(sf::Packet& packet) {
 	//error message D:
 	switch (status) {
 	case sf::Socket::Status::NotReady:
-		std::cout << "Socket not ready." << std::endl;
+		std::cout << "[MultiplayerWorld]: Socket not ready." << std::endl;
 		break;
 	case sf::Socket::Status::Partial:
-		std::cout << "Partial." << std::endl; //idk what this error means and I haven't gotten yet :D
+		std::cout << "[MultiplayerWorld]: Partial." << std::endl; //idk what this error means and I haven't gotten yet :D
 		break;
 	case sf::Socket::Status::Disconnected:
-		std::cout << "Socket disconnected." << std::endl;
+		std::cout << "[MultiplayerWorld]: Socket disconnected." << std::endl;
 		break;
 	case sf::Socket::Status::Error:
-		std::cout << "Something went wrong while sending packet." << std::endl;
+		std::cout << "[MultiplayerWorld]: Something went wrong while sending packet." << std::endl;
 		break;
 	default:
 		break;
@@ -130,6 +138,16 @@ void MultiplayerWorld::HandlePacketType(Server::PacketType type, sf::Packet& dat
 		if (!is_host_)
 			HandleSpawnPlayer(data);
 		break;
+	case Server::PacketType::kSpawnStar:
+		if (!is_host_) {
+			uint16_t x, y;
+			data >> x;
+			data >> y;
+			star_spawner_->SpawnStar(sf::Vector2f(x, y), false);
+			std::cout << x << ", " << y << std::endl;
+		}
+		std::cout << "x <<  << y" << std::endl;
+		break;
 	default:
 		std::cout << "[MultiplayerWorld]: unknown type" << std::endl;
 		break;
@@ -158,6 +176,18 @@ void MultiplayerWorld::StartGame() {
 
 		sf::Packet start_packet = Utility::CreatePacket(Server::PacketType::kStartGame);
 		SendPacket(start_packet);
+	}
+}
+
+void MultiplayerWorld::StarSpawned() {
+	if (is_host_) {//only the host should announce when a star has spawned
+		sf::Vector2f pos = star_spawner_->GetCurrentStarPoint();
+
+		sf::Packet star_info = Utility::CreatePacket(Server::PacketType::kSpawnStar);
+		star_info << static_cast<uint16_t>(pos.x);
+		star_info << static_cast<uint16_t>(pos.y);
+
+		SendPacket(star_info);
 	}
 }
 

@@ -44,7 +44,6 @@ public:
 	virtual bool IsStillInPlay();
 
 	void PassGameEvent(GameEvent event);
-	virtual void HandleGameEvent(GameEvent event);
 
 protected:
 	void SetCameraPosition(sf::Vector2f position);
@@ -69,6 +68,8 @@ protected:
 	virtual void BuildScene();
 
 	virtual void UpdateCurrent();
+
+	virtual void HandleGameEvent(GameEvent event);
 
 protected:
 	SceneNode root_node_;

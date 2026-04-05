@@ -139,8 +139,7 @@ void GameWorld::MakeBaseScene() {
     root_node_.AttachChild(std::move(soundNode));
 
 
-    std::unique_ptr<StarSpawner> spawner_ = std::make_unique<StarSpawner>(textures_);
-    root_node_.AttachChild(std::move(spawner_));
+    
 }
 
 

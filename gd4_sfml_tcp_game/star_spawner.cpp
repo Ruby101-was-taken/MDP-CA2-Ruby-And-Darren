@@ -6,11 +6,12 @@
 #include "sound_node.hpp"
 #include <iostream>
 
-StarSpawner::StarSpawner(TextureHolder& textures) :
+StarSpawner::StarSpawner(TextureHolder& textures, bool is_host) :
 	time_until_spawn_(0.f),
 	default_time_until_spawn(7.5f),
 	textures_(textures),
-	count_(0)
+	count_(0),
+	is_host_(is_host)
 {	
 }
 
@@ -19,7 +20,7 @@ void StarSpawner::StartCurrent() {
 }
 
 void StarSpawner::UpdateCurrent(sf::Time dt, CommandQueue& commands) {
-	if (time_until_spawn_ > 0) {
+	if (time_until_spawn_ > 0 and is_host_) {
 		time_until_spawn_ -= dt.asSeconds();
 		if (time_until_spawn_ <= 0) {
 			SpawnStar();
@@ -43,8 +44,8 @@ void StarSpawner::SpawnStar(int force_position_index) {
 }
 
 // Darren Meidl - D00255479
-void StarSpawner::SpawnStar(sf::Vector2f spawn_point) {
-	AddStar(true, spawn_point);
+void StarSpawner::SpawnStar(sf::Vector2f spawn_point, bool is_dropped) {
+	AddStar(is_dropped, spawn_point);
 }
 
 void StarSpawner::AddStar(bool dropped_star, sf::Vector2f spawn_point) {
@@ -62,10 +63,17 @@ void StarSpawner::AddStar(bool dropped_star, sf::Vector2f spawn_point) {
 		});
 
 	GetWorld()->GetCommandQueue().Push(command);
+
+	current_star_point_ = spawn_point;
+	GetWorld()->PassGameEvent(GameEvent::kStarSpawn);
 }
 
 ReceiverCategories StarSpawner::GetCategoryEnum() const {
 	return ReceiverCategories::kStarSpawner;
+}
+
+sf::Vector2f& StarSpawner::GetCurrentStarPoint() {
+	return current_star_point_;
 }
 
 
