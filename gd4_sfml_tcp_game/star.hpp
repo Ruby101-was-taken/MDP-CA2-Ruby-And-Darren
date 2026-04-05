@@ -8,7 +8,7 @@ class StarSpawner;
 
 class Star : public SceneNode {
 public:
-	Star(const TextureHolder& textures, StarSpawner* star_spawner, int x, int y, int count=0, bool dropped=false);
+	Star(const TextureHolder& textures, StarSpawner* star_spawner, int x, int y, int count=0, bool dropped=false, float bounce_direction=1);
 
 	void Collect();
 

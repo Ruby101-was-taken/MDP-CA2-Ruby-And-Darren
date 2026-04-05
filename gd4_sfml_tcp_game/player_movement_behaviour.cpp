@@ -83,8 +83,7 @@ void PlayerMovementBehaviour::OnCollision(SceneNode* other) {
                 BouncePlayer(false);
                 other_player->MakeInvincible(2.f);
                 MakeInvincible(0.01f);
-                PlayLocalSound(node_->GetWorld()->GetCommandQueue(), SoundEffect::kPlayerCollide);
-                std::cout << "I hit the other player!" << std::endl;
+                PlayLocalSound(node_->GetWorld()->GetCommandQueue(), SoundEffect::kPlayerCollide);            
             }
             else if (other_player->velocity_.y == velocity_.y and other_player->CanBeHit() and CanBeHit()) { // both player hit eachother
                 other_player->BouncePlayer(true);
@@ -95,12 +94,11 @@ void PlayerMovementBehaviour::OnCollision(SceneNode* other) {
             }
         }
     }
-    else if (other->GetCollisionLayer() == CollisionLayer::kItemStar) {
+    else if (other->GetCollisionLayer() == CollisionLayer::kItemStar and type_ != PlayerType::kOnlineNetworkedPlayer) {
 
         Star* star = dynamic_cast<Star*>(other); //get star
 
         if (star->CanBeCollected()) {
-            std::cout << "get star!!!" << std::endl;
             star->Collect();
             PlayLocalSound(node_->GetWorld()->GetCommandQueue(), SoundEffect::kStarGet);
             node_->GetWorld()->GetCommandQueue().Push(get_score_);

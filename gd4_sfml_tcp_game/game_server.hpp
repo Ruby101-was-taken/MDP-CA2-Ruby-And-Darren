@@ -30,7 +30,6 @@ private:
 #pragma region PacketHandlers
 	void HandlePlayerJoin(sf::Packet& data);
 	void HandleSpawnPlayer(sf::Packet& data);
-	void HandleStarSpawn(sf::Packet& data);
 #pragma endregion
 
 

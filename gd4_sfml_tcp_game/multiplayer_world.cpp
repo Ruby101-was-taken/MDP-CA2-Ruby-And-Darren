@@ -85,6 +85,11 @@ void MultiplayerWorld::HandleGameEvent(GameEvent event) {
 		break;
 	case GameEvent::kStarSpawn:
 		StarSpawned();
+		std::printf("kStarSpawn");
+		break;
+	case GameEvent::kClientStarSpawn:
+		TellHostToSpawnStar();
+		std::printf("kClientStarSpawn");
 		break;
 	default:
 		break;
@@ -200,16 +205,13 @@ void MultiplayerWorld::HandlePacketType(Server::PacketType type, sf::Packet& dat
 		break;
 	case Server::PacketType::kSpawnStar:
 		if (!is_host_) {
-			uint16_t x, y;
-			data >> x;
-			data >> y;
-			star_spawner_->SpawnStar(sf::Vector2f(x, y), false);
-			std::cout << x << ", " << y << std::endl;
+			HandleSpawnStar(data);
 		}
-		std::cout << "x <<  << y" << std::endl;
 		break;
-
-		// Incoming forwarded input from server (host will receive these)
+	case Server::PacketType::kClientDropStar:
+		HandleSpawnStar(data);
+		break;
+	// Incoming forwarded input from server (host will receive these)
 	case Server::PacketType::kPlayerEvent: {
 		std::string name;
 		uint8_t action_u;
@@ -332,15 +334,31 @@ void MultiplayerWorld::StartGame() {
 
 void MultiplayerWorld::StarSpawned() {
 	if (is_host_) {//only the host should announce when a star has spawned
-		sf::Vector2f pos = star_spawner_->GetCurrentStarPoint();
+		sf::Vector2f pos = star_spawner_->GetCurrentStar().position;
 
 		sf::Packet star_info = Utility::CreatePacket(Server::PacketType::kSpawnStar);
 		star_info << static_cast<uint16_t>(pos.x);
 		star_info << static_cast<uint16_t>(pos.y);
 
+		star_info << star_spawner_->GetCurrentStar().is_dropped;
+		star_info << static_cast<int8_t>(star_spawner_->GetCurrentStar().bounce_direction);
+
 		SendPacket(star_info);
 	}
 }
+void MultiplayerWorld::TellHostToSpawnStar() {
+
+	sf::Vector2f pos = star_spawner_->GetCurrentStar().position;
+	sf::Packet star_info = Utility::CreatePacket(Server::PacketType::kClientDropStar);
+	star_info << static_cast<uint16_t>(pos.x);
+	star_info << static_cast<uint16_t>(pos.y);
+
+	star_info << star_spawner_->GetCurrentStar().is_dropped;
+	star_info << static_cast<int8_t>(star_spawner_->GetCurrentStar().bounce_direction);
+
+	SendPacket(star_info);
+}
+
 
 void MultiplayerWorld::HandlePlayerJoin(sf::Packet& data) {
 	if (is_host_) { //this function should only ever run on the host
@@ -386,6 +404,27 @@ void MultiplayerWorld::HandleSpawnPlayer(sf::Packet& data) {
 	}
 }
 
+void MultiplayerWorld::HandleSpawnStar(sf::Packet& data) {
+	uint16_t x, y;
+	data >> x;
+	data >> y;
+	bool is_dropped;
+	data >> is_dropped;
+	int8_t bounce_direction;
+	data >> bounce_direction;
+	star_spawner_->SpawnStar(sf::Vector2f(x, y), is_dropped, bounce_direction, false);
+}
+
+void MultiplayerWorld::HandleSpawnStar(sf::Packet& data) {
+	uint16_t x, y;
+	data >> x;
+	data >> y;
+	bool is_dropped;
+	data >> is_dropped;
+	int8_t bounce_direction;
+	data >> bounce_direction;
+	star_spawner_->SpawnStar(sf::Vector2f(x, y), is_dropped, bounce_direction, false);
+}
 // Send helpers (client side sends these packets to server)
 void MultiplayerWorld::SendRealtimeChange(Action action, bool started) {
 	if (!is_connected_) return;

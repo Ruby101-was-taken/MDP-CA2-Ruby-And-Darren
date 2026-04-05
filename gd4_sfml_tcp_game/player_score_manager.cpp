@@ -20,10 +20,11 @@ void PlayerScoreManager::IncrementScore() {
 	std::printf("get score");
 	UpdateScoreVisual();
 	// check if player has won
-	if (score_ >= score_to_win_) {
+	// THE PLAYER BEING ABLE TO WIN IS LOST MEDIA????????????
+	/*if (score_ >= score_to_win_) {
 		ReceiverCategories player_category = node_->GetCategoryEnum();
 		node_->GetWorld()->SetWinningPlayer(player_category);
-	}
+	}*/
 		 
 }
 
@@ -38,7 +39,7 @@ bool PlayerScoreManager::DecrementScore() {
 		Command spawnCommand;
 		spawnCommand.category = static_cast<int>(ReceiverCategories::kStarSpawner);
 		spawnCommand.action = DerivedAction<StarSpawner>([dropped_star_spawn_point](StarSpawner& ss, sf::Time) {
-			ss.SpawnStar(dropped_star_spawn_point);
+			ss.AttemptDroppedStarSpawn(dropped_star_spawn_point, true);
 			});
 		node_->GetWorld()->GetCommandQueue().Push(spawnCommand);
 		return true;

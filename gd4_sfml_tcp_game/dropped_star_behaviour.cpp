@@ -3,14 +3,12 @@
 #include "scene_node.hpp"
 #include <iostream>
 
-DroppedStarBehaviour::DroppedStarBehaviour(BoxColliderBehaviour* collider) :
+DroppedStarBehaviour::DroppedStarBehaviour(BoxColliderBehaviour* collider, float bounce_direction) :
     PhysicBody(collider),
     bounce_strength_(5.f),
-    bounce_direction_(2.f),
+    bounce_direction_(bounce_direction),
     decay_speed_(0.2f)
 {
-    if (rand() % 2 == 0)
-        bounce_direction_ *= -1;
 }
 
 void DroppedStarBehaviour::Start() {

@@ -136,13 +136,14 @@ void GameServer::HandlePacketType(Server::PacketType type, sf::Packet& data, sf:
         HandleSpawnPlayer(data);
         break;
     case Server::PacketType::kStartGame:
-        // broadcast start to all clients (including origin)
         SendPacketToAll(data);
         break;
     case Server::PacketType::kSpawnStar:
-        HandleStarSpawn(data);
+        SendPacketToAll(data);
         break;
-
+    case Server::PacketType::kClientDropStar:
+        SendPacketToAll(data);
+        break;
         // Forward input packets from client to host (reserialize to include packet type byte)
     case Server::PacketType::kPlayerEvent: {
         // payload layout from client: username (string), uint8 action
@@ -187,6 +188,8 @@ void GameServer::HandlePacketType(Server::PacketType type, sf::Packet& data, sf:
         break;
     }
 
+    }
+
     default:
         std::cout << "[Server]: unknown type or missing break" << std::endl;
         break;
@@ -217,16 +220,5 @@ void GameServer::HandlePlayerJoin(sf::Packet& data) {
 }
 void GameServer::HandleSpawnPlayer(sf::Packet& data) {
     SendPacketToAll(data);
-}
-void GameServer::HandleStarSpawn(sf::Packet& data) {
-    uint16_t x, y;
-    data >> x;
-    data >> y;
-
-    sf::Packet packet = Utility::CreatePacket(Server::PacketType::kSpawnStar);
-    packet << x;
-    packet << y;
-
-    SendPacketToAll(packet);
 }
 #pragma endregion

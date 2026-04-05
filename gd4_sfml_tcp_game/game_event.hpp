@@ -1,5 +1,6 @@
 #pragma once
 enum class GameEvent {
 	kGameStart,
-	kStarSpawn
+	kStarSpawn,
+	kClientStarSpawn
 };

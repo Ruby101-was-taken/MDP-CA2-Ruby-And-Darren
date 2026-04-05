@@ -8,6 +8,7 @@ namespace Server {
 		kAddPlayer, // used when the non host clients need to spawn a new player
 		kStartGame, // used when host presses start
 		kSpawnStar, // used when a star spawns. Sends x and y with it
+		kClientDropStar, // used when a client spawns a dropped star
 
 		// Added network/input/state packets
 		kPlayerEvent,           // username + uint8(action)
