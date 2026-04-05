@@ -6,7 +6,8 @@
 #include <iostream>
 
 GameServer::GameServer()
-    : thread_(&GameServer::ExecutionThread, this) {
+    : thread_(&GameServer::ExecutionThread, this)
+{
     listener_socket_.setBlocking(false);
     listener_socket_.listen(SERVER_PORT);
 
@@ -20,14 +21,14 @@ GameServer::~GameServer() {
 }
 
 void GameServer::ExecutionThread() {
-
-
-    sf::Time tick_rate = sf::seconds(1.f / 20.f);
+        
+   
+    sf::Time tick_rate = sf::seconds(1.f / 20.f); // Old: 20.f
     sf::Time tick_time = sf::Time::Zero;
     sf::Clock tick_clock;
 
     while (!waiting_thread_end_) {
-
+        
 
         tick_time += tick_clock.getElapsedTime();
         tick_clock.restart();
@@ -37,31 +38,25 @@ void GameServer::ExecutionThread() {
             tick_time -= tick_rate;
         }
 
-        //sleep to allow me to run the client on this machine as well
-        //maybe rethink this if performance is poor
-        sf::sleep(sf::milliseconds(50));
+        // sleep removed; use a small wait to reduce CPU but keep latency low
+        //sf::sleep(sf::milliseconds(50));
 
-        if (selector_.wait(sf::milliseconds(100))) {
-            // loooks for new clients
+        // Use a short selector timeout so we service sockets frequently (e.g. 5ms)
+        if (selector_.wait(sf::milliseconds(5))) {
+            // accept new clients and service ready sockets
             if (selector_.isReady(listener_socket_)) {
                 auto client = std::make_unique<sf::TcpSocket>();
-
                 if (listener_socket_.accept(*client) == sf::Socket::Status::Done) {
                     client->setBlocking(false);
                     selector_.add(*client);
                     clients_.push_back(std::move(client));
                 }
-
             }
 
-            // loop through every client to see if they have data
             for (auto& client : clients_) {
                 if (selector_.isReady(*client)) {
                     sf::Packet data;
-
-                    sf::Socket::Status status = client->receive(data);
-
-                    if (status == sf::Socket::Status::Done) {
+                    if (client->receive(data) == sf::Socket::Status::Done) {
                         uint8_t type;
                         data >> type;
                         HandlePacketType(static_cast<Server::PacketType>(type), data, client.get());
@@ -122,7 +117,7 @@ void GameServer::SendPacketToHost(sf::Packet& data) {
     }
 }
 
-void GameServer::HandlePacketType(Server::PacketType type, sf::Packet& data, sf::TcpSocket* client_socket) {
+void GameServer::HandlePacketType(Server::PacketType type, sf::Packet& data, sf::TcpSocket *client_socket) {
     switch (type) {
     case Server::PacketType::kPlayerJoin:
         HandlePlayerJoin(data);
@@ -170,6 +165,26 @@ void GameServer::HandlePacketType(Server::PacketType type, sf::Packet& data, sf:
         pkt << action_u;
         pkt << started_u;
 
+        if (host_socket_)
+            SendPacketToHost(pkt);
+        break;
+    }
+
+    // New: forward state updates (username + float x + float y) to all clients (including host)
+    case Server::PacketType::kStateUpdate: {
+        std::string name;
+        float x, y;
+        data >> name;
+        data >> x;
+        data >> y;
+
+        sf::Packet pkt = Utility::CreatePacket(Server::PacketType::kStateUpdate);
+        pkt << name;
+        pkt << x;
+        pkt << y;
+
+        SendPacketToAll(pkt);
+        
         if (host_socket_)
             SendPacketToHost(pkt);
         break;

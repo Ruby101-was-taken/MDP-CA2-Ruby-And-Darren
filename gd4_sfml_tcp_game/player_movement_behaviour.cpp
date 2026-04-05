@@ -44,7 +44,7 @@ void PlayerMovementBehaviour::Start() {
         score_manager->DecrementScore();
         });
 }
-
+// D00255479 - Darren Meidl
 void PlayerMovementBehaviour::SetRemoteRealtime(Action action, bool started) {
     switch (action) {
     case Action::kMoveLeft:
@@ -61,7 +61,7 @@ void PlayerMovementBehaviour::SetRemoteRealtime(Action action, bool started) {
         break;
     }
 }
-
+// D00255479 - Darren Meidl
 void PlayerMovementBehaviour::ApplyRemoteEvent(Action action) {
     switch (action) {
     case Action::kMoveUp:
@@ -185,15 +185,16 @@ sf::Vector2f PlayerMovementBehaviour::HandlePlayerInput() {
         if (InputManager::InputIsPressed(InputTypes::kPlayerTwoRight))
             velocity.x += 1;
     }
-    // Network-controlled player: use remote flags
+    // D00255479 - Darren Meidl - Network-controlled player, uses remote flags
     else if (type_ == PlayerType::kOnlineNetworkedPlayer) {
         // Jump requested remotely?
         if (remote_jump_request_) {
             if (CanJump()) {
                 PerformJump();
+                // consume request only when jump succeeds
+                remote_jump_request_ = false;
             }
-            // consume request
-            remote_jump_request_ = false;
+            // otherwise keep request until a jump can be performed
         }
 
         if (remote_left_)
