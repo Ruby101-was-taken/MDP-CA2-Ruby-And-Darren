@@ -22,9 +22,9 @@ protected:
     void MakeBaseScene();
 
     void MakeTwoPlayer();
-
-    void AddPlayer(PlayerType type, sf::Vector2f spawn);
-    void AddPlayer(PlayerType type, sf::Vector2f spawn, std::string name);
+    // Modified: return pointer to the created Player so callers can keep a reference
+    Player* AddPlayer(PlayerType type, sf::Vector2f spawn);
+    Player* AddPlayer(PlayerType type, sf::Vector2f spawn, std::string name);
 
 protected:
     Player* player_one_;

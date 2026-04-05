@@ -103,12 +103,12 @@ void GameWorld::MakeTwoPlayer() {
     SetCameraSize({ 640, 180 });
     is_two_player_ = true;
 }
-
-void GameWorld::AddPlayer(PlayerType type, sf::Vector2f spawn) {
-    AddPlayer(type, spawn, "No Name");
+// Modified: return created Player*
+Player* GameWorld::AddPlayer(PlayerType type, sf::Vector2f spawn) {
+    return AddPlayer(type, spawn, "No Name");
 }
-
-void GameWorld::AddPlayer(PlayerType type, sf::Vector2f spawn, std::string name) {
+// Modified: make pointer out of created Player and return it so callers can keep a reference
+Player* GameWorld::AddPlayer(PlayerType type, sf::Vector2f spawn, std::string name) {
     auto player = std::make_unique<Player>(
         textures_,
         fonts_,
@@ -117,11 +117,15 @@ void GameWorld::AddPlayer(PlayerType type, sf::Vector2f spawn, std::string name)
         type,
         name
     );
+    Player* player_ptr = player.get();
+
     if (type == PlayerType::kPlayerOne or type == PlayerType::kOnlineLocalPlayer)
-        player_one_ = player.get();
+        player_one_ = player_ptr;
     if (type == PlayerType::kPlayerTwo)
-        player_two_ = player.get();
+        player_two_ = player_ptr;
     root_node_.AttachChild(std::move(player));
+
+    return player_ptr;
 }
 
 void GameWorld::MakeBaseScene() {
