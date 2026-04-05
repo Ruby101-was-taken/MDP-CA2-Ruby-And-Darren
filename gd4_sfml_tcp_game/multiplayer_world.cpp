@@ -415,16 +415,6 @@ void MultiplayerWorld::HandleSpawnStar(sf::Packet& data) {
 	star_spawner_->SpawnStar(sf::Vector2f(x, y), is_dropped, bounce_direction, false);
 }
 
-void MultiplayerWorld::HandleSpawnStar(sf::Packet& data) {
-	uint16_t x, y;
-	data >> x;
-	data >> y;
-	bool is_dropped;
-	data >> is_dropped;
-	int8_t bounce_direction;
-	data >> bounce_direction;
-	star_spawner_->SpawnStar(sf::Vector2f(x, y), is_dropped, bounce_direction, false);
-}
 // Send helpers (client side sends these packets to server)
 void MultiplayerWorld::SendRealtimeChange(Action action, bool started) {
 	if (!is_connected_) return;

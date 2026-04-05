@@ -188,8 +188,6 @@ void GameServer::HandlePacketType(Server::PacketType type, sf::Packet& data, sf:
         break;
     }
 
-    }
-
     default:
         std::cout << "[Server]: unknown type or missing break" << std::endl;
         break;
