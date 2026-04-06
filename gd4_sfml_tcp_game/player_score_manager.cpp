@@ -17,7 +17,7 @@ void PlayerScoreManager::Update(sf::Time dt, CommandQueue& commands) {
 
 void PlayerScoreManager::IncrementScore() {
 	score_ += 1;
-	std::printf("get score");
+	std::printf("get score\n");
 	UpdateScoreVisual();
 	// check if player has won
 	// THE PLAYER BEING ABLE TO WIN IS LOST MEDIA????????????

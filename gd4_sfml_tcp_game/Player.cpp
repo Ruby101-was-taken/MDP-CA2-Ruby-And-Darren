@@ -82,10 +82,21 @@ Player::Player(const TextureHolder& textures, const FontHolder& fonts, float x, 
 void Player::UpdateCurrent(sf::Time dt, CommandQueue& commands) {
 }
 
+bool Player::IsReal() {
+	return type_ != PlayerType::kOnlineNetworkedPlayer;
+}
+
 
 ReceiverCategories Player::GetCategoryEnum() const {
-	ReceiverCategories category = (type_ == PlayerType::kPlayerOne) ? ReceiverCategories::kPlayerOne : ReceiverCategories::kPlayerTwo;
-
-	return category;
+	switch (type_) {
+	case PlayerType::kPlayerOne:
+		return ReceiverCategories::kPlayerOne;
+	case PlayerType::kPlayerTwo:
+		return ReceiverCategories::kPlayerTwo;
+	case PlayerType::kOnlineLocalPlayer:
+		return ReceiverCategories::kPlayerOne;
+	default:
+		return ReceiverCategories::kNone;
+	}
 }
 

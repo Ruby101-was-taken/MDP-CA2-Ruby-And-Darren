@@ -11,9 +11,11 @@ public:
 
 	void UpdateCurrent(sf::Time dt, CommandQueue& commands) override;
 
+	bool IsReal();
+
+	PlayerType type_;
 	virtual ReceiverCategories GetCategoryEnum() const override;
 private:
-	PlayerType type_;
 };
 
 

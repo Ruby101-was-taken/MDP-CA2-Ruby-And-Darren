@@ -34,8 +34,10 @@ void PlayerMovementBehaviour::Start() {
 
     get_score_.category = static_cast<int>(category);
     get_score_.action = DerivedAction<Player>([](Player& player, sf::Time) {
-        PlayerScoreManager* score_manager = player.FindAttachable<PlayerScoreManager>();
-        score_manager->IncrementScore();
+        if (player.IsReal()) {
+            PlayerScoreManager* score_manager = player.FindAttachable<PlayerScoreManager>();
+            score_manager->IncrementScore();
+        }
         });
 
     lose_score_.category = static_cast<int>(category);
@@ -94,7 +96,7 @@ void PlayerMovementBehaviour::OnCollision(SceneNode* other) {
             }
         }
     }
-    else if (other->GetCollisionLayer() == CollisionLayer::kItemStar and type_ != PlayerType::kOnlineNetworkedPlayer) {
+    else if (other->GetCollisionLayer() == CollisionLayer::kItemStar) {
 
         Star* star = dynamic_cast<Star*>(other); //get star
 

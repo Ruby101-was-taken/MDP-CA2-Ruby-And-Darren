@@ -21,6 +21,7 @@ public:
 	void SetRemoteRealtime(Action action, bool started);
 	void ApplyRemoteEvent(Action action);
 
+
 private:
 	void PerformJump();
 	bool CanJump();
