@@ -17,7 +17,6 @@ void PlayerScoreManager::Update(sf::Time dt, CommandQueue& commands) {
 
 void PlayerScoreManager::IncrementScore() {
 	score_ += 1;
-	std::printf("get score\n");
 	UpdateScoreVisual();
 	// check if player has won
 	// THE PLAYER BEING ABLE TO WIN IS LOST MEDIA????????????
@@ -47,6 +46,12 @@ bool PlayerScoreManager::DecrementScore() {
 	std::printf("no more score to lose\n");
 	return false;
 }
+
+
+int PlayerScoreManager::GetScore() {
+	return score_;
+}
+
 
 void PlayerScoreManager::UpdateScoreVisual() {
 	int score = score_;

@@ -2,5 +2,6 @@
 enum class GameEvent {
 	kGameStart,
 	kStarSpawn,
-	kClientStarSpawn
+	kClientStarSpawn,
+	kStarCountChange
 };

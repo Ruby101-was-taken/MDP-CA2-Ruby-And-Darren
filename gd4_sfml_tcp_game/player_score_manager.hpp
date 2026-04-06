@@ -12,6 +12,7 @@ public:
 	void IncrementScore();
 	bool DecrementScore(); // returns true if the player has a start to remove
 
+	int GetScore();
 private:
 	void UpdateScoreVisual();
 	

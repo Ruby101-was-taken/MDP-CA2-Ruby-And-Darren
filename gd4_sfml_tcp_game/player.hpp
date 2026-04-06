@@ -13,9 +13,12 @@ public:
 
 	bool IsReal();
 
-	PlayerType type_;
+	int GetScore();
+	void IncrementScore();
+
 	virtual ReceiverCategories GetCategoryEnum() const override;
 private:
+	PlayerType type_;
 };
 
 

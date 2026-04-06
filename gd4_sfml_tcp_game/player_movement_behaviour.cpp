@@ -37,6 +37,7 @@ void PlayerMovementBehaviour::Start() {
         if (player.IsReal()) {
             PlayerScoreManager* score_manager = player.FindAttachable<PlayerScoreManager>();
             score_manager->IncrementScore();
+            player.GetWorld()->PassGameEvent(GameEvent::kStarCountChange);
         }
         });
 
@@ -44,6 +45,7 @@ void PlayerMovementBehaviour::Start() {
     lose_score_.action = DerivedAction<Player>([](Player& player, sf::Time) {
         PlayerScoreManager* score_manager = player.FindAttachable<PlayerScoreManager>();
         score_manager->DecrementScore();
+        player.GetWorld()->PassGameEvent(GameEvent::kStarCountChange);
         });
 }
 // D00255479 - Darren Meidl

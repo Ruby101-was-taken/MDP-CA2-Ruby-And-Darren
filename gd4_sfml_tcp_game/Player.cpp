@@ -87,6 +87,14 @@ bool Player::IsReal() {
 }
 
 
+int Player::GetScore() {
+	return FindAttachable<PlayerScoreManager>()->GetScore();
+}
+
+void Player::IncrementScore() {
+	FindAttachable<PlayerScoreManager>()->IncrementScore();
+}
+
 ReceiverCategories Player::GetCategoryEnum() const {
 	switch (type_) {
 	case PlayerType::kPlayerOne:

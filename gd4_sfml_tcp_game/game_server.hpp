@@ -43,5 +43,7 @@ private:
 	std::vector<std::unique_ptr<sf::TcpSocket>> clients_;
 
 	bool waiting_thread_end_ = false;
+
+	bool allow_player_join_;
 };
 

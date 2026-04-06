@@ -9,6 +9,7 @@
 #include "action.hpp"
 #include "player_movement_behaviour.hpp"
 #include "input_manager.hpp"
+#include "text_node_behaviour.hpp"
 
 MultiplayerWorld::MultiplayerWorld(sf::RenderTarget& output_target, FontHolder& font, SoundPlayer& sounds, State::Context* context, bool is_host) :
 	GameWorld(output_target, font, sounds, context),
@@ -90,6 +91,9 @@ void MultiplayerWorld::HandleGameEvent(GameEvent event) {
 	case GameEvent::kClientStarSpawn:
 		TellHostToSpawnStar();
 		std::printf("kClientStarSpawn");
+		break;
+	case GameEvent::kStarCountChange:
+		TellHostIGotStar();
 		break;
 	default:
 		break;
@@ -187,6 +191,9 @@ void MultiplayerWorld::HandlePacketType(Server::PacketType type, sf::Packet& dat
 		break;
 	case Server::PacketType::kClientDropStar:
 		HandleSpawnStar(data);
+		break;
+	case Server::PacketType::kIWillPickUpAStar:
+		HandleOtherPlayerGetStar(data);
 		break;
 	// Incoming forwarded input from server (host will receive these)
 	case Server::PacketType::kPlayerEvent: {
@@ -336,6 +343,16 @@ void MultiplayerWorld::TellHostToSpawnStar() {
 	SendPacket(star_info);
 }
 
+void MultiplayerWorld::TellHostIGotStar() {
+	int score = player_one_->GetScore();
+
+	sf::Packet star_info = Utility::CreatePacket(Server::PacketType::kIWillPickUpAStar);
+	star_info << username_;
+	star_info << static_cast<uint8_t>(score);
+
+	SendPacket(star_info);
+}
+
 
 void MultiplayerWorld::HandlePlayerJoin(sf::Packet& data) {
 	if (is_host_) { //this function should only ever run on the host
@@ -390,6 +407,26 @@ void MultiplayerWorld::HandleSpawnStar(sf::Packet& data) {
 	int8_t bounce_direction;
 	data >> bounce_direction;
 	star_spawner_->SpawnStar(sf::Vector2f(x, y), is_dropped, bounce_direction, false);
+}
+
+void MultiplayerWorld::HandleOtherPlayerGetStar(sf::Packet& data) {
+	std::cout << "[MultiplayerWorld]: HandleOtherPlayerGetStar" << std::endl;
+	std::string name;
+	data >> name;
+	if (name != username_) {
+		std::cout << "[MultiplayerWorld]: name != username_" << std::endl;
+		auto it = network_players_.find(name);
+		if (it != network_players_.end()) {
+			std::cout << "[MultiplayerWorld]: it != network_players_.end()" << std::endl;
+			Player* p = it->second;
+			if (p) {
+				std::cout << "[MultiplayerWorld]: p" << std::endl;
+				uint8_t score;
+				data >> score;
+				p->FindAttachable<TextNodeBehaviour>()->SetText(std::to_string(static_cast<int>(score)));
+			}
+		}
+	}
 }
 
 // Send helpers (client side sends these packets to server)

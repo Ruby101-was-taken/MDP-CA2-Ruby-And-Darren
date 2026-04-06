@@ -6,7 +6,8 @@
 #include <iostream>
 
 GameServer::GameServer()
-    : thread_(&GameServer::ExecutionThread, this)
+    : thread_(&GameServer::ExecutionThread, this),
+    allow_player_join_(true)
 {
     listener_socket_.setBlocking(false);
     listener_socket_.listen(SERVER_PORT);
@@ -43,13 +44,15 @@ void GameServer::ExecutionThread() {
 
         // Use a short selector timeout so we service sockets frequently (e.g. 5ms)
         if (selector_.wait(sf::milliseconds(5))) {
-            // accept new clients and service ready sockets
-            if (selector_.isReady(listener_socket_)) {
-                auto client = std::make_unique<sf::TcpSocket>();
-                if (listener_socket_.accept(*client) == sf::Socket::Status::Done) {
-                    client->setBlocking(false);
-                    selector_.add(*client);
-                    clients_.push_back(std::move(client));
+            if (allow_player_join_) {
+                // accept new clients and service ready sockets
+                if (selector_.isReady(listener_socket_)) {
+                    auto client = std::make_unique<sf::TcpSocket>();
+                    if (listener_socket_.accept(*client) == sf::Socket::Status::Done) {
+                        client->setBlocking(false);
+                        selector_.add(*client);
+                        clients_.push_back(std::move(client));
+                    }
                 }
             }
 
@@ -136,12 +139,16 @@ void GameServer::HandlePacketType(Server::PacketType type, sf::Packet& data, sf:
         HandleSpawnPlayer(data);
         break;
     case Server::PacketType::kStartGame:
+        allow_player_join_ = false;
         SendPacketToAll(data);
         break;
     case Server::PacketType::kSpawnStar:
         SendPacketToAll(data);
         break;
     case Server::PacketType::kClientDropStar:
+        SendPacketToAll(data);
+        break;
+    case Server::PacketType::kIWillPickUpAStar:
         SendPacketToAll(data);
         break;
         // Forward input packets from client to host (reserialize to include packet type byte)
