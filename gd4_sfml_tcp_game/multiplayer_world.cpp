@@ -424,17 +424,13 @@ void MultiplayerWorld::HandleSpawnStar(sf::Packet& data) {
 }
 
 void MultiplayerWorld::HandleOtherPlayerGetStar(sf::Packet& data) {
-	std::cout << "[MultiplayerWorld]: HandleOtherPlayerGetStar" << std::endl;
 	std::string name;
 	data >> name;
 	if (name != username_) {
-		std::cout << "[MultiplayerWorld]: name != username_" << std::endl;
 		auto it = network_players_.find(name);
 		if (it != network_players_.end()) {
-			std::cout << "[MultiplayerWorld]: it != network_players_.end()" << std::endl;
 			Player* p = it->second;
 			if (p) {
-				std::cout << "[MultiplayerWorld]: p" << std::endl;
 				uint8_t score;
 				data >> score;
 				p->FindAttachable<TextNodeBehaviour>()->SetText(std::to_string(static_cast<int>(score)));
