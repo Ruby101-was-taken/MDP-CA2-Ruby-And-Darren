@@ -13,7 +13,7 @@
 #include "text_node_behaviour.hpp"
 #include "utility.hpp"
 
-Player::Player(const TextureHolder& textures, const FontHolder& fonts, float x, float y, PlayerType type, std::string name)
+Player::Player(const TextureHolder& textures, const FontHolder& fonts, float x, float y, PlayerType type, std::string name, sf::Color colour)
 	: SceneNode(x, y) ,
 	type_(type)
 {
@@ -30,6 +30,17 @@ Player::Player(const TextureHolder& textures, const FontHolder& fonts, float x, 
 		AddBehaviour(sprite);
 		// using hsv to get better colours                    // saturation is made higher to keep colours vibrant, value is always kept at max
 		sprite->ColourSprite(Utility::GetUserColourFromFile());
+		sprite->BlitToSprite(textures.Get(TextureID::kOnlinePlayerEyesSheet));
+		break;
+	case PlayerType::kOnlineNetworkedPlayer: // D00255479 - Darren Meidl - use colour sent by host to colour player sprite, also blit eyes so networked players have them too
+		sprite = new SpriteBehaviour(textures.Get(TextureID::kOnlinePlayerSheet));
+		AddBehaviour(sprite);
+		if (colour == sf::Color::Transparent) {
+			// If colour is transparent, it means there was an issue reading the colour data from the packet, so we will use a default colour
+			std::cout << "Warning: Received transparent colour for networked player, using default colour instead." << std::endl;
+			colour = sf::Color::White; // Default to white if no valid colour was provided
+		}
+		sprite->ColourSprite(colour); // Colour should be assigned by host, if not; use default colour from file
 		sprite->BlitToSprite(textures.Get(TextureID::kOnlinePlayerEyesSheet));
 		break;
 	default:

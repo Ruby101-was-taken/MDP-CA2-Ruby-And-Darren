@@ -25,6 +25,7 @@ protected:
     // Modified: return pointer to the created Player so callers can keep a reference
     Player* AddPlayer(PlayerType type, sf::Vector2f spawn);
     Player* AddPlayer(PlayerType type, sf::Vector2f spawn, std::string name);
+    Player* AddPlayer(PlayerType type, sf::Vector2f spawn, std::string name, sf::Color colour);
 
 protected:
     Player* player_one_;

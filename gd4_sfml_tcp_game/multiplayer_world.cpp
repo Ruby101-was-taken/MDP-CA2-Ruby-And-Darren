@@ -297,7 +297,7 @@ void MultiplayerWorld::StartGame() {
 			sf::Vector2f spawn = Level::GetNextNetworkPlayerSpawnPosition();
 			std::cout << info.username << std::endl;
 
-			Player* newPlayer = AddPlayer((username_ != info.username) ? PlayerType::kOnlineNetworkedPlayer : PlayerType::kOnlineLocalPlayer, spawn, info.username);
+			Player* newPlayer = AddPlayer((username_ != info.username) ? PlayerType::kOnlineNetworkedPlayer : PlayerType::kOnlineLocalPlayer, spawn, info.username, info.colour);
 
 			network_players_[info.username] = newPlayer; // keep mapping (host only)
 
@@ -307,6 +307,9 @@ void MultiplayerWorld::StartGame() {
 			new_player_packet << static_cast<uint16_t>(spawn.x);
 			new_player_packet << static_cast<uint16_t>(static_cast<int>(spawn.y));
 			// send colour as RGB
+			new_player_packet << static_cast<uint8_t>(info.colour.r);
+			new_player_packet << static_cast<uint8_t>(info.colour.g);
+			new_player_packet << static_cast<uint8_t>(info.colour.b);
 
 			SendPacket(new_player_packet);
 		}
@@ -379,22 +382,33 @@ void MultiplayerWorld::HandlePlayerJoin(sf::Packet& data) {
 }
 
 void MultiplayerWorld::HandleSpawnPlayer(sf::Packet& data) {
-	if (!is_host_) { //host should have already spawned this player
-		std::string name;
-		data >> name;
-		uint16_t x, y;
-		data >> x;
-		data >> y;
-		sf::Vector2f spawn(x, y);
-		if (name == Utility::GetUserNameFromFile()) {
-			Player* p = AddPlayer(PlayerType::kOnlineLocalPlayer, spawn, name);
-			// local client: also include in map so host can target by name on this client if needed
-			network_players_[name] = p;
-		}
-		else {
-			Player* p = AddPlayer(PlayerType::kOnlineNetworkedPlayer, spawn, name);
-			network_players_[name] = p;
-		}
+	// Read name
+	std::string name;
+	data >> name;
+	// Read spawn position
+	uint16_t x, y;
+	data >> x;
+	data >> y;
+	// Read colour 
+	sf::Color colour;
+	uint8_t r = 0, g = 0, b = 0;
+	if ((data >> r) && (data >> g) && (data >> b)) {
+		// Successfully read colour, apply data
+		colour.r = static_cast<uint8_t>(r);
+		colour.g = static_cast<uint8_t>(g);
+		colour.b = static_cast<uint8_t>(b);
+	}
+
+		
+	sf::Vector2f spawn(x, y); // Create spawn vector
+	// Local player 
+	if (name == Utility::GetUserNameFromFile()) {
+		Player* p = AddPlayer(PlayerType::kOnlineLocalPlayer, spawn, name);
+		network_players_[name] = p;
+	} // Other networked player
+	else {
+		Player* p = AddPlayer(PlayerType::kOnlineNetworkedPlayer, spawn, name, colour);
+		network_players_[name] = p;
 	}
 }
 

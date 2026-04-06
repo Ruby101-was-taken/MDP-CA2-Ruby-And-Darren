@@ -103,13 +103,13 @@ void GameWorld::MakeTwoPlayer() {
     SetCameraSize({ 640, 180 });
     is_two_player_ = true;
 }
-// Modified: return created Player*
+// D00255479 - Darren Meidl - Add a player without a name, defaulting to "No Name".
 Player* GameWorld::AddPlayer(PlayerType type, sf::Vector2f spawn) {
     return AddPlayer(type, spawn, "No Name");
 }
-// Modified: make pointer out of created Player and return it so callers can keep a reference
+// D00255479 - Darren Meidl - Add a player without a colour
 Player* GameWorld::AddPlayer(PlayerType type, sf::Vector2f spawn, std::string name) {
-    auto player = std::make_unique<Player>(
+    auto player = std::make_unique<Player>( // Make player
         textures_,
         fonts_,
         spawn.x,
@@ -117,8 +117,29 @@ Player* GameWorld::AddPlayer(PlayerType type, sf::Vector2f spawn, std::string na
         type,
         name
     );
-    Player* player_ptr = player.get();
+    Player* player_ptr = player.get(); // Assign player pointer
+    // Handle local player types
+    if (type == PlayerType::kPlayerOne or type == PlayerType::kOnlineLocalPlayer)
+        player_one_ = player_ptr;
+    if (type == PlayerType::kPlayerTwo)
+        player_two_ = player_ptr;
+    root_node_.AttachChild(std::move(player));
 
+    return player_ptr;
+}
+
+Player* GameWorld::AddPlayer(PlayerType type, sf::Vector2f spawn, std::string name, sf::Color colour) {
+    auto player = std::make_unique<Player>( // Make player
+        textures_,
+        fonts_,
+        spawn.x,
+        spawn.y,
+        type,
+        name,
+        colour
+    );
+    Player* player_ptr = player.get(); // Assign player pointer
+    // Handle local player types
     if (type == PlayerType::kPlayerOne or type == PlayerType::kOnlineLocalPlayer)
         player_one_ = player_ptr;
     if (type == PlayerType::kPlayerTwo)
@@ -132,18 +153,11 @@ void GameWorld::MakeBaseScene() {
     textures_.Get(TextureID::kLevelBackdrop).setRepeated(true);
     sf::Vector2 level_size_bigger = sf::Vector2((int)background_texture_.getTexture().getSize().x * 2, (int)background_texture_.getTexture().getSize().y * 2);
     background_texture_.setTextureRect(sf::IntRect({ 0,0 }, level_size_bigger));
-    
-
-
-    
 
     // Darren - D00255479 thanks :3
     // Add sound effect node
     std::unique_ptr<SoundNode> soundNode(new SoundNode(sounds_));
     root_node_.AttachChild(std::move(soundNode));
-
-
-    
 }
 
 
