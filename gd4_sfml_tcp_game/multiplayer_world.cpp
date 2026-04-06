@@ -109,6 +109,7 @@ sf::Socket::Status MultiplayerWorld::SendPacket(sf::Packet& packet) {
 		break;
 	case sf::Socket::Status::Disconnected:
 		std::cout << "[MultiplayerWorld]: Socket disconnected." << std::endl;
+		is_connected_ = false;
 		break;
 	case sf::Socket::Status::Error:
 		std::cout << "[MultiplayerWorld]: Something went wrong while sending packet." << std::endl;
@@ -135,32 +136,8 @@ void MultiplayerWorld::UpdateCurrent() {
 		// no incoming data this frame
 	}
 
-	// If this client is not the host and we are connected, sample input and send changes
-	if (!is_host_ && is_connected_) {
-		// realtime left/right; jump is a one-shot event
-		bool left = InputManager::InputIsPressed(InputTypes::kPlayerOneLeft);
-		bool right = InputManager::InputIsPressed(InputTypes::kPlayerOneRight);
-		bool jump_pressed = InputManager::InputIsPressed(InputTypes::kPlayerOneUp);
-
-		// Left change
-		if (left != prev_left_) {
-			SendRealtimeChange(Action::kMoveLeft, left);
-			prev_left_ = left;
-		}
-		// Right change
-		if (right != prev_right_) {
-			SendRealtimeChange(Action::kMoveRight, right);
-			prev_right_ = right;
-		}
-		// Jump: fire a one-shot event when pressed (edge detect)
-		if (jump_pressed && !prev_jump_) {
-			SendEvent(Action::kMoveUp);
-		}
-		prev_jump_ = jump_pressed;
-	}
-
 	// Host: send authoritative state updates for all players at fixed interval
-	if (is_host_ && is_connected_) {
+	if (is_connected_) {
 		if (state_update_clock_.getElapsedTime().asSeconds() >= state_update_interval_) {
 			// send each player's position (could be batched)
 			for (auto& kv : network_players_) {
