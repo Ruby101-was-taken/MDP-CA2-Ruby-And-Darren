@@ -197,13 +197,11 @@ void MultiplayerWorld::HandlePacketType(Server::PacketType type, sf::Packet& dat
 			HandleSpawnPlayer(data);
 		break;
 	case Server::PacketType::kRemovePlayer:
-		if (!is_host_)
-			HandleRemovePlayer(data);
+		HandleRemovePlayer(data);
 		break;
 	case Server::PacketType::kSpawnStar:
-		if (!is_host_) {
+		if (!is_host_)
 			HandleSpawnStar(data);
-		}
 		break;
 	case Server::PacketType::kClientDropStar:
 		HandleSpawnStar(data);
@@ -373,7 +371,7 @@ void MultiplayerWorld::HandlePlayerJoin(sf::Packet& data) {
 		}
 	}
 }
-
+// Darren Meidl - D00255479 - Handle when a player leaves during the lobby (before game starts)
 void MultiplayerWorld::HandlePlayerLeave(sf::Packet& data) {
 	// Handle when player leaves lobby (before game starts) - remove from names list
 	if (is_host_) { //this function should only ever run on the host
@@ -413,7 +411,7 @@ void MultiplayerWorld::HandleSpawnPlayer(sf::Packet& data) {
 		network_players_[name] = p;
 	}
 }
-
+// Darren Meidl - D00255479 - Handle when a player leaves during the game (remove their Player object)
 void MultiplayerWorld::HandleRemovePlayer(sf::Packet& data) {
 	std::string name;
 	data >> name;

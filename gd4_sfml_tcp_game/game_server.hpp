@@ -15,8 +15,6 @@ public:
 	explicit GameServer();
 	~GameServer();
 
-
-
 private:
 	void ExecutionThread();
 	void Tick();
@@ -28,10 +26,11 @@ private:
 	void HandlePacketType(Server::PacketType type, sf::Packet& data, sf::TcpSocket* client_socket);
 
 #pragma region PacketHandlers
-	void HandlePlayerJoin(sf::Packet& data);
+	void HandlePlayerJoin(sf::Packet& data, sf::TcpSocket* client_socket);
+	void HandlePlayerLeave(sf::Packet& data, sf::TcpSocket* client_socket);
 	void HandleSpawnPlayer(sf::Packet& data);
+	void HandleRemovePlayer(sf::Packet& data);
 #pragma endregion
-
 
 private:
 	std::thread thread_;
@@ -41,6 +40,9 @@ private:
 	// Do NOT take ownership of the socket stored in clients_. Just keep a raw pointer.
 	sf::TcpSocket* host_socket_ = nullptr;
 	std::vector<std::unique_ptr<sf::TcpSocket>> clients_;
+
+	// map socket -> username; so we can detect socket disconnection with a particular user
+	std::map<sf::TcpSocket*, std::string> client_names_;
 
 	bool waiting_thread_end_ = false;
 

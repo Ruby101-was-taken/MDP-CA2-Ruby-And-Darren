@@ -4,6 +4,7 @@
 #include <SFML/System/Sleep.hpp>
 #include "pickup_type.hpp"
 #include <iostream>
+#include <algorithm>
 
 GameServer::GameServer()
     : thread_(&GameServer::ExecutionThread, this),
@@ -39,9 +40,6 @@ void GameServer::ExecutionThread() {
             tick_time -= tick_rate;
         }
 
-        // sleep removed; use a small wait to reduce CPU but keep latency low
-        //sf::sleep(sf::milliseconds(50));
-
         // Use a short selector timeout so we service sockets frequently (e.g. 5ms)
         if (selector_.wait(sf::milliseconds(5))) {
             if (allow_player_join_) {
@@ -56,15 +54,64 @@ void GameServer::ExecutionThread() {
                 }
             }
 
-            for (auto& client : clients_) {
+            // service client sockets; collect disconnected sockets & remove them after iterating
+            std::vector<sf::TcpSocket*> disconnected;
+            for (auto& clientPtr : clients_) {
+                sf::TcpSocket* client = clientPtr.get();
+                if (!client) continue;
+
                 if (selector_.isReady(*client)) {
                     sf::Packet data;
-                    if (client->receive(data) == sf::Socket::Status::Done) {
-                        uint8_t type;
-                        data >> type;
-                        HandlePacketType(static_cast<Server::PacketType>(type), data, client.get());
+                    sf::Socket::Status recvStatus = client->receive(data);
+
+                    switch (recvStatus) {
+                        case sf::Socket::Status::Done: { // Ruby White - D00255322
+                            uint8_t type;
+                            data >> type;
+                            HandlePacketType(static_cast<Server::PacketType>(type), data, client);
+                            // move to next client
+                            continue;
+                        }
+						case sf::Socket::Status::Disconnected: { // Darren Meidl - D00255479
+							std::cout << "[Server]: Socket disconnected." << std::endl;
+							auto nameIt = client_names_.find(client); // find the name associated with this socket, if we have it
+                            if (nameIt != client_names_.end()) {
+								std::cout << "[Server]: Client '" << nameIt->second << "' disconnected." << std::endl;
+                                const std::string& name = nameIt->second;
+
+                                // notify host (lobby) so it can remove the name
+                                sf::Packet leave_lobby = Utility::CreatePacket(Server::PacketType::kPlayerLeave);
+                                leave_lobby << name;
+                                SendPacketToHost(leave_lobby);
+                                // notify all clients to remove any in-game player
+                                sf::Packet remove_player = Utility::CreatePacket(Server::PacketType::kRemovePlayer);
+                                remove_player << name;
+                                SendPacketToAll(remove_player);
+
+                                client_names_.erase(nameIt);
+                            }
+                            // remove from selector and mark for deletion from clients_
+                            selector_.remove(*client);
+                            disconnected.push_back(client);
+                            // move to next client
+                            continue;
+                        }
+                        case sf::Socket::Status::NotReady:
+                        case sf::Socket::Status::Partial:
+                        case sf::Socket::Status::Error:
+                        default:
+                            break;
                     }
                 }
+            }
+            // remove disconnected client entries from clients_ (safe to modify now)
+            if (!disconnected.empty()) {
+                clients_.erase(
+                    std::remove_if(clients_.begin(), clients_.end(),
+                        [&disconnected](const std::unique_ptr<sf::TcpSocket>& ptr) {
+                            return std::find(disconnected.begin(), disconnected.end(), ptr.get()) != disconnected.end();
+                        }),
+                    clients_.end());
             }
         }
         else {
@@ -129,13 +176,19 @@ void GameServer::SendPacketToHost(sf::Packet& data) {
 void GameServer::HandlePacketType(Server::PacketType type, sf::Packet& data, sf::TcpSocket *client_socket) {
     switch (type) {
     case Server::PacketType::kPlayerJoin:
-        HandlePlayerJoin(data);
+        HandlePlayerJoin(data, client_socket);
+        break;
+    case Server::PacketType::kPlayerLeave:
+		HandlePlayerLeave(data, client_socket);
         break;
     case Server::PacketType::kIAmHost:
         host_socket_ = client_socket;
         break;
     case Server::PacketType::kAddPlayer:
         HandleSpawnPlayer(data);
+        break;
+    case Server::PacketType::kRemovePlayer:
+        HandleRemovePlayer(data);
         break;
     case Server::PacketType::kStartGame:
         allow_player_join_ = false;
@@ -150,14 +203,12 @@ void GameServer::HandlePacketType(Server::PacketType type, sf::Packet& data, sf:
     case Server::PacketType::kIWillPickUpAStar:
         SendPacketToAll(data);
         break;
-    case Server::PacketType::kPlayerInputEvent: {
+    case Server::PacketType::kPlayerInputEvent:
         SendPacketToAll(data, client_socket);
         break;
-    }
-    case Server::PacketType::kPlayerStateUpdate: {
+    case Server::PacketType::kPlayerStateUpdate:
         SendPacketToAll(data, client_socket);
         break;
-    }
     default:
         std::cout << "[Server]: unknown type or missing break" << std::endl;
         break;
@@ -165,8 +216,7 @@ void GameServer::HandlePacketType(Server::PacketType type, sf::Packet& data, sf:
 }
 
 #pragma region PacketHandlers
-void GameServer::HandlePlayerJoin(sf::Packet& data) {
-    // get username
+void GameServer::HandlePlayerJoin(sf::Packet& data, sf::TcpSocket* client_socket) {
     std::string name;
     data >> name;
     std::cout << "[Server]:" << name << " has joined the game!" << std::endl;
@@ -177,6 +227,12 @@ void GameServer::HandlePlayerJoin(sf::Packet& data) {
     data >> g;
     data >> b;
 
+    if (client_socket) {
+        client_names_[client_socket] = name; // keep track of this client's username for disconnection handling
+		std::cout << "[Server]: Registered client socket with name '" << name << "'." << std::endl;
+    }
+		
+
     sf::Packet packet = Utility::CreatePacket(Server::PacketType::kPlayerJoin);
     packet << name;
 
@@ -186,7 +242,30 @@ void GameServer::HandlePlayerJoin(sf::Packet& data) {
 
     SendPacketToHost(packet);
 }
+void GameServer::HandlePlayerLeave(sf::Packet& data, sf::TcpSocket* client_socket) {
+    std::string name;
+    data >> name;
+
+    // remove mapping if we have it
+    auto it = client_names_.find(client_socket);
+    if (it != client_names_.end() && it->second == name) {
+        client_names_.erase(it);
+    }
+
+    // notify host (lobby) so it can remove the name
+    sf::Packet leave_lobby = Utility::CreatePacket(Server::PacketType::kPlayerLeave);
+    leave_lobby << name;
+    SendPacketToHost(leave_lobby);
+
+    // notify all clients to remove any in-game player (so host and other clients remove the Player object)
+    sf::Packet remove_player = Utility::CreatePacket(Server::PacketType::kRemovePlayer);
+    remove_player << name;
+    SendPacketToAll(remove_player);
+}
 void GameServer::HandleSpawnPlayer(sf::Packet& data) {
+    SendPacketToAll(data);
+}
+void GameServer::HandleRemovePlayer(sf::Packet& data) {
     SendPacketToAll(data);
 }
 #pragma endregion
