@@ -13,6 +13,7 @@ public:
 	bool DecrementScore(); // returns true if the player has a start to remove
 
 	int GetScore();
+	void ResetScore(); // Darren Meidl - D00255479
 private:
 	void UpdateScoreVisual();
 	

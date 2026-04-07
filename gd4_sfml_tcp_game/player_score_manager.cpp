@@ -51,6 +51,16 @@ bool PlayerScoreManager::DecrementScore() {
 int PlayerScoreManager::GetScore() {
 	return score_;
 }
+// Darren Meidl - D00255479
+void PlayerScoreManager::ResetScore() {
+	// Drop all stars the player has
+	while (score_ > 0) {
+		DecrementScore();
+	}
+	// Ensure UI shows zero (DecrementScore updates visual per-decrement,
+	// but do a final update to guarantee consistency if score was already 0).
+	UpdateScoreVisual();
+}
 
 
 void PlayerScoreManager::UpdateScoreVisual() {

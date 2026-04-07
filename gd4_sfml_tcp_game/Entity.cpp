@@ -55,6 +55,7 @@ void Entity::Damage(int points)
 void Entity::Destroy()
 {
     hitpoints_ = 0;
+    DeleteNode();
 }
 
 void Entity::UpdateCurrent(sf::Time dt, CommandQueue& commands)

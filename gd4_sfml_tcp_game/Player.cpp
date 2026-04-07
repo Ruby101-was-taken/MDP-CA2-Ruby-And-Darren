@@ -59,14 +59,12 @@ Player::Player(const TextureHolder& textures, const FontHolder& fonts, float x, 
 		true,              // loop
 		0                  // row in sheet
 		});
-
 	anim->AddAnimation("run", { {16, 16}, 3, sf::seconds(0.2f), true, 1 });
 	anim->AddAnimation("jump", { {16, 16}, 3, sf::seconds(0.2f), false, 2 });
 	anim->AddAnimation("fall", { {16, 16}, 1, sf::seconds(0.1f), true, 3 });
 	AddBehaviour(anim);
 
 	AddBehaviour(new BoxColliderBehaviour({ 16.f, 16.f }, CollisionLayer::kPlayer));
-	//===
 
 	AddBehaviour(new HealthBehaviour(20));
 	AddBehaviour(new PlayerMovementBehaviour(FindAttachable<BoxColliderBehaviour>(), type_));
@@ -104,6 +102,12 @@ int Player::GetScore() {
 
 void Player::IncrementScore() {
 	FindAttachable<PlayerScoreManager>()->IncrementScore();
+}
+// Darren Meidl - D00255479
+void Player::Destroy() {
+	// Player node 2 seconds before being destroyed:
+	FindAttachable<PlayerScoreManager>()->ResetScore(); // Drop all stars when player is destroyed	
+	DeleteNode();
 }
 
 ReceiverCategories Player::GetCategoryEnum() const {

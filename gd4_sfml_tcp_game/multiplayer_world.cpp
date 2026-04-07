@@ -410,7 +410,7 @@ void MultiplayerWorld::HandleRemovePlayer(sf::Packet& data) {
 	if (it != network_players_.end()) {
 		Player* p = it->second;
 		if (p) {
-			//p->Destroy(); // TODO: Implement this function to remove from scene graph and free memory
+			p->Destroy();
 			network_players_.erase(it);
 		}
 	}

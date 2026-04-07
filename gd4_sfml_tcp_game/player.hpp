@@ -17,6 +17,8 @@ public:
 	void IncrementScore();
 
 	virtual ReceiverCategories GetCategoryEnum() const override;
+
+	void Destroy(); // Darren Meidl - D00255479
 private:
 	PlayerType type_;
 };
