@@ -12,6 +12,7 @@
 class MultiplayerWorld : public GameWorld {
 public:
 	MultiplayerWorld(sf::RenderTarget& output_target, FontHolder& font, SoundPlayer& sounds, State::Context* context, bool is_host);
+	~MultiplayerWorld();
 
 	void BuildScene() override;
 
@@ -63,16 +64,11 @@ protected:
 
 	// Map usernames -> Player*
 	std::map<std::string, Player*> network_players_;
-
 	// previous local input state (client) to avoid flooding
 	bool prev_left_ = false;
 	bool prev_right_ = false;
 	bool prev_jump_ = false;
-
 	// periodic state updates
 	sf::Clock state_update_clock_;
 	float state_update_interval_ = 1.f / 20.f; // 20 hz
-
-	sf::Clock input_resend_clock_;
-	float input_resend_interval_ = 0.1f; // resend while held every 100ms
 };

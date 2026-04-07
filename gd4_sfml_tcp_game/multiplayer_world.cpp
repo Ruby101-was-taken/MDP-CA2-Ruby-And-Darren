@@ -24,6 +24,17 @@ MultiplayerWorld::MultiplayerWorld(sf::RenderTarget& output_target, FontHolder& 
 	StartBuildScene();
 }
 
+// Darren Meidl - D00255479
+MultiplayerWorld::~MultiplayerWorld() {
+	if (is_connected_) { // If connected, tell server we're leaving so it can notify others
+		sf::Packet leave_packet = Utility::CreatePacket(Server::PacketType::kPlayerLeave);
+		leave_packet << username_;
+		SendPacket(leave_packet);
+		socket_.disconnect();
+		is_connected_ = false;
+	}
+}
+
 void MultiplayerWorld::BuildScene() {
 	MakeBaseScene();
 
