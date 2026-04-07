@@ -139,64 +139,33 @@ void MultiplayerWorld::UpdateCurrent() {
 	else {
 		// no incoming data this frame
 	}
-
+	if (!is_connected_) return;
 	// D00255479 - Darren Meidl - Handle local input and send to server (if changed since last frame)
-	if (is_connected_) {
-		if (state_update_clock_.getElapsedTime().asSeconds() >= state_update_interval_) {
-			//// send each player's position (could be batched)
-			//for (auto& kv : network_players_) {
-			//	const std::string& name = kv.first;
-			//	Player* p = kv.second;
-			//	// Read position
-			//	if (!p) continue;
-			//	sf::Vector2f pos = p->getPosition();
+	// Poll local input and send changes (realtime / event) before periodic state update
+	bool cur_left = InputManager::InputIsPressed(InputTypes::kPlayerOneLeft);
+	bool cur_right = InputManager::InputIsPressed(InputTypes::kPlayerOneRight);
+	bool cur_jump = InputManager::InputIsPressed(InputTypes::kPlayerOneUp);
 
-			//	// Attempt to include velocity so clients can animate jumps/falls instead of only using position
-			//	sf::Vector2f vel(0.f, 0.f);
-			//	if (auto pm = p->FindAttachable<PlayerMovementBehaviour>()) {
-			//		vel = pm->GetVelocity();
-			//	}
-			//	// Create packet
-			//	sf::Packet packet = Utility::CreatePacket(Server::PacketType::kStateUpdate);
-			//	packet << name;
-			//	packet << pos.x;
-			//	packet << pos.y;
-			//	// append velocity
-			//	packet << vel.x;
-			//	packet << vel.y;
+	// Left change
+	if (cur_left != prev_left_) {
+		SendRealtimeChange(Action::kMoveLeft, cur_left);
+		prev_left_ = cur_left;
+	}
+	// Right change
+	if (cur_right != prev_right_) {
+		SendRealtimeChange(Action::kMoveRight, cur_right);
+		prev_right_ = cur_right;
+	}
+	// Jump: treat as a discrete event on press
+	if (cur_jump && !prev_jump_) {
+		SendEvent(Action::kMoveUp);
+	}
+	prev_jump_ = cur_jump;
 
-			//	SendPacket(packet);
-			//}
-
-			// Poll local input and send changes (realtime / event) before periodic state update
-			bool cur_left = InputManager::InputIsPressed(InputTypes::kPlayerOneLeft);
-			bool cur_right = InputManager::InputIsPressed(InputTypes::kPlayerOneRight);
-			bool cur_jump = InputManager::InputIsPressed(InputTypes::kPlayerOneUp);
-
-			// Left change
-			if (cur_left != prev_left_) {
-				SendRealtimeChange(Action::kMoveLeft, cur_left);
-				prev_left_ = cur_left;
-			}
-			// Right change
-			if (cur_right != prev_right_) {
-				SendRealtimeChange(Action::kMoveRight, cur_right);
-				prev_right_ = cur_right;
-			}
-			// Jump: treat as a discrete event on press
-			if (cur_jump && !prev_jump_) {
-				SendEvent(Action::kMoveUp);
-			}
-			prev_jump_ = cur_jump;
-
-			// Periodic state update to ensure correct position on clients (in case of packet loss or new clients joining mid-game)
-			if (state_update_clock_.getElapsedTime().asSeconds() >= state_update_interval_) {
-				SendStateUpdate();
-				state_update_clock_.restart();
-			}
-			//SendStateUpdate();
-			//state_update_clock_.restart();
-		}
+	// Periodic state update to ensure correct position on clients (in case of packet loss or new clients joining mid-game)
+	if (state_update_clock_.getElapsedTime().asSeconds() >= state_update_interval_) {
+		//SendStateUpdate();
+		state_update_clock_.restart();
 	}
 }
 
@@ -228,11 +197,10 @@ void MultiplayerWorld::HandlePacketType(Server::PacketType type, sf::Packet& dat
 	case Server::PacketType::kPlayerEvent: {
 		std::string name;
 		uint8_t action_u;
+
 		data >> name;
 		data >> action_u;
-		// Ignore events that originated from ourselves
-		if (name == username_)
-			break;
+
 		Action action = static_cast<Action>(action_u);
 
 		auto it = network_players_.find(name);
@@ -252,12 +220,11 @@ void MultiplayerWorld::HandlePacketType(Server::PacketType type, sf::Packet& dat
 		std::string name;
 		uint8_t action_u;
 		uint8_t started_u;
+
 		data >> name;
 		data >> action_u;
 		data >> started_u;
-		// Ignore realtime changes that originated from ourselves
-		if (name == username_)
-			break;
+
 		Action action = static_cast<Action>(action_u); // create action from packet data
 		bool started = static_cast<bool>(started_u); // create started bool from packet data
 

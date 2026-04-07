@@ -132,7 +132,6 @@ void GameServer::HandlePacketType(Server::PacketType type, sf::Packet& data, sf:
         HandlePlayerJoin(data);
         break;
     case Server::PacketType::kIAmHost:
-        // Do NOT take ownership; client_socket is owned by clients_ vector.
         host_socket_ = client_socket;
         break;
     case Server::PacketType::kAddPlayer:
@@ -151,46 +150,40 @@ void GameServer::HandlePacketType(Server::PacketType type, sf::Packet& data, sf:
     case Server::PacketType::kIWillPickUpAStar:
         SendPacketToAll(data);
         break;
-        // Forward input packets from client to host (reserialize to include packet type byte)
     case Server::PacketType::kPlayerEvent: {
-        // payload layout from client: username (string), uint8 action
-        std::string name;
-        uint8_t action_u;
-        data >> name;
-        data >> action_u;
+        //// payload layout from client: username (string), uint8 action
+        //std::string name;
+        //uint8_t action_u;
+        //data >> name;
+        //data >> action_u;
 
-        sf::Packet pkt = Utility::CreatePacket(Server::PacketType::kPlayerEvent);
-        pkt << name;
-        pkt << action_u;
+        //sf::Packet pkt = Utility::CreatePacket(Server::PacketType::kPlayerEvent);
+        //pkt << name;
+        //pkt << action_u;
 
-        // Forward to host only (host is authoritative). Avoid sending back to the original sender.
-        SendPacketToHost(pkt);
+        // Forward to all clients except the original sender
+        SendPacketToAll(data, client_socket);
         break;
     }
-
     case Server::PacketType::kPlayerRealtimeChange: {
-        // payload layout: username (string), uint8 action, uint8 started
-        std::string name;
-        uint8_t action_u;
-        uint8_t started_u;
-        data >> name;
-        data >> action_u;
-        data >> started_u;
+        //// payload layout: username (string), uint8 action, uint8 started
+        //std::string name;
+        //uint8_t action_u;
+        //uint8_t started_u;
+        //data >> name;
+        //data >> action_u;
+        //data >> started_u;
 
-        sf::Packet pkt = Utility::CreatePacket(Server::PacketType::kPlayerRealtimeChange);
-        pkt << name;
-        pkt << action_u;
-        pkt << started_u;
+        //sf::Packet pkt = Utility::CreatePacket(Server::PacketType::kPlayerRealtimeChange);
+        //pkt << name;
+        //pkt << action_u;
+        //pkt << started_u;
 
-        // Forward to host
-        SendPacketToHost(pkt);
+        // Forward to all clients except the original sender
+        SendPacketToAll(data, client_socket);
         break;
     }
-
     case Server::PacketType::kStateUpdate: {
-        // If the host sends state updates, broadcast to all clients (but you probably should exclude sender to avoid echo)
-        // We will broadcast to all except the sender.
-        // The data already has username + x + y extracted from the incoming packet header; we forward the original packet
         SendPacketToAll(data, client_socket);
         break;
     }
