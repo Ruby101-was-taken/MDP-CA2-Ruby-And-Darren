@@ -222,7 +222,7 @@ void MultiplayerWorld::HandlePacketType(Server::PacketType type, sf::Packet& dat
 		break;
 	}
 	// Darren Meidl - D00255479
-	case Server::PacketType::kStateUpdate: {
+	case Server::PacketType::kPlayerStateUpdate: {
 		std::string name;
 		float x, y;
 		// read position
@@ -447,7 +447,7 @@ void MultiplayerWorld::SendStateUpdate() {
 		vel = pm->GetVelocity();
 	}
 	// create packet with type state update
-	sf::Packet packet = Utility::CreatePacket(Server::PacketType::kStateUpdate);
+	sf::Packet packet = Utility::CreatePacket(Server::PacketType::kPlayerStateUpdate);
 	packet << username_;
 	packet << pos.x;
 	packet << pos.y;

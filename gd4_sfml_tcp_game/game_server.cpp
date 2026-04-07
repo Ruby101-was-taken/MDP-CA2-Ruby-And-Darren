@@ -154,7 +154,7 @@ void GameServer::HandlePacketType(Server::PacketType type, sf::Packet& data, sf:
         SendPacketToAll(data, client_socket);
         break;
     }
-    case Server::PacketType::kStateUpdate: {
+    case Server::PacketType::kPlayerStateUpdate: {
         SendPacketToAll(data, client_socket);
         break;
     }
