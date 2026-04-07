@@ -183,6 +183,7 @@ void GameServer::HandlePacketType(Server::PacketType type, sf::Packet& data, sf:
         break;
     case Server::PacketType::kIAmHost:
         host_socket_ = client_socket;
+		HandleHostJoin(data, client_socket);
         break;
     case Server::PacketType::kAddPlayer:
         HandleSpawnPlayer(data);
@@ -216,22 +217,49 @@ void GameServer::HandlePacketType(Server::PacketType type, sf::Packet& data, sf:
 }
 
 #pragma region PacketHandlers
+// Darren Meidl - D00255479
+void GameServer::HandleHostJoin(sf::Packet& data, sf::TcpSocket* client_socket) {
+    std::string name;
+    data >> name;
+
+	std::cout << "[Server]:" << name << " has joined as host!" << std::endl;
+
+    if (client_socket) {
+        client_names_[client_socket] = name; // include tracking of the host's username
+        std::cout << "[Server]: Registered host socket with name '" << name << "'." << std::endl;
+    }
+}
 void GameServer::HandlePlayerJoin(sf::Packet& data, sf::TcpSocket* client_socket) {
     std::string name;
     data >> name;
-    std::cout << "[Server]:" << name << " has joined the game!" << std::endl;
+    std::cout << "[Server]:" << name << " has tried to join the lobby!" << std::endl;
 
     uint8_t r, g, b;
 
     data >> r;
     data >> g;
     data >> b;
+    
+
+    // Darren Meidl - D00255479 - Check for duplicate name among already-registered clients
+    for (const auto& kv : client_names_) {
+		std::cout << "[Server]: Checking existing client name '" << kv.second << "' against new client '" << name << "'." << std::endl;
+        if (kv.second == name) {
+            std::cout << "[Server]: Name '" << name << "' already taken. Rejecting client." << std::endl;
+            // Send a NameTaken packet back to the joining client so they return to the title screen
+            sf::Packet reject = Utility::CreatePacket(Server::PacketType::kNameTaken);
+			uint8_t error_code = -1; // use error code to specify reason for rejection
+			reject << error_code;
+            if (client_socket)
+                sf::Socket::Status s = client_socket->send(reject);
+            return;
+        }
+    }
 
     if (client_socket) {
         client_names_[client_socket] = name; // keep track of this client's username for disconnection handling
-		std::cout << "[Server]: Registered client socket with name '" << name << "'." << std::endl;
+        std::cout << "[Server]: Registered client socket with name '" << name << "'." << std::endl;
     }
-		
 
     sf::Packet packet = Utility::CreatePacket(Server::PacketType::kPlayerJoin);
     packet << name;

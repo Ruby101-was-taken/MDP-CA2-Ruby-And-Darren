@@ -13,6 +13,7 @@ namespace Server {
 		kClientDropStar, // used when a client spawns a dropped star
 		kIWillPickUpAStar, // used when a player picks up a star. Sends player name plus their new star count - the name makes no sense but I think it is funny and this is my code base (kinda) so don't tell me what to do DADs
 		kPlayerInputEvent, // used when the player presses an input key
-		kPlayerStateUpdate  // used to occasionally sync player position + velocity
+		kPlayerStateUpdate,  // used to occasionally sync player position + velocity
+		kNameTaken // used to tell client their name is already in use; client should return to title
 	};
 }

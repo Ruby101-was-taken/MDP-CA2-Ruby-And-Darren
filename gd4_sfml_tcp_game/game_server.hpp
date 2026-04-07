@@ -25,11 +25,12 @@ private:
 
 	void HandlePacketType(Server::PacketType type, sf::Packet& data, sf::TcpSocket* client_socket);
 
-#pragma region PacketHandlers
+#pragma region 
+	void HandleHostJoin(sf::Packet& data, sf::TcpSocket* client_socket); // Darren Meidl - D00255479
 	void HandlePlayerJoin(sf::Packet& data, sf::TcpSocket* client_socket);
-	void HandlePlayerLeave(sf::Packet& data, sf::TcpSocket* client_socket);
+	void HandlePlayerLeave(sf::Packet& data, sf::TcpSocket* client_socket); // Darren Meidl - D00255479
 	void HandleSpawnPlayer(sf::Packet& data);
-	void HandleRemovePlayer(sf::Packet& data);
+	void HandleRemovePlayer(sf::Packet& data); // Darren Meidl - D00255479
 #pragma endregion
 
 private:
