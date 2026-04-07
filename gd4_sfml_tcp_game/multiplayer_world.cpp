@@ -167,8 +167,35 @@ void MultiplayerWorld::UpdateCurrent() {
 
 			//	SendPacket(packet);
 			//}
-			SendStateUpdate();
-			state_update_clock_.restart();
+
+			// Poll local input and send changes (realtime / event) before periodic state update
+			bool cur_left = InputManager::InputIsPressed(InputTypes::kPlayerOneLeft);
+			bool cur_right = InputManager::InputIsPressed(InputTypes::kPlayerOneRight);
+			bool cur_jump = InputManager::InputIsPressed(InputTypes::kPlayerOneUp);
+
+			// Left change
+			if (cur_left != prev_left_) {
+				SendRealtimeChange(Action::kMoveLeft, cur_left);
+				prev_left_ = cur_left;
+			}
+			// Right change
+			if (cur_right != prev_right_) {
+				SendRealtimeChange(Action::kMoveRight, cur_right);
+				prev_right_ = cur_right;
+			}
+			// Jump: treat as a discrete event on press
+			if (cur_jump && !prev_jump_) {
+				SendEvent(Action::kMoveUp);
+			}
+			prev_jump_ = cur_jump;
+
+			// Periodic state update to ensure correct position on clients (in case of packet loss or new clients joining mid-game)
+			if (state_update_clock_.getElapsedTime().asSeconds() >= state_update_interval_) {
+				SendStateUpdate();
+				state_update_clock_.restart();
+			}
+			//SendStateUpdate();
+			//state_update_clock_.restart();
 		}
 	}
 }
@@ -197,12 +224,13 @@ void MultiplayerWorld::HandlePacketType(Server::PacketType type, sf::Packet& dat
 	case Server::PacketType::kIWillPickUpAStar:
 		HandleOtherPlayerGetStar(data);
 		break;
+	// Darren Meidl - D00255479 - Handle player input for remote players
 	case Server::PacketType::kPlayerEvent: {
 		std::string name;
 		uint8_t action_u;
 		data >> name;
 		data >> action_u;
-		// Ignore events that originated from ourselves (we are authoritative locally)
+		// Ignore events that originated from ourselves
 		if (name == username_)
 			break;
 		Action action = static_cast<Action>(action_u);
@@ -219,6 +247,7 @@ void MultiplayerWorld::HandlePacketType(Server::PacketType type, sf::Packet& dat
 		}
 		break;
 	}
+	// Darren Meidl - D00255479 - Handle player input for remote players
 	case Server::PacketType::kPlayerRealtimeChange: {
 		std::string name;
 		uint8_t action_u;
@@ -229,21 +258,22 @@ void MultiplayerWorld::HandlePacketType(Server::PacketType type, sf::Packet& dat
 		// Ignore realtime changes that originated from ourselves
 		if (name == username_)
 			break;
-		Action action = static_cast<Action>(action_u);
-		bool started = static_cast<bool>(started_u);
+		Action action = static_cast<Action>(action_u); // create action from packet data
+		bool started = static_cast<bool>(started_u); // create started bool from packet data
 
-		auto it = network_players_.find(name);
+		auto it = network_players_.find(name); // find the player this input is for
 		if (it != network_players_.end()) {
 			Player* p = it->second;
 			if (p) {
 				auto pm = p->FindAttachable<PlayerMovementBehaviour>();
 				if (pm) {
-					pm->SetRemoteRealtime(action, started);
+					pm->SetRemoteRealtime(action, started); // apply the input
 				}
 			}
 		}
 		break;
 	}
+	// Darren Meidl - D00255479 - Handle state update for remote players (position, velocity)
 	case Server::PacketType::kStateUpdate: { // On state update -> update remote player's transform
 		std::string name;
 		float x, y;
@@ -436,7 +466,7 @@ void MultiplayerWorld::HandleOtherPlayerGetStar(sf::Packet& data) {
 	}
 }
 
-// Darren Meidl - D00255479 - Function to send realtime input changes (Redundant currently)
+// Darren Meidl - D00255479 - Function to send realtime input changes
 void MultiplayerWorld::SendRealtimeChange(Action action, bool started) {
 	if (!is_connected_) return;
 	sf::Packet packet = Utility::CreatePacket(Server::PacketType::kPlayerRealtimeChange);
@@ -445,7 +475,7 @@ void MultiplayerWorld::SendRealtimeChange(Action action, bool started) {
 	packet << static_cast<uint8_t>(started ? 1 : 0);
 	SendPacket(packet);
 } 
-// Darren Meidl - D00255479 - Function to send discrete events (e.g. jump) (Redundant currently)
+// Darren Meidl - D00255479 - Function to send discrete events (e.g. jump)
 void MultiplayerWorld::SendEvent(Action action) {
 	if (!is_connected_) return;
 	sf::Packet packet = Utility::CreatePacket(Server::PacketType::kPlayerEvent);
