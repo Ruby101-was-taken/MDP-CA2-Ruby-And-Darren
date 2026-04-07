@@ -174,6 +174,9 @@ void MultiplayerWorld::HandlePacketType(Server::PacketType type, sf::Packet& dat
 	case Server::PacketType::kPlayerJoin:
 		HandlePlayerJoin(data);
 		break;
+	case Server::PacketType::kPlayerLeave:
+		HandlePlayerLeave(data);
+		break;
 	case Server::PacketType::kStartGame:
 		if (!is_host_)
 			GetState()->ExitLobbyState();
@@ -181,6 +184,10 @@ void MultiplayerWorld::HandlePacketType(Server::PacketType type, sf::Packet& dat
 	case Server::PacketType::kAddPlayer:
 		if (!is_host_)
 			HandleSpawnPlayer(data);
+		break;
+	case Server::PacketType::kRemovePlayer:
+		if (!is_host_)
+			HandleRemovePlayer(data);
 		break;
 	case Server::PacketType::kSpawnStar:
 		if (!is_host_) {
@@ -331,7 +338,7 @@ void MultiplayerWorld::TellHostIGotStar() {
 	SendPacket(star_info);
 }
 
-
+// LOBBY STATE PACKET HANDLERS
 void MultiplayerWorld::HandlePlayerJoin(sf::Packet& data) {
 	if (is_host_) { //this function should only ever run on the host
 		std::string name;
@@ -356,6 +363,15 @@ void MultiplayerWorld::HandlePlayerJoin(sf::Packet& data) {
 	}
 }
 
+void MultiplayerWorld::HandlePlayerLeave(sf::Packet& data) {
+	// Handle when player leaves lobby (before game starts) - remove from names list
+	if (is_host_) { //this function should only ever run on the host
+		std::string name;
+		data >> name;
+		//GetState()->RemoveName(name); // TODO: implement this function to remove from lobby list
+	}
+}
+// GAME STATE PACKET HANDLERS
 void MultiplayerWorld::HandleSpawnPlayer(sf::Packet& data) {
 	// Read name
 	std::string name;
@@ -384,6 +400,19 @@ void MultiplayerWorld::HandleSpawnPlayer(sf::Packet& data) {
 	else {
 		Player* p = AddPlayer(PlayerType::kOnlineNetworkedPlayer, spawn, name, colour);
 		network_players_[name] = p;
+	}
+}
+
+void MultiplayerWorld::HandleRemovePlayer(sf::Packet& data) {
+	std::string name;
+	data >> name;
+	auto it = network_players_.find(name);
+	if (it != network_players_.end()) {
+		Player* p = it->second;
+		if (p) {
+			//p->Destroy(); // TODO: Implement this function to remove from scene graph and free memory
+			network_players_.erase(it);
+		}
 	}
 }
 

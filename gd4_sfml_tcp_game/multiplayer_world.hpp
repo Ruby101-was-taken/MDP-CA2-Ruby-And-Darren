@@ -6,7 +6,7 @@
 #include "star_spawner.hpp"
 #include <map>
 #include <string>
-#include "action.hpp" // Action enum
+#include "action.hpp"
 #include <SFML/System/Clock.hpp>
 
 class MultiplayerWorld : public GameWorld {
@@ -36,7 +36,9 @@ private:
 
 #pragma region PacketHandlers
 	void HandlePlayerJoin(sf::Packet& data);
+	void HandlePlayerLeave(sf::Packet& data);
 	void HandleSpawnPlayer(sf::Packet& data);
+	void HandleRemovePlayer(sf::Packet& data);
 	void HandleSpawnStar(sf::Packet& data);
 	void HandleOtherPlayerGetStar(sf::Packet& data);
 #pragma endregion
