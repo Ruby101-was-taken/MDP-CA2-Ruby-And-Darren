@@ -17,8 +17,8 @@ public:
 	void MakeInvincible(float time);
 	bool CanBeHit();
 
-	// New: called by host when receiving input for networked players
-	void SetRemoteRealtime(Action action, bool started);
+	// Darren Meidl - D00255479
+	void ApplyRemoteEvent(Action action, bool started);
 	void ApplyRemoteEvent(Action action);
 
 

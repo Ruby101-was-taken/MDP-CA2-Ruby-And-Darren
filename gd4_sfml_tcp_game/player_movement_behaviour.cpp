@@ -49,7 +49,7 @@ void PlayerMovementBehaviour::Start() {
         });
 }
 // D00255479 - Darren Meidl
-void PlayerMovementBehaviour::SetRemoteRealtime(Action action, bool started) {
+void PlayerMovementBehaviour::ApplyRemoteEvent(Action action, bool started) {
     switch (action) {
     case Action::kMoveLeft:
         remote_left_ = started;

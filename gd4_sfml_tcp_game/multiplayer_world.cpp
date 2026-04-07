@@ -19,7 +19,7 @@ MultiplayerWorld::MultiplayerWorld(sf::RenderTarget& output_target, FontHolder& 
 	prev_left_(false),
 	prev_right_(false),
 	prev_jump_(false),
-	state_update_interval_(1.f / 20.f)
+	state_update_interval_(1.f / 10.f) // 10 updates per second for periodic state updates
 {
 	StartBuildScene();
 }
@@ -140,7 +140,7 @@ void MultiplayerWorld::UpdateCurrent() {
 		// no incoming data this frame
 	}
 	if (!is_connected_) return;
-	// D00255479 - Darren Meidl - Handle local input and send to server (if changed since last frame)
+// D00255479 - Darren Meidl - Handle local input and send to server (if changed since last frame)
 	// Poll local input and send changes (realtime / event) before periodic state update
 	bool cur_left = InputManager::InputIsPressed(InputTypes::kPlayerOneLeft);
 	bool cur_right = InputManager::InputIsPressed(InputTypes::kPlayerOneRight);
@@ -148,12 +148,12 @@ void MultiplayerWorld::UpdateCurrent() {
 
 	// Left change
 	if (cur_left != prev_left_) {
-		SendRealtimeChange(Action::kMoveLeft, cur_left);
+		SendEvent(Action::kMoveLeft, cur_left);
 		prev_left_ = cur_left;
 	}
 	// Right change
 	if (cur_right != prev_right_) {
-		SendRealtimeChange(Action::kMoveRight, cur_right);
+		SendEvent(Action::kMoveRight, cur_right);
 		prev_right_ = cur_right;
 	}
 	// Jump: treat as a discrete event on press
@@ -162,9 +162,9 @@ void MultiplayerWorld::UpdateCurrent() {
 	}
 	prev_jump_ = cur_jump;
 
-	// Periodic state update to ensure correct position on clients (in case of packet loss or new clients joining mid-game)
+	// Periodic state update to ensure correct position on clients
 	if (state_update_clock_.getElapsedTime().asSeconds() >= state_update_interval_) {
-		//SendStateUpdate();
+		SendStateUpdate();
 		state_update_clock_.restart();
 	}
 }
@@ -193,40 +193,16 @@ void MultiplayerWorld::HandlePacketType(Server::PacketType type, sf::Packet& dat
 	case Server::PacketType::kIWillPickUpAStar:
 		HandleOtherPlayerGetStar(data);
 		break;
-	// Darren Meidl - D00255479 - Handle player input for remote players
-	case Server::PacketType::kPlayerEvent: {
-		std::string name;
-		uint8_t action_u;
-
-		data >> name;
-		data >> action_u;
-
-		Action action = static_cast<Action>(action_u);
-
-		auto it = network_players_.find(name);
-		if (it != network_players_.end()) {
-			Player* p = it->second;
-			if (p) {
-				auto pm = p->FindAttachable<PlayerMovementBehaviour>();
-				if (pm) {
-					pm->ApplyRemoteEvent(action);
-				}
-			}
-		}
-		break;
-	}
-	// Darren Meidl - D00255479 - Handle player input for remote players
-	case Server::PacketType::kPlayerRealtimeChange: {
+	// Darren Meidl - D00255479
+	case Server::PacketType::kPlayerInputEvent: {
 		std::string name;
 		uint8_t action_u;
 		uint8_t started_u;
 
 		data >> name;
 		data >> action_u;
-		data >> started_u;
 
 		Action action = static_cast<Action>(action_u); // create action from packet data
-		bool started = static_cast<bool>(started_u); // create started bool from packet data
 
 		auto it = network_players_.find(name); // find the player this input is for
 		if (it != network_players_.end()) {
@@ -234,14 +210,19 @@ void MultiplayerWorld::HandlePacketType(Server::PacketType type, sf::Packet& dat
 			if (p) {
 				auto pm = p->FindAttachable<PlayerMovementBehaviour>();
 				if (pm) {
-					pm->SetRemoteRealtime(action, started); // apply the input
+					if (data >> started_u) {
+						bool started = static_cast<bool>(started_u); // create started bool from packet data
+						pm->ApplyRemoteEvent(action, started);
+					}	
+					else
+						pm->ApplyRemoteEvent(action);
 				}
 			}
 		}
 		break;
 	}
-	// Darren Meidl - D00255479 - Handle state update for remote players (position, velocity)
-	case Server::PacketType::kStateUpdate: { // On state update -> update remote player's transform
+	// Darren Meidl - D00255479
+	case Server::PacketType::kStateUpdate: {
 		std::string name;
 		float x, y;
 		// read position
@@ -434,9 +415,9 @@ void MultiplayerWorld::HandleOtherPlayerGetStar(sf::Packet& data) {
 }
 
 // Darren Meidl - D00255479 - Function to send realtime input changes
-void MultiplayerWorld::SendRealtimeChange(Action action, bool started) {
+void MultiplayerWorld::SendEvent(Action action, bool started) {
 	if (!is_connected_) return;
-	sf::Packet packet = Utility::CreatePacket(Server::PacketType::kPlayerRealtimeChange);
+	sf::Packet packet = Utility::CreatePacket(Server::PacketType::kPlayerInputEvent);
 	packet << username_;
 	packet << static_cast<uint8_t>(action);
 	packet << static_cast<uint8_t>(started ? 1 : 0);
@@ -445,7 +426,7 @@ void MultiplayerWorld::SendRealtimeChange(Action action, bool started) {
 // Darren Meidl - D00255479 - Function to send discrete events (e.g. jump)
 void MultiplayerWorld::SendEvent(Action action) {
 	if (!is_connected_) return;
-	sf::Packet packet = Utility::CreatePacket(Server::PacketType::kPlayerEvent);
+	sf::Packet packet = Utility::CreatePacket(Server::PacketType::kPlayerInputEvent);
 	packet << username_;
 	packet << static_cast<uint8_t>(action);
 	SendPacket(packet);
@@ -460,17 +441,16 @@ void MultiplayerWorld::SendStateUpdate() {
 	if (!p) return;
 	// Read position from player object
 	sf::Vector2f pos = p->getPosition();
-
 	// Attempt to include velocity so clients can animate jumps/falls instead of only using position
 	sf::Vector2f vel(0.f, 0.f);
 	if (auto pm = p->FindAttachable<PlayerMovementBehaviour>()) {
 		vel = pm->GetVelocity();
 	}
-	sf::Packet packet = Utility::CreatePacket(Server::PacketType::kStateUpdate); // create packet with type state update
+	// create packet with type state update
+	sf::Packet packet = Utility::CreatePacket(Server::PacketType::kStateUpdate);
 	packet << username_;
 	packet << pos.x;
 	packet << pos.y;
-	// append velocity
 	packet << vel.x;
 	packet << vel.y;
 	SendPacket(packet);

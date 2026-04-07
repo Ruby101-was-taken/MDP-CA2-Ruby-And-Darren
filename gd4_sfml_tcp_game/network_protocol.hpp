@@ -9,12 +9,9 @@ namespace Server {
 		kStartGame, // used when host presses start
 		kSpawnStar, // used when a star spawns. Sends x and y with it
 		kClientDropStar, // used when a client spawns a dropped star
-		kIWillPickUpAStar, // used when a player picks up a star. Sends player name plus their new star count - the name makes no sense but I think it is funny and this is my code base (kinda) so don't tell me what to do DAD
-
-		// Added network/input/state packets
-		kPlayerEvent,           // username + uint8(action)
-		kPlayerRealtimeChange,  // username + uint8(action) + uint8(started)
-		kStateUpdate            // username + float x + float y
+		kIWillPickUpAStar, // used when a player picks up a star. Sends player name plus their new star count - the name makes no sense but I think it is funny and this is my code base (kinda) so don't tell me what to do DADs
+		kPlayerInputEvent, // used when the player presses an input key
+		kStateUpdate  // used to occasionally sync player position + velocity
 	};
 }
 

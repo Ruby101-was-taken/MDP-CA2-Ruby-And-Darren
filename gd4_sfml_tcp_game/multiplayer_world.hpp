@@ -40,13 +40,11 @@ private:
 	void HandleSpawnStar(sf::Packet& data);
 	void HandleOtherPlayerGetStar(sf::Packet& data);
 #pragma endregion
-
-	// Networking input helpers
-	void SendRealtimeChange(Action action, bool started);
+#pragma region PacketSenders
+	void SendEvent(Action action, bool started);
 	void SendEvent(Action action);
-
-	// State update helper
 	void SendStateUpdate();
+#pragma endregion
 
 protected:
 	bool is_host_;

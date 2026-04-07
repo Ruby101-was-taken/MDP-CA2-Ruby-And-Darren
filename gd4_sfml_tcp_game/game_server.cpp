@@ -150,36 +150,7 @@ void GameServer::HandlePacketType(Server::PacketType type, sf::Packet& data, sf:
     case Server::PacketType::kIWillPickUpAStar:
         SendPacketToAll(data);
         break;
-    case Server::PacketType::kPlayerEvent: {
-        //// payload layout from client: username (string), uint8 action
-        //std::string name;
-        //uint8_t action_u;
-        //data >> name;
-        //data >> action_u;
-
-        //sf::Packet pkt = Utility::CreatePacket(Server::PacketType::kPlayerEvent);
-        //pkt << name;
-        //pkt << action_u;
-
-        // Forward to all clients except the original sender
-        SendPacketToAll(data, client_socket);
-        break;
-    }
-    case Server::PacketType::kPlayerRealtimeChange: {
-        //// payload layout: username (string), uint8 action, uint8 started
-        //std::string name;
-        //uint8_t action_u;
-        //uint8_t started_u;
-        //data >> name;
-        //data >> action_u;
-        //data >> started_u;
-
-        //sf::Packet pkt = Utility::CreatePacket(Server::PacketType::kPlayerRealtimeChange);
-        //pkt << name;
-        //pkt << action_u;
-        //pkt << started_u;
-
-        // Forward to all clients except the original sender
+    case Server::PacketType::kPlayerInputEvent: {
         SendPacketToAll(data, client_socket);
         break;
     }
@@ -187,7 +158,6 @@ void GameServer::HandlePacketType(Server::PacketType type, sf::Packet& data, sf:
         SendPacketToAll(data, client_socket);
         break;
     }
-
     default:
         std::cout << "[Server]: unknown type or missing break" << std::endl;
         break;
