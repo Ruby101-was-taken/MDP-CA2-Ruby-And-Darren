@@ -368,7 +368,7 @@ void MultiplayerWorld::HandlePlayerLeave(sf::Packet& data) {
 	if (is_host_) { //this function should only ever run on the host
 		std::string name;
 		data >> name;
-		//GetState()->RemoveName(name); // TODO: implement this function to remove from lobby list
+		GetState()->RemoveName(name);
 	}
 }
 // GAME STATE PACKET HANDLERS

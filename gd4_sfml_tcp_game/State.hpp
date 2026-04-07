@@ -41,8 +41,10 @@ public:
 	virtual bool Update(sf::Time dt) = 0;
 	virtual bool HandleEvent(const sf::Event& event) = 0;
 
-	//these really shouldn't be here but idk how else to do this help me
+	//these really shouldn't be here but idk how else to do this help me - No >:)
 	virtual void ShowNewName(PlayerInfo info, bool is_host = true);
+	virtual void RemoveName(std::string name);
+
 	virtual std::vector<PlayerInfo> GetNames();
 	virtual void ExitLobbyState();
 	void SetIsHost(bool is_host);

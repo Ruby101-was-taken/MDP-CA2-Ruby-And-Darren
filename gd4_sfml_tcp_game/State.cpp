@@ -19,6 +19,9 @@ State::~State()
 void State::ShowNewName(PlayerInfo info, bool is_host) {
 }
 
+void State::RemoveName(std::string name) {
+}
+
 std::vector<PlayerInfo> State::GetNames() {
     return std::vector<PlayerInfo>();
 }

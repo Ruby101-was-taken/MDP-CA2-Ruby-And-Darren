@@ -22,6 +22,7 @@ public:
 	void ExitLobbyState() override;
 
 	void ShowNewName(PlayerInfo info, bool is_host) override;
+	void RemoveName(std::string name) override; // Darren Meidl - D00255479
 private:
 	WorldClass world_;
 	sf::Font lobby_font_;
@@ -111,4 +112,11 @@ template<typename WorldClass>
 inline void GameState<WorldClass>::ShowNewName(PlayerInfo info, bool is_host) {
 
 	players_.emplace_back(info);
+}
+// Darren Meidl - D00255479
+template<typename WorldClass>
+inline void GameState<WorldClass>::RemoveName(std::string name) {
+	players_.erase(std::remove_if(players_.begin(), players_.end(), [&name](const PlayerInfo& info) {
+		return info.username == name;
+		}), players_.end());
 }
