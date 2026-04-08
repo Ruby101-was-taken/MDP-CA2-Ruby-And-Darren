@@ -6,6 +6,7 @@
 #include "network_protocol.hpp"
 #include <SFML/Network/Packet.hpp>
 #include <SFML/Network/IpAddress.hpp>
+#include <SFML/Network/Socket.hpp>
 
 class Utility
 {
@@ -31,6 +32,7 @@ class Utility
 		static sf::IpAddress GetAddressFromFile();
 		static sf::Packet CreatePacket(Server::PacketType type);
 
+		static void PrintStatusError(sf::Socket::Status status, std::string name, bool print_successes = false);
 
 		static bool CheckIfFolderExists(const char* dir);
 };

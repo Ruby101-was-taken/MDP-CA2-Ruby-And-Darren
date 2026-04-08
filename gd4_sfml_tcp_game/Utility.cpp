@@ -305,6 +305,30 @@ sf::Packet Utility::CreatePacket(Server::PacketType type) {
 	return packet;
 }
 
+void Utility::PrintStatusError(sf::Socket::Status status, std::string name, bool print_successes) {
+	switch (status) {
+	case sf::Socket::Status::Done:
+		if(print_successes)
+			std::cout << "[" << name << "]: Packet sent." << std::endl;
+		break;
+	case sf::Socket::Status::NotReady:
+		std::cout << "[" << name << "]: Socket not ready." << std::endl;
+		break;
+	case sf::Socket::Status::Partial:
+		std::cout << "[" << name << "]: Partial." << std::endl; //idk what this error means and I haven't gotten yet :D
+		break;
+	case sf::Socket::Status::Disconnected:
+		std::cout << "[" << name << "]: Socket disconnected." << std::endl;
+		break;
+	case sf::Socket::Status::Error:
+		std::cout << "[" << name << "]: Something went wrong while sending packet." << std::endl;
+		break;
+	default:
+		break;
+	}
+
+}
+
 //https://www.geeksforgeeks.org/cpp/how-to-check-a-file-or-directory-exists-in-cpp/
 bool Utility::CheckIfFolderExists(const char* dir) {
 

@@ -62,7 +62,6 @@ void StarSpawner::SpawnStar(sf::Vector2f spawn_point, bool is_dropped, float bou
 void StarSpawner::AddStar(bool dropped_star, sf::Vector2f spawn_point, float bounce_direction, bool announce) {
 	if (bounce_direction == 0 and dropped_star) {
 		bounce_direction = 2.f;
-		std::printf("\n\nRANDOMISING STAR DIR");
 		if (rand() % 2 == 0)
 			bounce_direction *= -1;
 	}

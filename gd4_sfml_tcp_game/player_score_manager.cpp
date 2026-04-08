@@ -28,7 +28,6 @@ void PlayerScoreManager::IncrementScore() {
 }
 
 bool PlayerScoreManager::DecrementScore() {
-	std::printf("lose score\n");
 	if (score_ != 0) {
 		score_ -= 1;
 		UpdateScoreVisual();
@@ -43,7 +42,6 @@ bool PlayerScoreManager::DecrementScore() {
 		node_->GetWorld()->GetCommandQueue().Push(spawnCommand);
 		return true;
 	}
-	std::printf("no more score to lose\n");
 	return false;
 }
 

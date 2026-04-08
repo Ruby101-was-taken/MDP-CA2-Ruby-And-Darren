@@ -132,22 +132,7 @@ void GameServer::SendPacketToAll(sf::Packet& data, sf::TcpSocket* exclude) {
 
         sf::Socket::Status status = client->send(data);
         //error message D:
-        switch (status) {
-        case sf::Socket::Status::NotReady:
-            std::cout << "Socket not ready." << std::endl;
-            break;
-        case sf::Socket::Status::Partial:
-            std::cout << "Partial." << std::endl; //idk what this error means and I haven't gotten yet :D
-            break;
-        case sf::Socket::Status::Disconnected:
-            std::cout << "Socket disconnected." << std::endl;
-            break;
-        case sf::Socket::Status::Error:
-            std::cout << "Something went wrong while sending packet." << std::endl;
-            break;
-        default:
-            break;
-        }
+        Utility::PrintStatusError(status, "Server");
     }
 }
 
@@ -155,22 +140,7 @@ void GameServer::SendPacketToHost(sf::Packet& data) {
     if (!host_socket_) return;
     sf::Socket::Status status = host_socket_->send(data);
     //error message D:
-    switch (status) {
-    case sf::Socket::Status::NotReady:
-        std::cout << "[Server]: Socket not ready." << std::endl;
-        break;
-    case sf::Socket::Status::Partial:
-        std::cout << "[Server]: Partial." << std::endl; //idk what this error means and I haven't gotten yet :D
-        break;
-    case sf::Socket::Status::Disconnected:
-        std::cout << "[Server]: Socket disconnected." << std::endl;
-        break;
-    case sf::Socket::Status::Error:
-        std::cout << "[Server]: Something went wrong while sending packet." << std::endl;
-        break;
-    default:
-        break;
-    }
+    Utility::PrintStatusError(status, "Server");
 }
 
 void GameServer::HandlePacketType(Server::PacketType type, sf::Packet& data, sf::TcpSocket *client_socket) {

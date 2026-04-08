@@ -64,7 +64,7 @@ void MultiplayerWorld::BuildScene() {
 
 	username_ = Utility::GetUserNameFromFile();
 	if (!is_connected_) {
-		std::printf("No Server");
+		std::printf("No Server\n");
 	}
 	else if (!is_host_) {
 		sf::Packet packet = Utility::CreatePacket(Server::PacketType::kPlayerJoin);
@@ -98,11 +98,9 @@ void MultiplayerWorld::HandleGameEvent(GameEvent event) {
 		break;
 	case GameEvent::kStarSpawn:
 		StarSpawned();
-		std::printf("kStarSpawn");
 		break;
 	case GameEvent::kClientStarSpawn:
 		TellHostToSpawnStar();
-		std::printf("kClientStarSpawn");
 		break;
 	case GameEvent::kStarCountChange:
 		TellHostIGotStar();
@@ -116,23 +114,7 @@ void MultiplayerWorld::HandleGameEvent(GameEvent event) {
 sf::Socket::Status MultiplayerWorld::SendPacket(sf::Packet& packet) {
 	sf::Socket::Status status = socket_.send(packet);
 	//error message D:
-	switch (status) {
-	case sf::Socket::Status::NotReady:
-		std::cout << "[MultiplayerWorld]: Socket not ready." << std::endl;
-		break;
-	case sf::Socket::Status::Partial:
-		std::cout << "[MultiplayerWorld]: Partial." << std::endl; //idk what this error means and I haven't gotten yet :D
-		break;
-	case sf::Socket::Status::Disconnected:
-		std::cout << "[MultiplayerWorld]: Socket disconnected." << std::endl;
-		is_connected_ = false;
-		break;
-	case sf::Socket::Status::Error:
-		std::cout << "[MultiplayerWorld]: Something went wrong while sending packet." << std::endl;
-		break;
-	default:
-		break;
-	}
+	Utility::PrintStatusError(status, "MultiplayerWorld");
 	return status;
 }
 
@@ -300,7 +282,6 @@ void MultiplayerWorld::StartGame() {
 		// spawn other nodes
 		for (PlayerInfo info : GetState()->GetNames()) {
 			sf::Vector2f spawn = Level::GetNextNetworkPlayerSpawnPosition();
-			std::cout << info.username << std::endl;
 
 			Player* newPlayer = AddPlayer((username_ != info.username) ? PlayerType::kOnlineNetworkedPlayer : PlayerType::kOnlineLocalPlayer, spawn, info.username, info.colour);
 
@@ -375,11 +356,6 @@ void MultiplayerWorld::HandlePlayerJoin(sf::Packet& data) {
 			colour.r = static_cast<uint8_t>(r);
 			colour.g = static_cast<uint8_t>(g);
 			colour.b = static_cast<uint8_t>(b);
-			std::cout << Utility::RGBToHex(colour) << std::endl;
-
-			std::cout << (int)colour.r << std::endl;
-			std::cout << (int)colour.g << std::endl;
-			std::cout << (int)colour.b << std::endl;
 
 			GetState()->ShowNewName(PlayerInfo(state_->GetNames().size(), name, GetState()->GetContext().fonts->Get(Font::kMain), colour));
 		}
