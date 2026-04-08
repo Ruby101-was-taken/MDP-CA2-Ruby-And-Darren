@@ -51,8 +51,10 @@ private:
 	void SendEvent(Action action, bool started);
 	void SendEvent(Action action);
 	void SendStateUpdate();
-	Player* GetPlayerByID(int id);
 #pragma endregion
+
+	Player* GetPlayerByID(int id);
+	Player* GetPlayerByName(std::string name);
 
 protected:
 	bool is_host_;

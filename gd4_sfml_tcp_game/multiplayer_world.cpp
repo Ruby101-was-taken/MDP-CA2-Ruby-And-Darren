@@ -28,7 +28,7 @@ MultiplayerWorld::MultiplayerWorld(sf::RenderTarget& output_target, FontHolder& 
 MultiplayerWorld::~MultiplayerWorld() {
 	if (is_connected_) { // If connected, tell server we're leaving so it can notify others
 		sf::Packet leave_packet = Utility::CreatePacket(Server::PacketType::kPlayerLeave);
-		leave_packet << static_cast<uint8_t>(id_);
+		leave_packet << username_;
 		SendPacket(leave_packet);
 		socket_.disconnect();
 		is_connected_ = false;
@@ -368,14 +368,17 @@ void MultiplayerWorld::HandleSpawnPlayer(sf::Packet& data) {
 }
 // Darren Meidl - D00255479 - Handle when a player leaves during the game (remove their Player object)
 void MultiplayerWorld::HandleRemovePlayer(sf::Packet& data) {
-	uint8_t id;
-	data >> id;
-	auto it = network_players_.find(static_cast<int>(id));
-	if (it != network_players_.end()) {
-		Player* p = it->second;
-		if (p) {
-			p->Destroy();
-			network_players_.erase(it);
+	std::string name;
+	data >> name;
+	std::cout << "[MultiplayerWorld]: Removing player with id of: " << name << std::endl;
+	
+	
+	for (auto it = network_players_.begin(); it != network_players_.end(); ++it) {
+		if (it->second->name_ == name) {
+			it = network_players_.erase(it);
+		}
+		else {
+			++it;
 		}
 	}
 }
@@ -504,6 +507,17 @@ void MultiplayerWorld::SendStateUpdate() {
 Player* MultiplayerWorld::GetPlayerByID(int id) {
 	if (network_players_.contains(id)) {
 		return network_players_[id];
+	}
+	return nullptr;
+}
+
+Player* MultiplayerWorld::GetPlayerByName(std::string name) {
+	auto it = network_players_.begin();
+	for (;it != network_players_.end(); it++) {
+		if (it->second->name_ == name) {
+			Player* p = it->second;
+			return p;
+		}
 	}
 	return nullptr;
 }

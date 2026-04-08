@@ -86,6 +86,8 @@ Player::Player(const TextureHolder& textures, const FontHolder& fonts, float x, 
 	default:
 		break;
 	}
+
+	name_ = name;
 }
 
 void Player::UpdateCurrent(sf::Time dt, CommandQueue& commands) {

@@ -255,6 +255,9 @@ void GameServer::HandlePlayerLeave(sf::Packet& data, sf::TcpSocket* client_socke
     std::string name;
     data >> name;
 
+    std::cout << "[Server]: Removing player named: " << name << std::endl;
+
+
     // remove mapping if we have it
     auto it = client_names_.find(client_socket);
     if (it != client_names_.end() && it->second == name) {
