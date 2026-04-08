@@ -28,7 +28,7 @@ MultiplayerWorld::MultiplayerWorld(sf::RenderTarget& output_target, FontHolder& 
 MultiplayerWorld::~MultiplayerWorld() {
 	if (is_connected_) { // If connected, tell server we're leaving so it can notify others
 		sf::Packet leave_packet = Utility::CreatePacket(Server::PacketType::kPlayerLeave);
-		leave_packet << username_;
+		leave_packet << static_cast<uint8_t>(id_);
 		SendPacket(leave_packet);
 		socket_.disconnect();
 		is_connected_ = false;
@@ -64,20 +64,13 @@ void MultiplayerWorld::BuildScene() {
 
 	username_ = Utility::GetUserNameFromFile();
 	if (!is_connected_) {
-		std::printf("No Server\n");
+		std::printf("No Server");
 	}
 	else if (!is_host_) {
-		sf::Packet packet = Utility::CreatePacket(Server::PacketType::kPlayerJoin);
-
-		packet << username_;
-		sf::Color colour = Utility::GetUserColourFromFile();
-		packet << static_cast<uint8_t>(colour.r);
-		packet << static_cast<uint8_t>(colour.g);
-		packet << static_cast<uint8_t>(colour.b);
-		SendPacket(packet);
 
 	}
 	else if (is_host_) {
+		id_ = 0; // host id is always 0
 		sf::Packet packet = Utility::CreatePacket(Server::PacketType::kIAmHost);
 		packet << username_;
 		SendPacket(packet);
@@ -114,7 +107,7 @@ void MultiplayerWorld::HandleGameEvent(GameEvent event) {
 sf::Socket::Status MultiplayerWorld::SendPacket(sf::Packet& packet) {
 	sf::Socket::Status status = socket_.send(packet);
 	//error message D:
-	Utility::PrintStatusError(status, "MultiplayerWorld");
+	Utility::PrintStatusError(status, (is_host_)? "MultiplayerWorld(Host)" : "MultiplayerWorld(Client)");
 	return status;
 }
 
@@ -134,8 +127,8 @@ void MultiplayerWorld::UpdateCurrent() {
 		// no incoming data this frame
 	}
 	if (!is_connected_) return;
-// D00255479 - Darren Meidl - Handle local input and send to server (if changed since last frame)
-	// Poll local input and send changes (realtime / event) before periodic state update
+	// D00255479 - Darren Meidl - Handle local input and send to server (if changed since last frame)
+		// Poll local input and send changes (realtime / event) before periodic state update
 	bool cur_left = InputManager::InputIsPressed(InputTypes::kPlayerOneLeft);
 	bool cur_right = InputManager::InputIsPressed(InputTypes::kPlayerOneRight);
 	bool cur_jump = InputManager::InputIsPressed(InputTypes::kPlayerOneUp);
@@ -161,6 +154,18 @@ void MultiplayerWorld::UpdateCurrent() {
 		SendStateUpdate();
 		state_update_clock_.restart();
 	}
+}
+
+void MultiplayerWorld::SendAllMyInformationOnTheInternet() {
+	sf::Packet packet = Utility::CreatePacket(Server::PacketType::kPlayerJoin);
+	std::cout << "[MultiplayerWorld]: My ID is: " << id_ << std::endl;
+	packet << static_cast<uint8_t>(id_);
+	packet << username_;
+	sf::Color colour = Utility::GetUserColourFromFile();
+	packet << static_cast<uint8_t>(colour.r);
+	packet << static_cast<uint8_t>(colour.g);
+	packet << static_cast<uint8_t>(colour.b);
+	SendPacket(packet);
 }
 
 void MultiplayerWorld::HandlePacketType(Server::PacketType type, sf::Packet& data) {
@@ -193,78 +198,33 @@ void MultiplayerWorld::HandlePacketType(Server::PacketType type, sf::Packet& dat
 	case Server::PacketType::kIWillPickUpAStar:
 		HandleOtherPlayerGetStar(data);
 		break;
-	// Darren Meidl - D00255479
+	case Server::PacketType::kWhatIsMyID:
+		if (!is_host_) {
+			uint8_t id;
+			data >> id;
+			id_ = static_cast<int>(id);
+			std::cout << "[MultiplayerWorld]: Just got my ID of: " << id_ << std::endl;
+			SendAllMyInformationOnTheInternet();
+		}
+		break;
+		// Darren Meidl - D00255479
 	case Server::PacketType::kPlayerInputEvent: {
-		std::string name;
-		uint8_t action_u;
-		uint8_t started_u;
-
-		data >> name;
-		data >> action_u;
-
-		Action action = static_cast<Action>(action_u); // create action from packet data
-
-		auto it = network_players_.find(name); // find the player this input is for
-		if (it != network_players_.end()) {
-			Player* p = it->second;
-			if (p) {
-				auto pm = p->FindAttachable<PlayerMovementBehaviour>();
-				if (pm) {
-					if (data >> started_u) {
-						bool started = static_cast<bool>(started_u); // create started bool from packet data
-						pm->ApplyRemoteEvent(action, started);
-					}	
-					else
-						pm->ApplyRemoteEvent(action);
-				}
-			}
-		}
+		HandlePlayerInputEvent(data);
 		break;
 	}
-	// Darren Meidl - D00255479
+											  // Darren Meidl - D00255479
 	case Server::PacketType::kPlayerStateUpdate: {
-		std::string name;
-		float x, y;
-		// read position
-		data >> name;
-		data >> x;
-		data >> y;
-		// Read velocity
-		float vx = 0.f, vy = 0.f;
-		if (!(data >> vx)) { vx = 0.f; }
-		if (!(data >> vy)) { vy = 0.f; }
-
-		// Ignore updates for local player
-		if (name == username_)
-			break;
-
-		auto it = network_players_.find(name);
-		if (it != network_players_.end()) {
-			Player* p = it->second;
-			if (p) {
-				// Apply a small smoothing to reduce jitter on clients (lerp rather than teleport)
-				const float lerp_factor = 0.6f; // tune between 0 (no move) and 1 (teleport)
-				sf::Vector2f current = p->getPosition();
-				sf::Vector2f target(x, y);
-				sf::Vector2f newpos = current + (target - current) * lerp_factor;
-				p->setPosition(newpos); // apply smoothed position
-
-				// Apply velocity to the PlayerMovementBehaviour so animation (jump/fall) can react
-				if (auto pm = p->FindAttachable<PlayerMovementBehaviour>()) {
-					pm->GetVelocity() = { vx, vy };
-				}
-			}
-		}
+		HandlePlayerStateUpdate(data);
 		break;
 	}
-	// Darren Meidl - D00255479
+											   // Darren Meidl - D00255479
 	case Server::PacketType::kNameTaken: {
 		uint8_t error_type;
 		data >> error_type;
 		if (error_type == (uint8_t)-1)
 			std::cout << "[MultiplayerWorld]: Join rejected by server: Username already taken." << std::endl;
 		else
-			std::cout << "[MultiplayerWorld]: Join rejected by server (no reason provided)." << std::endl;	
+			std::cout << "[MultiplayerWorld]: Join rejected by server (no reason provided)." << std::endl;
 		is_connected_ = false; // Mark not connected so GameState will return us to the title screen
 		socket_.disconnect(); // cleanly disconnect the socket
 		break;
@@ -285,9 +245,10 @@ void MultiplayerWorld::StartGame() {
 
 			Player* newPlayer = AddPlayer((username_ != info.username) ? PlayerType::kOnlineNetworkedPlayer : PlayerType::kOnlineLocalPlayer, spawn, info.username, info.colour);
 
-			network_players_[info.username] = newPlayer; // keep mapping (host only)
+			network_players_[info.id] = newPlayer; // keep mapping (host only)
 
 			sf::Packet new_player_packet = Utility::CreatePacket(Server::PacketType::kAddPlayer);
+			new_player_packet << static_cast<uint8_t>(info.id);
 			new_player_packet << info.username;
 			// send spawn position
 			new_player_packet << static_cast<uint16_t>(spawn.x);
@@ -336,7 +297,7 @@ void MultiplayerWorld::TellHostIGotStar() {
 	int score = player_one_->GetScore();
 
 	sf::Packet star_info = Utility::CreatePacket(Server::PacketType::kIWillPickUpAStar);
-	star_info << username_;
+	star_info << static_cast<uint8_t>(id_);
 	star_info << static_cast<uint8_t>(score);
 
 	SendPacket(star_info);
@@ -345,6 +306,8 @@ void MultiplayerWorld::TellHostIGotStar() {
 // LOBBY STATE PACKET HANDLERS
 void MultiplayerWorld::HandlePlayerJoin(sf::Packet& data) {
 	if (is_host_) { //this function should only ever run on the host
+		uint8_t id;
+		data >> id;
 		std::string name;
 		data >> name;
 		if (name != Utility::GetUserNameFromFile()) {
@@ -357,7 +320,7 @@ void MultiplayerWorld::HandlePlayerJoin(sf::Packet& data) {
 			colour.g = static_cast<uint8_t>(g);
 			colour.b = static_cast<uint8_t>(b);
 
-			GetState()->ShowNewName(PlayerInfo(state_->GetNames().size(), name, GetState()->GetContext().fonts->Get(Font::kMain), colour));
+			GetState()->ShowNewName(PlayerInfo(static_cast<int>(id), name, GetState()->GetContext().fonts->Get(Font::kMain), colour));
 		}
 	}
 }
@@ -372,6 +335,9 @@ void MultiplayerWorld::HandlePlayerLeave(sf::Packet& data) {
 }
 // GAME STATE PACKET HANDLERS
 void MultiplayerWorld::HandleSpawnPlayer(sf::Packet& data) {
+	//read id
+	uint8_t id;
+	data >> id;
 	// Read name
 	std::string name;
 	data >> name;
@@ -389,23 +355,22 @@ void MultiplayerWorld::HandleSpawnPlayer(sf::Packet& data) {
 		colour.b = static_cast<uint8_t>(b);
 	}
 
-		
 	sf::Vector2f spawn(x, y); // Create spawn vector
 	// Local player 
 	if (name == Utility::GetUserNameFromFile()) {
 		Player* p = AddPlayer(PlayerType::kOnlineLocalPlayer, spawn, name);
-		network_players_[name] = p;
+		network_players_[static_cast<int>(id)] = p;
 	} // Other networked player
 	else {
 		Player* p = AddPlayer(PlayerType::kOnlineNetworkedPlayer, spawn, name, colour);
-		network_players_[name] = p;
+		network_players_[static_cast<int>(id)] = p;
 	}
 }
 // Darren Meidl - D00255479 - Handle when a player leaves during the game (remove their Player object)
 void MultiplayerWorld::HandleRemovePlayer(sf::Packet& data) {
-	std::string name;
-	data >> name;
-	auto it = network_players_.find(name);
+	uint8_t id;
+	data >> id;
+	auto it = network_players_.find(static_cast<int>(id));
 	if (it != network_players_.end()) {
 		Player* p = it->second;
 		if (p) {
@@ -427,17 +392,72 @@ void MultiplayerWorld::HandleSpawnStar(sf::Packet& data) {
 }
 
 void MultiplayerWorld::HandleOtherPlayerGetStar(sf::Packet& data) {
-	std::string name;
-	data >> name;
-	if (name != username_) {
-		auto it = network_players_.find(name);
-		if (it != network_players_.end()) {
-			Player* p = it->second;
-			if (p) {
-				uint8_t score;
-				data >> score;
-				p->FindAttachable<TextNodeBehaviour>()->SetText(std::to_string(static_cast<int>(score)));
+	uint8_t id;
+	data >> id;
+	int id_as_int = static_cast<int>(id);
+	if (id_as_int != id) {
+		Player* p = GetPlayerByID(id_as_int);
+		if (p) {
+			uint8_t score;
+			data >> score;
+			p->FindAttachable<TextNodeBehaviour>()->SetText(std::to_string(static_cast<int>(score)));
+		}
+	}
+}
+
+void MultiplayerWorld::HandlePlayerInputEvent(sf::Packet& data) {
+	uint8_t id;
+	uint8_t action_u;
+	uint8_t started_u;
+
+	data >> id;
+	data >> action_u;
+
+	Action action = static_cast<Action>(action_u); // create action from packet data
+
+	Player* p = GetPlayerByID(static_cast<int>(id));
+	if (p) {
+		auto pm = p->FindAttachable<PlayerMovementBehaviour>();
+		if (pm) {
+			if (data >> started_u) {
+				bool started = static_cast<bool>(started_u); // create started bool from packet data
+				pm->ApplyRemoteEvent(action, started);
 			}
+			else
+				pm->ApplyRemoteEvent(action);
+		}
+	}
+}
+
+void MultiplayerWorld::HandlePlayerStateUpdate(sf::Packet& data) {
+
+	uint8_t id;
+	float x, y;
+	// read position
+	data >> id;
+	data >> x;
+	data >> y;
+	// Read velocity
+	float vx = 0.f, vy = 0.f;
+	if (!(data >> vx)) { vx = 0.f; }
+	if (!(data >> vy)) { vy = 0.f; }
+
+	// Ignore updates for local player
+	if (static_cast<int>(id) == id_)
+		return;
+
+	Player* p = GetPlayerByID(static_cast<int>(id));
+	if (p) {
+		// Apply a small smoothing to reduce jitter on clients (lerp rather than teleport)
+		const float lerp_factor = 0.6f; // tune between 0 (no move) and 1 (teleport)
+		sf::Vector2f current = p->getPosition();
+		sf::Vector2f target(x, y);
+		sf::Vector2f newpos = current + (target - current) * lerp_factor;
+		p->setPosition(newpos); // apply smoothed position
+
+		// Apply velocity to the PlayerMovementBehaviour so animation (jump/fall) can react
+		if (auto pm = p->FindAttachable<PlayerMovementBehaviour>()) {
+			pm->GetVelocity() = { vx, vy };
 		}
 	}
 }
@@ -446,26 +466,23 @@ void MultiplayerWorld::HandleOtherPlayerGetStar(sf::Packet& data) {
 void MultiplayerWorld::SendEvent(Action action, bool started) {
 	if (!is_connected_) return;
 	sf::Packet packet = Utility::CreatePacket(Server::PacketType::kPlayerInputEvent);
-	packet << username_;
+	packet << static_cast<uint8_t>(id_);
 	packet << static_cast<uint8_t>(action);
 	packet << static_cast<uint8_t>(started ? 1 : 0);
 	SendPacket(packet);
-} 
+}
 // Darren Meidl - D00255479 - Function to send discrete events (e.g. jump)
 void MultiplayerWorld::SendEvent(Action action) {
 	if (!is_connected_) return;
 	sf::Packet packet = Utility::CreatePacket(Server::PacketType::kPlayerInputEvent);
-	packet << username_;
+	packet << static_cast<uint8_t>(id_);
 	packet << static_cast<uint8_t>(action);
 	SendPacket(packet);
 }
 // Darren Meidl - D00255479 - Function to send periodic state updates to server
 void MultiplayerWorld::SendStateUpdate() {
 	if (!is_connected_) return;
-	// find the local player's object (we stored it in network_players_ during spawn)
-	auto it = network_players_.find(username_);
-	if (it == network_players_.end()) return;
-	Player* p = it->second;
+	Player* p = GetPlayerByID(id_);
 	if (!p) return;
 	// Read position from player object
 	sf::Vector2f pos = p->getPosition();
@@ -476,10 +493,17 @@ void MultiplayerWorld::SendStateUpdate() {
 	}
 	// create packet with type state update
 	sf::Packet packet = Utility::CreatePacket(Server::PacketType::kPlayerStateUpdate);
-	packet << username_;
+	packet << static_cast<uint8_t>(id_);
 	packet << pos.x;
 	packet << pos.y;
 	packet << vel.x;
 	packet << vel.y;
 	SendPacket(packet);
+}
+
+Player* MultiplayerWorld::GetPlayerByID(int id) {
+	if (network_players_.contains(id)) {
+		return network_players_[id];
+	}
+	return nullptr;
 }

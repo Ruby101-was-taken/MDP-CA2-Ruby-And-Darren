@@ -47,9 +47,17 @@ void GameServer::ExecutionThread() {
                 if (selector_.isReady(listener_socket_)) {
                     auto client = std::make_unique<sf::TcpSocket>();
                     if (listener_socket_.accept(*client) == sf::Socket::Status::Done) {
+
+                        sf::Packet new_id = Utility::CreatePacket(Server::PacketType::kWhatIsMyID);
+                        new_id << static_cast<uint8_t>(next_id_++);
+                        client->send(new_id);
+
+                        std::cout << "[Server]: Register client with id of: " << next_id_ - 1 << std::endl;
+
                         client->setBlocking(false);
                         selector_.add(*client);
                         clients_.push_back(std::move(client));
+
                     }
                 }
             }
@@ -192,7 +200,7 @@ void GameServer::HandleHostJoin(sf::Packet& data, sf::TcpSocket* client_socket) 
     std::string name;
     data >> name;
 
-	std::cout << "[Server]:" << name << " has joined as host!" << std::endl;
+	std::cout << "[Server]: " << name << " has joined as host!" << std::endl;
 
     if (client_socket) {
         client_names_[client_socket] = name; // include tracking of the host's username
@@ -200,9 +208,11 @@ void GameServer::HandleHostJoin(sf::Packet& data, sf::TcpSocket* client_socket) 
     }
 }
 void GameServer::HandlePlayerJoin(sf::Packet& data, sf::TcpSocket* client_socket) {
+    uint8_t id;
+    data >> id;
     std::string name;
     data >> name;
-    std::cout << "[Server]:" << name << " has tried to join the lobby!" << std::endl;
+    std::cout << "[Server]: " << name << " has tried to join the lobby!" << std::endl;
 
     uint8_t r, g, b;
 
@@ -232,6 +242,7 @@ void GameServer::HandlePlayerJoin(sf::Packet& data, sf::TcpSocket* client_socket
     }
 
     sf::Packet packet = Utility::CreatePacket(Server::PacketType::kPlayerJoin);
+    packet << id;
     packet << name;
 
     packet << static_cast<uint8_t>(r);

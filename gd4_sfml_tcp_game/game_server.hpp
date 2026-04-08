@@ -48,5 +48,7 @@ private:
 	bool waiting_thread_end_ = false;
 
 	bool allow_player_join_;
+
+	int next_id_ = 0; 
 };
 

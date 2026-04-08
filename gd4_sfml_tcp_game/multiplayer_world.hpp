@@ -25,6 +25,8 @@ protected:
 
 private:
 
+	void SendAllMyInformationOnTheInternet(); // very safe thing to do
+
 	void HandlePacketType(Server::PacketType type, sf::Packet& data);
 
 	void StartGame();
@@ -42,11 +44,14 @@ private:
 	void HandleRemovePlayer(sf::Packet& data);
 	void HandleSpawnStar(sf::Packet& data);
 	void HandleOtherPlayerGetStar(sf::Packet& data);
+	void HandlePlayerInputEvent(sf::Packet& data);
+	void HandlePlayerStateUpdate(sf::Packet& data);
 #pragma endregion
 #pragma region PacketSenders
 	void SendEvent(Action action, bool started);
 	void SendEvent(Action action);
 	void SendStateUpdate();
+	Player* GetPlayerByID(int id);
 #pragma endregion
 
 protected:
@@ -54,6 +59,7 @@ protected:
 	bool is_connected_;
 
 	std::string username_;
+	int id_;
 
 	std::unique_ptr<GameServer> game_server_;
 	sf::TcpSocket socket_;
@@ -63,7 +69,7 @@ protected:
 	StarSpawner* star_spawner_;
 
 	// Map usernames -> Player*
-	std::map<std::string, Player*> network_players_;
+	std::map<int, Player*> network_players_;
 	// previous local input state (client) to avoid flooding
 	bool prev_left_ = false;
 	bool prev_right_ = false;
