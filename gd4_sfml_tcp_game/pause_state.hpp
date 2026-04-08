@@ -6,7 +6,7 @@
 
 class PauseState : public State {
 public:
-    PauseState(StateStack& stack, Context context);
+    PauseState(StateStack& stack, Context context, bool allowBackgroundUpdates = false);
     ~PauseState();
     virtual void Draw() override;
     virtual bool Update(sf::Time dt) override;
@@ -16,18 +16,22 @@ private:
     sf::Sprite background_sprite_;
     sf::Text paused_text_;
     sf::Text instruction_text_;
+    bool allow_background_updates_;
 };
 
 #include "resource_holder.hpp"
 #include <SFML/Graphics/RenderWindow.hpp>
 #include "Utility.hpp"
+#include "input_manager.hpp"
 
 // Darren Meidl - D00255479
-PauseState::PauseState(StateStack& stack, Context context)
+PauseState::PauseState(StateStack& stack, Context context, bool allowBackgroundUpdates)
     :State(stack, context)
     , background_sprite_(context.textures->Get(TextureID::kTitleScreen))
     , paused_text_(context.fonts->Get(Font::kMain))
-    , instruction_text_(context.fonts->Get(Font::kMain)) {
+    , instruction_text_(context.fonts->Get(Font::kMain))
+    , allow_background_updates_(allowBackgroundUpdates)
+{
     //sf::Font& font = context.fonts->Get(Font::kMain);
     sf::Vector2f view_size = context.window->getView().getSize();
 
@@ -41,9 +45,9 @@ PauseState::PauseState(StateStack& stack, Context context)
     instruction_text_.setString("Press backspace to return to main menu, esc to game");
     Utility::CentreOrigin(instruction_text_);
     instruction_text_.setPosition({ 0.5f * view_size.x, 0.6f * view_size.y });
-
-    //Pause the music
-    GetContext().music->SetPaused(true);
+   
+    GetContext().music->SetPaused(true); //Pause the music
+    InputManager::SetInputEnabled(false); // Block realtime input
 }
 
 // Darren Meidl - D00255479
@@ -61,7 +65,7 @@ void PauseState::Draw() {
 }
 
 bool PauseState::Update(sf::Time dt) {
-    return false;
+	return allow_background_updates_; // decides whether to block update propagation to underlying states
 }
 
 bool PauseState::HandleEvent(const sf::Event& event) {
@@ -79,7 +83,9 @@ bool PauseState::HandleEvent(const sf::Event& event) {
 
     return false;
 }
-
+// Darren Meidl - D00255479
 PauseState::~PauseState() {
+    // restore music and input behaviour
     GetContext().music->SetPaused(false);
+    InputManager::SetInputEnabled(true);
 }

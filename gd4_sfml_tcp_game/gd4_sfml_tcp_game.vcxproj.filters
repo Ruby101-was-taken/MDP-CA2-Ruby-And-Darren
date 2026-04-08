@@ -539,6 +539,9 @@
     <ClInclude Include="player_info.hpp">
       <Filter>Header Files\Structs</Filter>
     </ClInclude>
+    <ClInclude Include="multiplayer_pause_state.hpp">
+      <Filter>Header Files\States</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="resource_holder.inl">

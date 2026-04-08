@@ -244,6 +244,7 @@
     <ClInclude Include="menu_world.hpp" />
     <ClInclude Include="mission_status.hpp" />
     <ClInclude Include="multiplayer_game_state.hpp" />
+    <ClInclude Include="multiplayer_pause_state.hpp" />
     <ClInclude Include="multiplayer_world.hpp" />
     <ClInclude Include="music_player.hpp" />
     <ClInclude Include="music_themes.hpp" />
