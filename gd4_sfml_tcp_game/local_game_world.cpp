@@ -7,7 +7,13 @@ LocalGameWorld::LocalGameWorld(sf::RenderTarget& output_target, FontHolder& font
     StartBuildScene();
 }
 
+void LocalGameWorld::Start() {
+    GetState()->GetContext().music->Play(MusicThemes::kLevelTheme);
+}
+
 void LocalGameWorld::BuildScene() {
+
+
     MakeBaseScene();
 
     // Add player 1 node

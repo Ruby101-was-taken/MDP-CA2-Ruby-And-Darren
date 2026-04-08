@@ -3,8 +3,9 @@
 MusicPlayer::MusicPlayer()
 	: volume_(10.f)
 {
-	filenames_[MusicThemes::kMenuTheme] = "Media/Music/MenuTheme.mp3";
-	filenames_[MusicThemes::kLevelTheme] = "Media/Music/LevelTheme.mp3";
+	filenames_[MusicThemes::kMenuTheme] = "Media/Music/Menu/MenuTheme.mp3";
+	filenames_[MusicThemes::kLevelTheme] = "Media/Music/Game/1.mp3";
+	filenames_[MusicThemes::kLobbyTheme] = "Media/Music/Menu/LobbyTheme.wav";
 }
 
 void MusicPlayer::Play(MusicThemes theme)
