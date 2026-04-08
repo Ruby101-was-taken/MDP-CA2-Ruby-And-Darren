@@ -172,7 +172,7 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="menu_state.cpp" />
     <ClCompile Include="menu_world.cpp" />
-    <ClCompile Include="multiplayer_game_state.cpp" />
+    <ClCompile Include="multiplayer_pause_state.cpp" />
     <ClCompile Include="multiplayer_world.cpp" />
     <ClCompile Include="music_player.cpp" />
     <ClCompile Include="pause_state.cpp" />
@@ -243,7 +243,6 @@
     <ClInclude Include="menu_state.hpp" />
     <ClInclude Include="menu_world.hpp" />
     <ClInclude Include="mission_status.hpp" />
-    <ClInclude Include="multiplayer_game_state.hpp" />
     <ClInclude Include="multiplayer_pause_state.hpp" />
     <ClInclude Include="multiplayer_world.hpp" />
     <ClInclude Include="music_player.hpp" />
