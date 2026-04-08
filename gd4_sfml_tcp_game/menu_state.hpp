@@ -37,43 +37,63 @@ MenuState<WorldClass>::MenuState(StateStack& stack, Context context)
     //background_sprite_.setTexture(texture);
 
     auto play_button = std::make_shared<gui::Button>(context);
-    play_button->setPosition({ 530, 530 });
+    play_button->setPosition({ 650, 360 });
     play_button->SetText("Play");
     play_button->SetCallback([this]()
-        {
-            RequestStackPop();
-            RequestStackPush(StateID::kGame);
-        });
+    {
+        RequestStackPop();
+        RequestStackPush(StateID::kGame);
+    });
+
+    auto host_button = std::make_shared<gui::Button>(context);
+    host_button->setPosition({ 650, 430 });
+    host_button->SetText("Host");
+    host_button->SetCallback([this]()
+    {
+        RequestStackPop();
+        RequestStackPush(StateID::kHost);
+    });
+    // Darren - D00255479
+    auto join_button = std::make_shared<gui::Button>(context);
+    join_button->setPosition({ 650, 500 });
+    join_button->SetText("Join");
+    join_button->SetCallback([this]()
+    {
+        RequestStackPop();
+        RequestStackPush(StateID::kJoin);
+    });
 
     auto settings_button = std::make_shared<gui::Button>(context);
-    settings_button->setPosition({ 680, 530 });
-    settings_button->SetText("Host");
+    settings_button->setPosition({ 830, 360 });
+    settings_button->SetText("Settings");
     settings_button->SetCallback([this]()
-        {
-            RequestStackPop();
-            RequestStackPush(StateID::kHost);
-        });
-    // Darren - D00255479
-    auto tutorial_button = std::make_shared<gui::Button>(context);
-    tutorial_button->setPosition({ 830, 530 });
-    tutorial_button->SetText("Join");
-    tutorial_button->SetCallback([this]()
-        {
-            RequestStackPop();
-            RequestStackPush(StateID::kJoin);
-        });
+    {
+        RequestStackPop();
+        RequestStackPush(StateID::kSettings);
+    });
+
+    auto about_button = std::make_shared<gui::Button>(context);
+    about_button->setPosition({ 830, 430 });
+    about_button->SetText("About");
+    about_button->SetCallback([this]()
+    {
+        RequestStackPop();
+        RequestStackPush(StateID::kTutorial);
+    });
 
     auto exit_button = std::make_shared<gui::Button>(context);
-    exit_button->setPosition({ 980, 530 });
+    exit_button->setPosition({ 830, 500 });
     exit_button->SetText("Exit");
     exit_button->SetCallback([this]()
-        {
+    {
             RequestStackPop();
-        });
+    });
 
-    gui_container_.Pack(play_button);    
+    gui_container_.Pack(play_button);
+    gui_container_.Pack(host_button);
+    gui_container_.Pack(join_button);
     gui_container_.Pack(settings_button);
-    gui_container_.Pack(tutorial_button);
+    gui_container_.Pack(about_button);
     gui_container_.Pack(exit_button);
 
     //Play the music

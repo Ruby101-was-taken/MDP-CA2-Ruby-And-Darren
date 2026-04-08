@@ -53,7 +53,7 @@ SettingsState<WorldClass>::SettingsState(StateStack& stack, Context context)
     // Darren - D00255479
     auto subtract_sound_volume_button = std::make_shared<gui::Button>(context);
     subtract_sound_volume_button->SetSmall(true);
-    subtract_sound_volume_button->setPosition({ 500, 500 });
+    subtract_sound_volume_button->setPosition({ 400, 500 });
     subtract_sound_volume_button->SetText("-");
     subtract_sound_volume_button->SetCallback([this, context]() {
         context.sounds->IncrementVolume(-20.f);
@@ -68,7 +68,7 @@ SettingsState<WorldClass>::SettingsState(StateStack& stack, Context context)
     // Darren - D00255479
     auto add_sound_volume_button = std::make_shared<gui::Button>(context);
     add_sound_volume_button->SetSmall(true);
-    add_sound_volume_button->setPosition({ 700, 500 });
+    add_sound_volume_button->setPosition({ 600, 500 });
     add_sound_volume_button->SetText("+");
     add_sound_volume_button->SetCallback([this, context]() {
         context.sounds->IncrementVolume(20.f);
@@ -79,7 +79,7 @@ SettingsState<WorldClass>::SettingsState(StateStack& stack, Context context)
     // Ruby White - D00255322
     auto subtract_music_volume_button = std::make_shared<gui::Button>(context);
     subtract_music_volume_button->SetSmall(true);
-    subtract_music_volume_button->setPosition({ 700, 500 });
+    subtract_music_volume_button->setPosition({ 750, 500 });
     subtract_music_volume_button->SetText("-");
     subtract_music_volume_button->SetCallback([this, context]() {
         context.music->IncrementVolume(-20.f);
@@ -94,7 +94,7 @@ SettingsState<WorldClass>::SettingsState(StateStack& stack, Context context)
     // Ruby White - D00255322
     auto add_music_volume_button = std::make_shared<gui::Button>(context);
     add_music_volume_button->SetSmall(true);
-    add_music_volume_button->setPosition({ 900, 500 });
+    add_music_volume_button->setPosition({ 950, 500 });
     add_music_volume_button->SetText("+");
     add_music_volume_button->SetCallback([this, context]() {
         context.music->IncrementVolume(20.f);
@@ -104,8 +104,8 @@ SettingsState<WorldClass>::SettingsState(StateStack& stack, Context context)
     gui_container_.Pack(back_button);
     gui_container_.Pack(subtract_sound_volume_button);
     gui_container_.Pack(add_sound_volume_button);
-    gui_container_.Pack(add_music_volume_button);
     gui_container_.Pack(subtract_music_volume_button);
+    gui_container_.Pack(add_music_volume_button); 
 
     // TODO: Add a unique theme for this menu and settings
     context.music->Play(MusicThemes::kMenuTheme);
