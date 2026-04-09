@@ -372,16 +372,22 @@ void MultiplayerWorld::HandleRemovePlayer(sf::Packet& data) {
 	std::string name;
 	data >> name;
 	std::cout << "[MultiplayerWorld]: Removing player with id of: " << name << std::endl;
+	std::cout << "[MultiplayerWorld]: There are " << network_players_.size() << " players to search" << std::endl;
 	
 	
-	for (auto it = network_players_.begin(); it != network_players_.end(); ++it) {
+	for (auto it = network_players_.begin(); it != network_players_.end();) {
+		std::cout << "[MultiplayerWorld]: Trying to remove " << it->second->name_ << std::endl;
 		if (it->second->name_ == name) {
+			it->second->Destroy();
 			it = network_players_.erase(it);
+			std::cout << "[MultiplayerWorld]: " << name << " was found." << std::endl;
+			return;
 		}
 		else {
 			++it;
 		}
 	}
+	std::cout << "[MultiplayerWorld]: " << name << " was not found." << std::endl;
 }
 
 void MultiplayerWorld::HandleSpawnStar(sf::Packet& data) {
