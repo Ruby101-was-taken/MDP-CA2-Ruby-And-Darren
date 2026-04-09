@@ -405,7 +405,7 @@ void MultiplayerWorld::HandleOtherPlayerGetStar(sf::Packet& data) {
 	uint8_t id;
 	data >> id;
 	int id_as_int = static_cast<int>(id);
-	if (id_as_int != id) {
+	if (id_as_int != id_) {
 		Player* p = GetPlayerByID(id_as_int);
 		if (p) {
 			uint8_t score;
