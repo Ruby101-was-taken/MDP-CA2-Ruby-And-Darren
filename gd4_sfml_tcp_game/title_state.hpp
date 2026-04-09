@@ -4,6 +4,7 @@
 #include <type_traits>
 #include <SFML/Graphics/Sprite.hpp>
 #include <SFML/Graphics/Text.hpp>
+#include "Constants.hpp"
 
 template <typename WorldClass>
 class TitleState : public State
@@ -16,7 +17,9 @@ public:
 
 private:
 	sf::Sprite background_sprite_;
-	sf::Text text_;
+    sf::Text text_;
+
+    sf::Text version_text_;
 
 	bool show_text_;
 	sf::Time text_effect_time_;
@@ -34,6 +37,7 @@ TitleState<WorldClass>::TitleState(StateStack& stack, Context context)
     , text_effect_time_(sf::Time::Zero)
     , background_sprite_(context.textures->Get(TextureID::kTitleScreen))
     , text_(context.fonts->Get(Font::kMain))
+    , version_text_(context.fonts->Get(Font::kMain))
 {
     //background_sprite_.setTexture(context.textures->Get(TextureID::kTitleScreen));
     //text_.setFont(context.fonts->Get(Font::kMain));
@@ -41,6 +45,9 @@ TitleState<WorldClass>::TitleState(StateStack& stack, Context context)
     text_.setFillColor(sf::Color::Black);
     Utility::CentreOrigin(text_);
     text_.setPosition({ 850, 500 });
+
+    version_text_.setString(GAME_VERSION);
+    version_text_.setPosition({ 0, 0 });
 }
 
 template <typename WorldClass>
@@ -53,6 +60,8 @@ void TitleState<WorldClass>::Draw()
     {
         window.draw(text_);
     }
+
+    window.draw(version_text_);
 }
 template <typename WorldClass>
 bool TitleState<WorldClass>::Update(sf::Time dt)
