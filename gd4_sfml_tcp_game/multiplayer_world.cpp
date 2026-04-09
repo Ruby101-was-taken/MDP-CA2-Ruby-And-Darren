@@ -75,10 +75,6 @@ void MultiplayerWorld::BuildScene() {
 		packet << username_;
 		SendPacket(packet);
 	}
-	//add star spawner
-	std::unique_ptr<StarSpawner> spawner = std::make_unique<StarSpawner>(textures_, is_host_);
-	star_spawner_ = spawner.get();
-	root_node_.AttachChild(std::move(spawner));
 
 	//Set socket to non-blocking
 	socket_.setBlocking(false);
@@ -181,8 +177,10 @@ void MultiplayerWorld::HandlePacketType(Server::PacketType type, sf::Packet& dat
 		break;
 	case Server::PacketType::kStartGame:
 		GetState()->GetContext().music->Play(MusicThemes::kLevelTheme);
-		if (!is_host_)
+		if (!is_host_) {
+			PrepareLevel();
 			GetState()->ExitLobbyState();
+		}
 		break;
 	case Server::PacketType::kAddPlayer:
 		if (!is_host_)
@@ -247,8 +245,19 @@ void MultiplayerWorld::HandlePacketType(Server::PacketType type, sf::Packet& dat
 	}
 }
 
+void MultiplayerWorld::PrepareLevel() {
+	Level::LoadLevel(level_id_);
+
+	//add star spawner
+	std::unique_ptr<StarSpawner> spawner = std::make_unique<StarSpawner>(textures_, is_host_);
+	star_spawner_ = spawner.get();
+	root_node_.AttachChild(std::move(spawner));
+}
+
 void MultiplayerWorld::StartGame() {
 	if (is_host_) {
+
+		PrepareLevel();
 
 		// spawn other nodes
 		for (PlayerInfo info : GetState()->GetNames()) {

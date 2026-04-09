@@ -15,7 +15,6 @@ GameWorld::GameWorld(sf::RenderTarget& output_target, FontHolder& font, SoundPla
     is_two_player_(false)
 {
     has_level_ = true;
-    level_path_ = "Media/Levels/1.csv";
     SetCameraSize({ 640, 360 });
 
     split_screen_splitter_.setFillColor(sf::Color::White);

@@ -17,7 +17,7 @@ World::World(sf::RenderTarget& output_target, FontHolder& font, SoundPlayer& sou
 	, scrollspeed_(-50.f)
 	, scene_texture_({ target_.getSize().x, target_.getSize().y }),
 	context_(context),
-	level_path_("Media/Levels/1.csv")
+	level_id_(2)
 {
 	SetCameraSize({ 640, 360});
 	LoadTextures();
@@ -41,6 +41,7 @@ void World::Update(sf::Time dt) {
 
 	// Ruby White - D00255322
 	root_node_.Update(dt, command_queue_);
+	//std::cout << "====" << std::endl;
 }
 
 // Ruby White - D00255322
@@ -148,7 +149,6 @@ void World::LoadTextures()
 	textures_.Load(TextureID::kOnlinePlayerEyesSheet, "Media/Textures/Player/Default/Sheet-Eyes.png");
 
 	textures_.Load(TextureID::kItemStar, "Media/Textures/Item/Star.png");
-	textures_.Load(TextureID::kLevelTile, "Media/Textures/Level/Tile.png");
 	textures_.Load(TextureID::kLevelBackdrop, "Media/Textures/Level/Backdrop.png");
 }
 
@@ -164,7 +164,6 @@ void World::StartBuildScene()
 		root_node_.AttachChild(std::move(layer));
 	}
 
-	Level::LoadLevel(level_path_, textures_.Get(TextureID::kLevelTile));
 
 	root_node_.SetWorld(this);
 	BuildScene();

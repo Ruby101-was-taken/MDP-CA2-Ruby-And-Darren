@@ -138,7 +138,8 @@ xcopy /y /d /s /i "$(ProjectDir)\Media" "$(TargetDir)\Media"</Command>
       <AdditionalDependencies>sfml-system.lib;sfml-window.lib;sfml-graphics.lib;sfml-audio.lib;sfml-network.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
-      <Command>xcopy /y /d /s /i "$(ProjectDir)\SFML-3.0.1\bin\*.dll" "$(TargetDir)"</Command>
+      <Command>xcopy /y /d /s /i "$(ProjectDir)\SFML-3.0.1\bin\*.dll" "$(TargetDir)"
+xcopy /y /d /s /i "$(ProjectDir)\Media" "$(TargetDir)\Media"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
@@ -287,6 +288,7 @@ xcopy /y /d /s /i "$(ProjectDir)\Media" "$(TargetDir)\Media"</Command>
     <ClInclude Include="texture_holder.hpp" />
     <ClInclude Include="texture_id.hpp" />
     <ClInclude Include="text_node_behaviour.hpp" />
+    <ClInclude Include="tile_id.hpp" />
     <ClInclude Include="title_state.hpp" />
     <ClInclude Include="title_world.hpp" />
     <ClInclude Include="tutorial_world.hpp" />

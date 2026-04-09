@@ -16,7 +16,7 @@ StarSpawner::StarSpawner(TextureHolder& textures, bool is_host) :
 }
 
 void StarSpawner::StartCurrent() {
-	SpawnStar(0);
+	SpawnStar(0, false);
 }
 
 void StarSpawner::UpdateCurrent(sf::Time dt, CommandQueue& commands) {
@@ -43,14 +43,14 @@ void StarSpawner::AttemptDroppedStarSpawn(sf::Vector2f spawn_point, bool is_drop
 	}
 }
 
-void StarSpawner::SpawnStar(int force_position_index) {
+void StarSpawner::SpawnStar(int force_position_index, bool annouce) {
 	++count_;
 	sf::Vector2f spawn_point;
 	if (force_position_index < 0)
 		spawn_point = Level::GetStarSpawnSpots()[rand() % Level::GetStarSpawnSpots().size()];
 	else
 		spawn_point = Level::GetStarSpawnSpots()[force_position_index];
-	AddStar(false, spawn_point);
+	AddStar(false, spawn_point, 0, annouce);
 
 }
 

@@ -4,12 +4,17 @@
 #include <SFML/Graphics.hpp>
 #include <vector>
 #include <string>
+#include "tile_id.hpp"
+#include "resource_identifiers.hpp"
+#include <map>
 
 class Level { 
 public:
     Level() = delete;
 
-    static void LoadLevel(const std::string& filename, const sf::Texture& tile);
+    static void LoadTileSheets();
+
+    static void LoadLevel(const int& level_id);
     static bool IsCollidingWithLevel(BoxColliderBehaviour* collider);
 
     static std::vector<sf::Vector2f> GetStarSpawnSpots();
@@ -37,4 +42,8 @@ private:
 
     static std::vector<sf::Vector2f> network_spawn_points_;
     static int last_spawn_grabbed_;
+
+    static TileSheetHolder tile_sheets_;
+
+    static std::map<int, TileID> level_tile_types_;
 };

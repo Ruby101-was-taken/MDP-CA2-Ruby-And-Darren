@@ -19,6 +19,8 @@
 #include "player_local_win_state.hpp"
 #include "player_networked_win_state.hpp"
 
+#include "level.hpp"
+
 #include "host_world.hpp"
 #include "join_world.hpp"
 #include "multiplayer_pause_state.hpp"
@@ -57,6 +59,8 @@ Application::Application() :
 
 	RegisterStates();
 	stack_.PushState(StateID::kTitle);
+
+	Level::LoadTileSheets();
 
 	//set icon
 	sf::Image icon("Media/Textures/Interface/Window_Icon.png");

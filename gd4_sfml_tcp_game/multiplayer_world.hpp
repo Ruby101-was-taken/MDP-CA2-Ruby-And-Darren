@@ -30,6 +30,8 @@ private:
 
 	void HandlePacketType(Server::PacketType type, sf::Packet& data);
 
+	void PrepareLevel();
+
 	void StartGame();
 
 	void StarSpawned();

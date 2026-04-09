@@ -41,6 +41,7 @@ void Star::UpdateCurrent(sf::Time dt, CommandQueue& commands) {
 		can_be_collected_ -= dt.asSeconds();
 	if (dropped_)
 		sprite_->ToggleVisibilty();
+	//std::cout << "i am a star" << std::endl;
 }
 
 bool Star::CanBeCollected() {

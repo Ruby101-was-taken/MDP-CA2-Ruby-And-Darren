@@ -15,7 +15,7 @@ public:
 
 	void AttemptDroppedStarSpawn(sf::Vector2f spawn_point, bool is_dropped = false, float bounce_direction = 0.f);
 
-	void SpawnStar(int force_position_index = -1);
+	void SpawnStar(int force_position_index = -1, bool annouce=true);
 	void SpawnStar(sf::Vector2f spawn_point, bool is_dropped=false, float bounce_direction = 0.f, bool announce = true);
 
 	ReceiverCategories GetCategoryEnum() const override;

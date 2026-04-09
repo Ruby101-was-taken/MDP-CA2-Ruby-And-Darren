@@ -4,6 +4,8 @@
 #include <fstream>
 #include <sstream>
 #include <cassert>
+#include "resource_identifiers.hpp"
+#include "resource_holder.hpp"
 
 // THIS CLASS TOOK ME SO LONG TO MAKE I HATE IT I HATE IT I HATE IT C++ IS THE WORST THING HUMANITY HAS EVER MADE, WE EVOLVED TO POINT AT THINGS TO LET OUR FELLOW MAN KNOW WHERE TO LOOK, WE WERE NEVER MEANT TO POINT AT COMPUTER MEMORY, THAT IS INSANITY, WHY MUST ONE POINT, WHY DOES C++ MAKE YOU DO THAT, HOW DOES THIS BENEFIT SOCIETY, THE WORLD WOULD BE A BETTER PLACE IF WE KEPT THE POINTING TO OUR FINGERS, AND AWAY FROM OUR COMPUTERS
 
@@ -15,14 +17,29 @@ sf::Vector2f Level::player_one_spawn_;
 sf::Vector2f Level::player_two_spawn_;
 std::vector<sf::Vector2f> Level::network_spawn_points_;
 int Level::last_spawn_grabbed_;
+TileSheetHolder Level::tile_sheets_;
+std::map<int, TileID> Level::level_tile_types_;
 
-void Level::LoadLevel(const std::string& filename, const sf::Texture& tile_texture) {
+void Level::LoadTileSheets() {
+    tile_sheets_.Load(TileID::kSand, "Media/Textures/Level/TileSheets/Sand.png");
+    // which level use this tileset
+    level_tile_types_[1] = TileID::kSand;
+}
+
+void Level::LoadLevel(const int& level_id) {
 
     last_spawn_grabbed_ = 0; // reset this index
 
+    std::string filename = "Media/Levels/" + std::to_string(level_id) + ".csv";
+
     std::ifstream file(filename);
     if (!file.is_open()) {
-        std::cerr << "Could not open the file!\n" << filename << "\n";
+        if(level_id==1)
+            std::cerr << "[Level]: Could not open backup file: " << filename << "\n";
+        else
+            std::cout << "[Level]: Could not open the file: " << filename << ". Trying back up file\n";
+        LoadLevel(1);
+        return;
     }
 
     std::string line;
@@ -51,7 +68,7 @@ void Level::LoadLevel(const std::string& filename, const sf::Texture& tile_textu
         static_cast<unsigned int>(data[0].size() * tile_size),
         static_cast<unsigned int>(data.size() * tile_size) 
     });
-    sf::Sprite tile(tile_texture);
+    sf::Sprite tile(tile_sheets_.Get(level_tile_types_[level_id]));
 
     level_tiles_.clear();
 

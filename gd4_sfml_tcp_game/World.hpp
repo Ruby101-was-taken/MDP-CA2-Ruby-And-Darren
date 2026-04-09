@@ -93,7 +93,7 @@ protected:
 	State* state_;
 
 	bool has_level_;
-	std::string level_path_;
+	int level_id_;
 	ReceiverCategories winning_player;
 	bool level_is_over = false;
 };

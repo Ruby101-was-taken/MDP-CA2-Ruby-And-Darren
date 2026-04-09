@@ -15,6 +15,7 @@ void LocalGameWorld::BuildScene() {
 
 
     MakeBaseScene();
+    Level::LoadLevel(level_id_);
 
     // Add player 1 node
     sf::Vector2f spawn = Level::GetPlayerSpawn(1);
