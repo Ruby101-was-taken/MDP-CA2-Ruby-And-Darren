@@ -18,6 +18,7 @@ public:
 
 	void HandleGameEvent(GameEvent event) override;
 
+	bool IsMultiplayer() const override { return true; }
 protected:
 	sf::Socket::Status SendPacket(sf::Packet& packet);
 

@@ -85,8 +85,12 @@ bool GameState<WorldClass>::Update(sf::Time dt) {
 template <typename WorldClass>
 bool GameState<WorldClass>::HandleEvent(const sf::Event& event) {
 	if (const auto* keyPressed = event.getIf<sf::Event::KeyPressed>()) {
-		if (keyPressed->scancode == sf::Keyboard::Scancode::Escape)
-			RequestStackPush(StateID::kPause);
+		if (keyPressed->scancode == sf::Keyboard::Scancode::Escape) {
+			if (world_.IsMultiplayer())
+				RequestStackPush(StateID::kPauseMultiplayer);
+			else
+				RequestStackPush(StateID::kPause);
+		}
 		if (keyPressed->scancode == sf::Keyboard::Scancode::Enter and waiting_ and is_host_) {
 			ExitLobbyState();
 		}

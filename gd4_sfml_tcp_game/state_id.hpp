@@ -8,6 +8,7 @@ enum class StateID
 	kHost,
 	kJoin,
 	kPause,
+	kPauseMultiplayer,
 	kSettings,
 	kTutorial,
 	kPlayerOneWin,
