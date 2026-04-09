@@ -30,7 +30,8 @@ private:
 template <typename WorldClass>
 MenuState<WorldClass>::MenuState(StateStack& stack, Context context)
     :State(stack, context)
-    , background_sprite_(context.textures->Get(TextureID::kTitleScreen))
+    , background_sprite_(context.textures->Get(TextureID::kTitleScreen)),
+    gui_container_(3)
 {
     //sf::Texture& texture = context.textures->Get(TextureID::kTitleScreen);
 

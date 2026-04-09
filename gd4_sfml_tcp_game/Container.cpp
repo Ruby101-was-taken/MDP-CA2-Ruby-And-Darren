@@ -1,7 +1,8 @@
 #include "container.hpp"
 
-gui::Container::Container()
-    :selected_child_(-1)
+gui::Container::Container(int column_height)
+    :selected_child_(-1),
+    column_height_(column_height)
 {
 }
 
@@ -29,15 +30,20 @@ void gui::Container::HandleEvent(const sf::Event& event)
     if (key_pressed)
     {
         sf::Keyboard::Scancode key = key_pressed->scancode;
-        if ((key == sf::Keyboard::Scancode::W || key == sf::Keyboard::Scancode::Up) 
-            || (key == sf::Keyboard::Scancode::A || key == sf::Keyboard::Scancode::Left)) // Darren
+        if (key == sf::Keyboard::Scancode::W || key == sf::Keyboard::Scancode::Up) // Darren
         {
-            SelectPrevious();
+            SelectPrevious(1);
         }
-        else if ((key == sf::Keyboard::Scancode::S || key == sf::Keyboard::Scancode::Down) 
-            || (key == sf::Keyboard::Scancode::D || key == sf::Keyboard::Scancode::Right)) // Darren
+        else if (key == sf::Keyboard::Scancode::A || key == sf::Keyboard::Scancode::Left) {
+            SelectPrevious(column_height_);
+        }
+        else if (key == sf::Keyboard::Scancode::S || key == sf::Keyboard::Scancode::Down) // Darren
         {
-            SelectNext();
+            SelectNext(1);
+        }
+        else if (key == sf::Keyboard::Scancode::D || key == sf::Keyboard::Scancode::Right) // Darren
+        {
+            SelectNext(column_height_);
         }
         else if (key == sf::Keyboard::Scancode::Enter || key == sf::Keyboard::Scancode::Space)
         {
@@ -76,7 +82,7 @@ void gui::Container::Select(std::size_t index)
     }
 }
 
-void gui::Container::SelectNext()
+void gui::Container::SelectNext(int move)
 {
     if (!HasSelection())
     {
@@ -86,12 +92,12 @@ void gui::Container::SelectNext()
     int next = selected_child_;
     do
     {
-        next = (next + 1) % children_.size();
+        next = (next + move) % children_.size();
     } while (!children_[next]->IsSelectable());
     Select(next);
 }
 
-void gui::Container::SelectPrevious()
+void gui::Container::SelectPrevious(int move)
 {
     if (!HasSelection())
     {
@@ -100,7 +106,7 @@ void gui::Container::SelectPrevious()
     int prev = selected_child_;
     do
     {
-        prev = (prev + children_.size() - 1) % children_.size();
+        prev = (prev + children_.size() - move) % children_.size();
     } while (!children_[prev]->IsSelectable());
     Select(prev);
 }
