@@ -508,7 +508,9 @@ void MultiplayerWorld::SendStateUpdate() {
 	packet << pos.y;
 	packet << vel.x;
 	packet << vel.y;
-	SendPacket(packet);
+	if (SendPacket(packet) == sf::Socket::Status::Disconnected and not is_host_) { // disconnect clients when they lose connection
+		is_connected_ = false;
+	}
 }
 
 Player* MultiplayerWorld::GetPlayerByID(int id) {
