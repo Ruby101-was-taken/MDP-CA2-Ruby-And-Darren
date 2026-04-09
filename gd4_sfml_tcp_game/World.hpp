@@ -44,7 +44,7 @@ public:
 	virtual bool IsStillInPlay();
 
 	void PassGameEvent(GameEvent event);
-
+	virtual bool IsMultiplayer() const { return false; } // Darren Meidl - D00255479, override in MultiplayerWorld
 protected:
 	void SetCameraPosition(sf::Vector2f position);
 	void SetCameraSize(sf::Vector2f position);

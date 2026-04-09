@@ -3,6 +3,7 @@
 
 std::map<InputTypes, sf::Keyboard::Scancode> InputManager::input_map_;
 bool InputManager::window_focused_ = true;
+bool InputManager::input_enabled_ = true;
 
 void InputManager::BindInput(InputTypes input, sf::Keyboard::Scancode scan_code) {
     input_map_[input] = scan_code;
@@ -23,9 +24,13 @@ void InputManager::SetUpInputs() {
 }
 
 bool InputManager::InputIsPressed(InputTypes input) {
-    return sf::Keyboard::isKeyPressed(input_map_[input]) and window_focused_;
+    return input_enabled_ && window_focused_ && sf::Keyboard::isKeyPressed(input_map_[input]);
 }
 
 void InputManager::SetFocused(bool focus) {
     window_focused_ = focus;
+}
+
+void InputManager::SetInputEnabled(bool enabled) {
+    input_enabled_ = enabled;
 }

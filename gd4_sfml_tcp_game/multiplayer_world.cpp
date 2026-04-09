@@ -185,6 +185,7 @@ void MultiplayerWorld::HandlePacketType(Server::PacketType type, sf::Packet& dat
 		if (!is_host_)
 			HandleSpawnPlayer(data);
 		break;
+	// Darren Meidl - D00255479
 	case Server::PacketType::kRemovePlayer:
 		HandleRemovePlayer(data);
 		break;

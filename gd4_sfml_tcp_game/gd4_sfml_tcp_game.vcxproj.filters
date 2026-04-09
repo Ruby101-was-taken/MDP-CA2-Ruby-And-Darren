@@ -273,9 +273,6 @@
     <ClCompile Include="multiplayer_world.cpp">
       <Filter>Source Files\Worlds\Multiplayer Worlds</Filter>
     </ClCompile>
-    <ClCompile Include="multiplayer_game_state.cpp">
-      <Filter>Source Files\States</Filter>
-    </ClCompile>
     <ClCompile Include="join_world.cpp">
       <Filter>Source Files\Worlds\Multiplayer Worlds</Filter>
     </ClCompile>
@@ -284,6 +281,9 @@
     </ClCompile>
     <ClCompile Include="player_info.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="multiplayer_pause_state.cpp">
+      <Filter>Source Files\States</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -512,9 +512,6 @@
     <ClInclude Include="network_protocol.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="multiplayer_game_state.hpp">
-      <Filter>Header Files\States</Filter>
-    </ClInclude>
     <ClInclude Include="level.hpp">
       <Filter>Header Files\General</Filter>
     </ClInclude>
@@ -538,6 +535,9 @@
     </ClInclude>
     <ClInclude Include="player_info.hpp">
       <Filter>Header Files\Structs</Filter>
+    </ClInclude>
+    <ClInclude Include="multiplayer_pause_state.hpp">
+      <Filter>Header Files\States</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

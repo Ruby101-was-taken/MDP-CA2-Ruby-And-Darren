@@ -17,9 +17,12 @@ public:
 
 	static void SetFocused(bool focus);
 
+	static void SetInputEnabled(bool enabled); // Darren Meidl - D00255479 - Added method to enable/disable input checks
+
 private:
 	static std::map<InputTypes, sf::Keyboard::Scancode> input_map_;
 
 	static bool window_focused_;
+	static bool input_enabled_; // Darren Meidl - D00255479 - Track whether input checks are enabled
 };
 

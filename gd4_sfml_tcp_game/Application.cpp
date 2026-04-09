@@ -17,9 +17,9 @@
 #include "player_one_win_state.hpp"
 #include "player_two_win_state.hpp"
 
-#include "multiplayer_game_state.hpp"
 #include "host_world.hpp"
 #include "join_world.hpp"
+#include "multiplayer_pause_state.hpp"
 
 #include <filesystem>
 
@@ -131,8 +131,9 @@ void Application::RegisterStates()
 	stack_.RegisterState<GameState<JoinWorld>>(StateID::kJoin);
 
 	stack_.RegisterState<PauseState>(StateID::kPause);
+	stack_.RegisterState<MultiplayerPauseState>(StateID::kPauseMultiplayer);
 	stack_.RegisterState<TutorialState<TutorialWorld>>(StateID::kTutorial);
 	stack_.RegisterState<SettingsState<TutorialWorld>>(StateID::kSettings);
 	stack_.RegisterState<PlayerOneWinState>(StateID::kPlayerOneWin);
-	stack_.RegisterState<PlayerTwoWinState>(StateID::kPlayerTwoWin);
+	stack_.RegisterState<PlayerTwoWinState>(StateID::kPlayerTwoWin);	
 }
