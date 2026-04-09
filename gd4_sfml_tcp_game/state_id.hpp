@@ -12,5 +12,8 @@ enum class StateID
 	kSettings,
 	kTutorial,
 	kPlayerOneWin,
-	kPlayerTwoWin
+	kPlayerTwoWin,
+
+	kOnlineLocalPlayerWin,
+	kOnlineNetworkedPlayerWin
 };

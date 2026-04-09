@@ -254,11 +254,14 @@ xcopy /y /d /s /i "$(ProjectDir)\Media" "$(TargetDir)\Media"</Command>
     <ClInclude Include="player.hpp" />
     <ClInclude Include="player_animation_behaviour.hpp" />
     <ClInclude Include="player_info.hpp" />
+    <ClInclude Include="player_local_win_state.hpp" />
     <ClInclude Include="player_movement_behaviour.hpp" />
+    <ClInclude Include="player_networked_win_state.hpp" />
     <ClInclude Include="player_score_manager.hpp" />
     <ClInclude Include="player_two_win_state.hpp" />
     <ClInclude Include="player_type.hpp" />
     <ClInclude Include="player_one_win_state.hpp" />
+    <ClInclude Include="player_win_state.hpp" />
     <ClInclude Include="post_effect.hpp" />
     <ClInclude Include="receiver_categories.hpp" />
     <ClInclude Include="resource_holder.hpp" />

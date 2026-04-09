@@ -98,6 +98,9 @@ void MultiplayerWorld::HandleGameEvent(GameEvent event) {
 	case GameEvent::kStarCountChange:
 		TellHostIGotStar();
 		break;
+	case GameEvent::kIWon:
+		IWon();
+		break;
 	default:
 		break;
 	}
@@ -208,6 +211,13 @@ void MultiplayerWorld::HandlePacketType(Server::PacketType type, sf::Packet& dat
 			SendAllMyInformationOnTheInternet();
 		}
 		break;
+	case Server::PacketType::kIWon:
+		uint8_t id;
+		data >> id;
+		if (id != id_) {
+			SetWinningPlayer(ReceiverCategories::kOnlineNetworkedPlayer);
+		}
+		break;
 		// Darren Meidl - D00255479
 	case Server::PacketType::kPlayerInputEvent: {
 		HandlePlayerInputEvent(data);
@@ -302,6 +312,12 @@ void MultiplayerWorld::TellHostIGotStar() {
 	star_info << static_cast<uint8_t>(score);
 
 	SendPacket(star_info);
+}
+
+void MultiplayerWorld::IWon() {
+	sf::Packet win = Utility::CreatePacket(Server::PacketType::kIWon);
+	win << static_cast<uint8_t>(id_);
+	SendPacket(win);
 }
 
 // LOBBY STATE PACKET HANDLERS

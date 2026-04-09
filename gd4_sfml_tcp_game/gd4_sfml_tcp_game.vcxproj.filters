@@ -539,6 +539,15 @@
     <ClInclude Include="multiplayer_pause_state.hpp">
       <Filter>Header Files\States</Filter>
     </ClInclude>
+    <ClInclude Include="player_local_win_state.hpp">
+      <Filter>Header Files\States</Filter>
+    </ClInclude>
+    <ClInclude Include="player_win_state.hpp">
+      <Filter>Header Files\States</Filter>
+    </ClInclude>
+    <ClInclude Include="player_networked_win_state.hpp">
+      <Filter>Header Files\States</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="resource_holder.inl">

@@ -16,6 +16,8 @@
 #include "settings_world.hpp"
 #include "player_one_win_state.hpp"
 #include "player_two_win_state.hpp"
+#include "player_local_win_state.hpp"
+#include "player_networked_win_state.hpp"
 
 #include "host_world.hpp"
 #include "join_world.hpp"
@@ -38,14 +40,19 @@ Application::Application() :
 	window_.setMinimumSize(sf::Vector2u(WINDOW_WIDTH, WINDOW_HEIGHT));
 	fonts_.Load(Font::kMain, "Media/Fonts/Sansation.ttf");
 	textures_.Load(TextureID::kTitleScreen, "Media/Textures/Interface/TitleScreen2.png");
-	textures_.Load(TextureID::kButtonNormal, "Media/Textures/Interface/ButtonNormal.png");
-	textures_.Load(TextureID::kButtonSelected, "Media/Textures/Interface/ButtonSelected.png");
+	textures_.Load(TextureID::kButtonNormal, "Media/Textures/Interface/GUI/ButtonNormal.png");
+	textures_.Load(TextureID::kButtonSelected, "Media/Textures/Interface/GUI/ButtonSelected.png");
 	//textures_.Load(TextureID::kButtonActivated, "Media/Textures/ButtonPressed.png");
-	textures_.Load(TextureID::kButtons, "Media/Textures/Interface/Buttons.png");
-	textures_.Load(TextureID::kSmallButtons, "Media/Textures/Interface/SmallButtons.png");
+	textures_.Load(TextureID::kButtons, "Media/Textures/Interface/GUI/Buttons.png");
+	textures_.Load(TextureID::kSmallButtons, "Media/Textures/Interface/GUI/SmallButtons.png");
 
-	textures_.Load(TextureID::kPlayerOneVictory, "Media/Textures/Interface/VictoryPlayerOne.png");
-	textures_.Load(TextureID::kPlayerTwoVictory, "Media/Textures/Interface/VictoryPlayerTwo.png");
+	textures_.Load(TextureID::kPlayerOneVictory, "Media/Textures/Interface/WinScreen/Local/VictoryPlayerOne.png");
+	textures_.Load(TextureID::kPlayerTwoVictory, "Media/Textures/Interface/WinScreen/Local/VictoryPlayerTwo.png");
+
+	textures_.Load(TextureID::kOnlinePlayerLocalVictory, "Media/Textures/Interface/WinScreen/Online/VictoryPlayerLocal.png");
+	textures_.Load(TextureID::kOnlinePlayerNetworkedVictory, "Media/Textures/Interface/WinScreen/Online/VictoryPlayerNetworked.png");
+	textures_.Load(TextureID::kOnlinePlayerLocalVictoryLayer2, "Media/Textures/Interface/WinScreen/Online/VictoryPlayerLocalCrown.png");
+	textures_.Load(TextureID::kOnlinePlayerNetworkedVictoryLayer2, "Media/Textures/Interface/WinScreen/Online/VictoryPlayerNetworkedTears.png");
 
 
 	RegisterStates();
@@ -135,5 +142,7 @@ void Application::RegisterStates()
 	stack_.RegisterState<TutorialState<TutorialWorld>>(StateID::kTutorial);
 	stack_.RegisterState<SettingsState<TutorialWorld>>(StateID::kSettings);
 	stack_.RegisterState<PlayerOneWinState>(StateID::kPlayerOneWin);
-	stack_.RegisterState<PlayerTwoWinState>(StateID::kPlayerTwoWin);	
+	stack_.RegisterState<PlayerTwoWinState>(StateID::kPlayerTwoWin);
+	stack_.RegisterState<PlayerLocalWinState>(StateID::kOnlineLocalPlayerWin);
+	stack_.RegisterState<PlayerNetworkedWinState>(StateID::kOnlineNetworkedPlayerWin);
 }

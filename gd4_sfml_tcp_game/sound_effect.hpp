@@ -5,6 +5,7 @@ enum class SoundEffect
 	kPlayerCollide,
 
 	kVictory,
+	kLose,
 
 	kStarGet,
 	kStarSpawn,

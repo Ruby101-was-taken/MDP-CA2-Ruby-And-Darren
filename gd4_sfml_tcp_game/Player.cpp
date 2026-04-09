@@ -119,7 +119,9 @@ ReceiverCategories Player::GetCategoryEnum() const {
 	case PlayerType::kPlayerTwo:
 		return ReceiverCategories::kPlayerTwo;
 	case PlayerType::kOnlineLocalPlayer:
-		return ReceiverCategories::kPlayerOne;
+		return ReceiverCategories::kOnlineLocalPlayer;
+	case PlayerType::kOnlineNetworkedPlayer:
+		return ReceiverCategories::kOnlineNetworkedPlayer;
 	default:
 		return ReceiverCategories::kNone;
 	}

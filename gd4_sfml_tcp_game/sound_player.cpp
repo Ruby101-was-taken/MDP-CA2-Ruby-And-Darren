@@ -20,6 +20,7 @@ SoundPlayer::SoundPlayer()
 	sound_buffers_.Load(SoundEffect::kPlayerCollide, "Media/Sound/Player/Player-Collide.ogg");
 
 	sound_buffers_.Load(SoundEffect::kVictory, "Media/Sound/UI/Victory.wav");
+	sound_buffers_.Load(SoundEffect::kLose, "Media/Sound/UI/Lose.wav");
 
 
 	sound_buffers_.Load(SoundEffect::kStarGet, "Media/Sound/Star/Star-Get.ogg");

@@ -19,11 +19,12 @@ void PlayerScoreManager::IncrementScore() {
 	score_ += 1;
 	UpdateScoreVisual();
 	// check if player has won
-	// THE PLAYER BEING ABLE TO WIN IS LOST MEDIA????????????
-	/*if (score_ >= score_to_win_) {
+	// THE PLAYER BEING ABLE TO WIN IS FOUND MEDIA????????????
+	if (score_ >= score_to_win_) {
 		ReceiverCategories player_category = node_->GetCategoryEnum();
 		node_->GetWorld()->SetWinningPlayer(player_category);
-	}*/
+		node_->GetWorld()->PassGameEvent(GameEvent::kIWon);
+	}
 		 
 }
 

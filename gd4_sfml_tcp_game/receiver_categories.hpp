@@ -12,6 +12,9 @@ enum class ReceiverCategories
 	kParticleSystem = 1 << 7,
 	kSoundEffect = 1 << 8,
 
+	kOnlineLocalPlayer = 1 << 9,
+	kOnlineNetworkedPlayer = 1 << 10,
+
 
 	kPlayers =  kPlayerOne | kPlayerTwo,
 	kProjectile = kAlliedProjectile | kEnemyProjectile

@@ -15,6 +15,7 @@ namespace Server {
 		kPlayerInputEvent, // used when the player presses an input key
 		kPlayerStateUpdate,  // used to occasionally sync player position + velocity
 		kNameTaken, // used to tell client their name is already in use; client should return to title
-		kWhatIsMyID // sent by client to ask what id they should use. sent by server to tell what id to use. wild stuff
+		kWhatIsMyID, // sent by client to ask what id they should use. sent by server to tell what id to use. wild stuff
+		kIWon // sent with an id when a player wins
 	};
 }

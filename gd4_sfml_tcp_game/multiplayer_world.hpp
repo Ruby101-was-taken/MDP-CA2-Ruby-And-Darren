@@ -38,6 +38,8 @@ private:
 
 	void TellHostIGotStar();
 
+	void IWon();
+
 #pragma region PacketHandlers
 	void HandlePlayerJoin(sf::Packet& data);
 	void HandlePlayerLeave(sf::Packet& data);

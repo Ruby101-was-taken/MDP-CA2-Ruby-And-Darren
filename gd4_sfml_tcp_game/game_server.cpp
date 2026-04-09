@@ -188,6 +188,9 @@ void GameServer::HandlePacketType(Server::PacketType type, sf::Packet& data, sf:
     case Server::PacketType::kPlayerStateUpdate:
         SendPacketToAll(data, client_socket);
         break;
+    case Server::PacketType::kIWon:
+        SendPacketToAll(data, client_socket);
+        break;
     default:
         std::cout << "[Server]: unknown type or missing break" << std::endl;
         break;

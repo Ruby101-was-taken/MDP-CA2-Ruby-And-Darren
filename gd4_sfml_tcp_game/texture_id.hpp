@@ -13,6 +13,11 @@ enum class TextureID
 	kOnlinePlayerSheet,
 	kOnlinePlayerEyesSheet,
 
+	kOnlinePlayerLocalVictory,
+	kOnlinePlayerNetworkedVictory,
+	kOnlinePlayerLocalVictoryLayer2,
+	kOnlinePlayerNetworkedVictoryLayer2,
+
 	kTitleScreen,
 
 	kLevelBackdrop,

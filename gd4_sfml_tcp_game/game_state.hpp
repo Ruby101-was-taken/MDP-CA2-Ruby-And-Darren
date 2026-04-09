@@ -68,11 +68,18 @@ bool GameState<WorldClass>::Update(sf::Time dt) {
 	CommandQueue& commands = world_.GetCommandQueue();
 
 	if (world_.LevelHasEnded()) {
+		SoundEffect sound_to_play = SoundEffect::kVictory;
 		if (world_.GetWinningPlayer() == ReceiverCategories::kPlayerOne)
 			RequestStackPush(StateID::kPlayerOneWin);
 		else if (world_.GetWinningPlayer() == ReceiverCategories::kPlayerTwo)
 			RequestStackPush(StateID::kPlayerTwoWin);
-		GetContext().sounds->Play(SoundEffect::kVictory);
+		else if (world_.GetWinningPlayer() == ReceiverCategories::kOnlineLocalPlayer)
+			RequestStackPush(StateID::kOnlineLocalPlayerWin);
+		else if (world_.GetWinningPlayer() == ReceiverCategories::kOnlineNetworkedPlayer) {
+			RequestStackPush(StateID::kOnlineNetworkedPlayerWin);
+			sound_to_play = SoundEffect::kLose;
+		}
+		GetContext().sounds->Play(sound_to_play);
 	}
 	if (!world_.IsStillInPlay()) {
 		RequestStackClear();
