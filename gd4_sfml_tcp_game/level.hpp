@@ -33,10 +33,10 @@ public:
 
 private:
     static void AddTile(int x, int y, int size, int id, sf::Sprite& tile, std::vector<std::vector<std::string>>& data, TileID base_tile_type);
-    static sf::Vector2i GetTileSlicePosition(int x, int y, int size, int id, const std::vector<std::vector<std::string>>& data);
+    static sf::Vector2i GetTileSlicePosition(int x, int y, int size, std::vector<int>& neighbour_ids, const std::vector<std::vector<std::string>>& data);
     static void PrepareTileForRender(int x, int y, int size, sf::Sprite& tile, sf::Vector2<float>& position, sf::Vector2i slice_position);
 
-    static void RenderAndEmplaceTile(std::vector<sf::FloatRect>& level_tiles, sf::Vector2<float> position, int x, int y, int size, int id, sf::Sprite& tile, std::vector<std::vector<std::string>>& data);
+    static void RenderAndEmplaceTile(std::vector<sf::FloatRect>& level_tiles, sf::Vector2<float> position, int x, int y, int size, std::vector<int>& neighbour_ids, sf::Sprite& tile, std::vector<std::vector<std::string>>& data);
 
 private:
     static std::vector<sf::FloatRect> level_tiles_;

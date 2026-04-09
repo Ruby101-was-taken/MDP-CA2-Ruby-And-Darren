@@ -98,21 +98,33 @@ void Level::LoadLevel(const int& level_id) {
     }
 }
 
-sf::Vector2i Level::GetTileSlicePosition(int x, int y, int size, int id, const std::vector<std::vector<std::string>>& data) {
+sf::Vector2i Level::GetTileSlicePosition(int x, int y, int size, std::vector<int>& neighbour_ids, const std::vector<std::vector<std::string>>& data) {
     int slice = 0;
     if (y > 0)
-        if (std::stoi(data[y - 1][x]) == id)
-            slice = slice | 8;
+        for(int id : neighbour_ids)
+            if (std::stoi(data[y - 1][x]) == id) {
+                slice = slice | 8;
+                break;
+            }
     if (y < data.size() - 1)
-        if (std::stoi(data[y + 1][x]) == id)
-            slice = slice | 4;;
+        for (int id : neighbour_ids)
+            if (std::stoi(data[y + 1][x]) == id) {
+                slice = slice | 4;
+                break;
+            }
 
     if (x > 0)
-        if (std::stoi(data[y][x - 1]) == id)
-            slice = slice | 2;
+        for (int id : neighbour_ids)
+            if (std::stoi(data[y][x - 1]) == id) {
+                slice = slice | 2;
+                break;
+            }
     if (x < data[y].size() - 1)
-        if (std::stoi(data[y][x + 1]) == id)
-            slice = slice | 1;
+        for (int id : neighbour_ids)
+            if (std::stoi(data[y][x + 1]) == id) {
+                slice = slice | 1;
+                break;
+            }
 
     switch (slice) {
     case 0: // no tiles around
@@ -165,9 +177,9 @@ void Level::PrepareTileForRender(int x, int y, int size, sf::Sprite& tile, sf::V
     tile.setTextureRect(rect);
 }
 
-void Level::RenderAndEmplaceTile(std::vector<sf::FloatRect>& level_tiles, sf::Vector2<float> position, int x, int y, int size, int id, sf::Sprite& tile, std::vector<std::vector<std::string>>& data) {
+void Level::RenderAndEmplaceTile(std::vector<sf::FloatRect>& level_tiles, sf::Vector2<float> position, int x, int y, int size, std::vector<int>& neighbour_ids, sf::Sprite& tile, std::vector<std::vector<std::string>>& data) {
 
-    sf::Vector2i slice_position = GetTileSlicePosition(x, y, size, id, data);
+    sf::Vector2i slice_position = GetTileSlicePosition(x, y, size, neighbour_ids, data);
 
     if (slice_position != sf::Vector2i(size, size))
         /// offset the top rendering by tile size 
@@ -189,7 +201,6 @@ sf::Vector2f Level::GetNextNetworkPlayerSpawnPosition() {
     if (last_spawn_grabbed_ >= network_spawn_points_.size()) {
         last_spawn_grabbed_ = 0;
     }
-    std::cout << network_spawn_points_.size() << std::endl;
     return network_spawn_points_[last_spawn_grabbed_++];
 }
 
@@ -222,7 +233,8 @@ int Level::GetMaxLevelID() {
 void Level::AddTile(int x, int y, int size, int id, sf::Sprite& tile, std::vector<std::vector<std::string>>& data, TileID base_tile_type) {
     sf::Vector2 position = { x * size * 1.f, y * size * 1.f };
     if (id == 0) { // ground tile
-        RenderAndEmplaceTile(level_tiles_, position, x, y, size, id, tile, data);
+        std::vector<int> neighbour_ids = { 0 };
+        RenderAndEmplaceTile(level_tiles_, position, x, y, size, neighbour_ids, tile, data);
     }
     else if (id == 1) { // star spawn spot
         if (x != 0 and y != 0) { // ignore 0,0 cuz it kept spawning a star there idk why
@@ -250,8 +262,9 @@ void Level::AddTile(int x, int y, int size, int id, sf::Sprite& tile, std::vecto
         network_spawn_points_.emplace_back(position);
     }
     if (id == 6) { // bounce tile
+        std::vector<int> neighbour_ids = { 0, 6 };
         tile.setTexture(tile_sheets_.Get(TileID::kSlime));
-        RenderAndEmplaceTile(bounce_tiles_, position, x, y, size, id, tile, data);
+        RenderAndEmplaceTile(bounce_tiles_, position, x, y, size, neighbour_ids, tile, data);
         tile.setTexture(tile_sheets_.Get(base_tile_type));
     }
 }
