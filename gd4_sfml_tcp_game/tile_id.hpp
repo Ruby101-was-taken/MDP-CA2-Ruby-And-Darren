@@ -1,4 +1,8 @@
 #pragma once
 enum class TileID {
-	kSand
+	kSand,
+	kGrass,
+
+
+	kSlime
 };

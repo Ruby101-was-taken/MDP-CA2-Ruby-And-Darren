@@ -21,6 +21,8 @@ public:
 	void ApplyRemoteEvent(Action action, bool started);
 	void ApplyRemoteEvent(Action action);
 
+	//Ruby White - D00255322
+	void RemoveCoyoteTime();
 
 private:
 	void PerformJump();

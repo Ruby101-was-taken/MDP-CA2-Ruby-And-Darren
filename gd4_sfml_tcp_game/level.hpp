@@ -16,6 +16,7 @@ public:
 
     static void LoadLevel(const int& level_id);
     static bool IsCollidingWithLevel(BoxColliderBehaviour* collider);
+    static bool CheckGimmickCollisions(BoxColliderBehaviour* collider);
 
     static std::vector<sf::Vector2f> GetStarSpawnSpots();
 
@@ -29,12 +30,15 @@ public:
     static void SetLastNetworkSpawnIndex(int index);
 
 private:
-    static void AddTile(int x, int y, int size, int id, sf::Sprite& tile, std::vector<std::vector<std::string>>& data);
+    static void AddTile(int x, int y, int size, int id, sf::Sprite& tile, std::vector<std::vector<std::string>>& data, TileID base_tile_type);
     static sf::Vector2i GetTileSlicePosition(int x, int y, int size, int id, const std::vector<std::vector<std::string>>& data);
     static void PrepareTileForRender(int x, int y, int size, sf::Sprite& tile, sf::Vector2<float>& position, sf::Vector2i slice_position);
 
+    static void RenderAndEmplaceTile(std::vector<sf::FloatRect>& level_tiles, sf::Vector2<float> position, int x, int y, int size, int id, sf::Sprite& tile, std::vector<std::vector<std::string>>& data);
+
 private:
     static std::vector<sf::FloatRect> level_tiles_;
+    static std::vector<sf::FloatRect> bounce_tiles_;
     static std::vector<sf::Vector2f> star_spawn_spots_;
 
     static sf::Vector2f player_one_spawn_;

@@ -6,10 +6,13 @@
 #include <cassert>
 #include "resource_identifiers.hpp"
 #include "resource_holder.hpp"
+#include "player.hpp"
+#include "player_movement_behaviour.hpp"
 
 // THIS CLASS TOOK ME SO LONG TO MAKE I HATE IT I HATE IT I HATE IT C++ IS THE WORST THING HUMANITY HAS EVER MADE, WE EVOLVED TO POINT AT THINGS TO LET OUR FELLOW MAN KNOW WHERE TO LOOK, WE WERE NEVER MEANT TO POINT AT COMPUTER MEMORY, THAT IS INSANITY, WHY MUST ONE POINT, WHY DOES C++ MAKE YOU DO THAT, HOW DOES THIS BENEFIT SOCIETY, THE WORLD WOULD BE A BETTER PLACE IF WE KEPT THE POINTING TO OUR FINGERS, AND AWAY FROM OUR COMPUTERS
 
 std::vector<sf::FloatRect> Level::level_tiles_;
+std::vector<sf::FloatRect> Level::bounce_tiles_;
 std::vector<sf::Vector2f> Level::star_spawn_spots_;
 sf::RenderTexture Level::level_texture_;
 
@@ -21,9 +24,20 @@ TileSheetHolder Level::tile_sheets_;
 std::map<int, TileID> Level::level_tile_types_;
 
 void Level::LoadTileSheets() {
+    // load sand
     tile_sheets_.Load(TileID::kSand, "Media/Textures/Level/TileSheets/Sand.png");
     // which level use this tileset
     level_tile_types_[1] = TileID::kSand;
+
+    // load grass
+    tile_sheets_.Load(TileID::kGrass, "Media/Textures/Level/TileSheets/Grass.png");
+    // which level use this tileset
+    level_tile_types_[2] = TileID::kGrass;
+
+
+
+    // load grass
+    tile_sheets_.Load(TileID::kSlime, "Media/Textures/Level/TileSheets/Slime.png");
 }
 
 void Level::LoadLevel(const int& level_id) {
@@ -71,12 +85,15 @@ void Level::LoadLevel(const int& level_id) {
     sf::Sprite tile(tile_sheets_.Get(level_tile_types_[level_id]));
 
     level_tiles_.clear();
+    bounce_tiles_.clear();
+    network_spawn_points_.clear();
+    star_spawn_spots_.clear();
 
     for (int y = 0; y < data.size(); ++y) {
         const auto& row = data[y];
         for (int x = 0; x < row.size(); ++x) {
             const auto& cell = row[x];
-            AddTile(x, y, tile_size, std::stoi(cell), tile, data);
+            AddTile(x, y, tile_size, std::stoi(cell), tile, data, level_tile_types_[level_id]);
         }
     }
 }
@@ -148,6 +165,20 @@ void Level::PrepareTileForRender(int x, int y, int size, sf::Sprite& tile, sf::V
     tile.setTextureRect(rect);
 }
 
+void Level::RenderAndEmplaceTile(std::vector<sf::FloatRect>& level_tiles, sf::Vector2<float> position, int x, int y, int size, int id, sf::Sprite& tile, std::vector<std::vector<std::string>>& data) {
+
+    sf::Vector2i slice_position = GetTileSlicePosition(x, y, size, id, data);
+
+    if (slice_position != sf::Vector2i(size, size))
+        /// offset the top rendering by tile size 
+        level_tiles.emplace_back(sf::FloatRect(position, { size * 1.f, size * 1.f }));
+
+
+    PrepareTileForRender(x, y, size, tile, position, slice_position);
+
+    level_texture_.draw(tile);
+}
+
 sf::Vector2f Level::GetPlayerSpawn(int player) {
     if (player == 1) return player_one_spawn_;
     else if (player == 2) return player_two_spawn_;
@@ -175,20 +206,10 @@ void Level::SetLastNetworkSpawnIndex(int index) {
     last_spawn_grabbed_ = index;
 }
 
-void Level::AddTile(int x, int y, int size, int id, sf::Sprite& tile, std::vector<std::vector<std::string>>& data) {    
+void Level::AddTile(int x, int y, int size, int id, sf::Sprite& tile, std::vector<std::vector<std::string>>& data, TileID base_tile_type) {
     sf::Vector2 position = { x * size * 1.f, y * size * 1.f };
     if (id == 0) { // ground tile
-        
-        sf::Vector2i slice_position = GetTileSlicePosition(x, y, size, id, data);
-
-        if (slice_position != sf::Vector2i(size, size))
-                                                    /// offset the top rendering by tile size 
-            level_tiles_.emplace_back(sf::FloatRect(position, {size * 1.f, size * 1.f }));
-                                                   
-
-        PrepareTileForRender(x, y, size, tile, position, slice_position);
-
-        level_texture_.draw(tile);
+        RenderAndEmplaceTile(level_tiles_, position, x, y, size, id, tile, data);
     }
     else if (id == 1) { // star spawn spot
         if (x != 0 and y != 0) { // ignore 0,0 cuz it kept spawning a star there idk why
@@ -198,7 +219,7 @@ void Level::AddTile(int x, int y, int size, int id, sf::Sprite& tile, std::vecto
     else if (id == 2) { // first star spawn spot
         if (x != 0 and y != 0) {
             if (star_spawn_spots_.size() < 1)
-                AddTile(x, y, size, 1, tile, data); // if there are no star spawn spots yet just add this as a normal one
+                AddTile(x, y, size, 1, tile, data, base_tile_type); // if there are no star spawn spots yet just add this as a normal one
             else { // otherwise replace the first one
                 sf::Vector2f old_first = star_spawn_spots_[0];
                 star_spawn_spots_.emplace_back(old_first);
@@ -215,6 +236,11 @@ void Level::AddTile(int x, int y, int size, int id, sf::Sprite& tile, std::vecto
     else if (id == 5) { // networked player spawn
         network_spawn_points_.emplace_back(position);
     }
+    if (id == 6) { // bounce tile
+        tile.setTexture(tile_sheets_.Get(TileID::kSlime));
+        RenderAndEmplaceTile(bounce_tiles_, position, x, y, size, id, tile, data);
+        tile.setTexture(tile_sheets_.Get(base_tile_type));
+    }
 }
 
 
@@ -224,6 +250,24 @@ bool Level::IsCollidingWithLevel(BoxColliderBehaviour* collider) {
     for (const sf::FloatRect& rect : level_tiles_) {
         auto intersection = rect.findIntersection(collider->GetWorldBounds());
         if (intersection) {
+            return true;
+        }
+    }
+
+    return false;
+}
+
+bool Level::CheckGimmickCollisions(BoxColliderBehaviour* collider) {
+    assert(collider != nullptr);
+
+    for (const sf::FloatRect& rect : bounce_tiles_) {
+        auto intersection = rect.findIntersection(collider->GetWorldBounds());
+        if (intersection) {
+            PlayerMovementBehaviour* player_movement = static_cast<Player*>(collider->GetNode())->FindAttachable<PlayerMovementBehaviour>();
+            if (player_movement) {
+                player_movement->GetVelocity().y = -10;
+                player_movement->RemoveCoyoteTime(); // prevents players from jumping after bounce
+            }
             return true;
         }
     }

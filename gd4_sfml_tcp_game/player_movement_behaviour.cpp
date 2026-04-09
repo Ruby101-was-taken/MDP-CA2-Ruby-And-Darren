@@ -78,6 +78,10 @@ void PlayerMovementBehaviour::ApplyRemoteEvent(Action action) {
     }
 }
 
+void PlayerMovementBehaviour::RemoveCoyoteTime() {
+    coyote_time_ = 0;
+}
+
 void PlayerMovementBehaviour::OnCollision(SceneNode* other) {
     if (other->GetCollisionLayer() == CollisionLayer::kPlayer) {
         PlayerMovementBehaviour* other_player = dynamic_cast<Player*>(other)->FindAttachable<PlayerMovementBehaviour>(); //get other player's component
@@ -209,6 +213,8 @@ sf::Vector2f PlayerMovementBehaviour::HandlePlayerInput() {
 }
 
 sf::Vector2f PlayerMovementBehaviour::CustomPhysicsUpdate(sf::Time dt, CommandQueue& commands) {
+
+    Level::CheckGimmickCollisions(collider_);
 
     if (invincibility_time_ > 0) {
         sprite_->ToggleVisibilty();
