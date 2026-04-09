@@ -178,8 +178,7 @@ void MultiplayerWorld::HandlePacketType(Server::PacketType type, sf::Packet& dat
 	case Server::PacketType::kStartGame:
 		GetState()->GetContext().music->Play(MusicThemes::kLevelTheme);
 		if (!is_host_) {
-			PrepareLevel();
-			GetState()->ExitLobbyState();
+			HandleGameStart(data);
 		}
 		break;
 	case Server::PacketType::kAddPlayer:
@@ -282,6 +281,7 @@ void MultiplayerWorld::StartGame() {
 		}
 
 		sf::Packet start_packet = Utility::CreatePacket(Server::PacketType::kStartGame);
+		start_packet << static_cast<uint8_t>(level_id_);
 		SendPacket(start_packet);
 	}
 }
@@ -327,6 +327,17 @@ void MultiplayerWorld::IWon() {
 	sf::Packet win = Utility::CreatePacket(Server::PacketType::kIWon);
 	win << static_cast<uint8_t>(id_);
 	SendPacket(win);
+}
+
+void MultiplayerWorld::HandleGameStart(sf::Packet& data) {
+	uint8_t level_id;
+	data >> level_id;
+
+	level_id_ = static_cast<int>(level_id);
+
+	PrepareLevel();
+
+	GetState()->ExitLobbyState();
 }
 
 // LOBBY STATE PACKET HANDLERS

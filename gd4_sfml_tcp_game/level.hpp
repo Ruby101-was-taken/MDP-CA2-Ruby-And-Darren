@@ -29,6 +29,8 @@ public:
     static int GetLastNetworkSpawnIndex();
     static void SetLastNetworkSpawnIndex(int index);
 
+    static int GetMaxLevelID();
+
 private:
     static void AddTile(int x, int y, int size, int id, sf::Sprite& tile, std::vector<std::vector<std::string>>& data, TileID base_tile_type);
     static sf::Vector2i GetTileSlicePosition(int x, int y, int size, int id, const std::vector<std::vector<std::string>>& data);

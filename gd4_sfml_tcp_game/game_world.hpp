@@ -19,6 +19,8 @@ private:
 
 protected:
 
+    void RandomiseLevel();
+
     void MakeBaseScene();
 
     void MakeTwoPlayer();

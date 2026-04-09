@@ -43,6 +43,7 @@ private:
 	void IWon();
 
 #pragma region PacketHandlers
+	void HandleGameStart(sf::Packet& data);
 	void HandlePlayerJoin(sf::Packet& data);
 	void HandlePlayerLeave(sf::Packet& data);
 	void HandleSpawnPlayer(sf::Packet& data);

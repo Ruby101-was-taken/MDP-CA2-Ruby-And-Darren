@@ -7,6 +7,7 @@
 #include "star.hpp"
 #include "star_spawner.hpp"
 #include "level.hpp"
+#include "Utility.hpp"
 
 GameWorld::GameWorld(sf::RenderTarget& output_target, FontHolder& font, SoundPlayer& sounds, State::Context* context) : 
     World(output_target, font, sounds, context),
@@ -19,6 +20,8 @@ GameWorld::GameWorld(sf::RenderTarget& output_target, FontHolder& font, SoundPla
 
     split_screen_splitter_.setFillColor(sf::Color::White);
     split_screen_splitter_.setPosition({ 0.f, 82.f });
+
+    RandomiseLevel();
 }
 
 GameWorld::~GameWorld() {
@@ -146,6 +149,10 @@ Player* GameWorld::AddPlayer(PlayerType type, sf::Vector2f spawn, std::string na
     root_node_.AttachChild(std::move(player));
 
     return player_ptr;
+}
+
+void GameWorld::RandomiseLevel() {
+    level_id_ = Utility::RandomInt(Level::GetMaxLevelID())+1;
 }
 
 void GameWorld::MakeBaseScene() {

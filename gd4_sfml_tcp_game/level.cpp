@@ -206,6 +206,19 @@ void Level::SetLastNetworkSpawnIndex(int index) {
     last_spawn_grabbed_ = index;
 }
 
+//https://stackoverflow.com/a/59343785
+int Level::GetMaxLevelID() {
+    auto dirIter = std::filesystem::directory_iterator("Media/Levels/");
+
+    int fileCount = std::count_if(
+        begin(dirIter),
+        end(dirIter),
+        [](auto& entry) { return entry.is_regular_file(); }
+    );
+
+    return fileCount;
+}
+
 void Level::AddTile(int x, int y, int size, int id, sf::Sprite& tile, std::vector<std::vector<std::string>>& data, TileID base_tile_type) {
     sf::Vector2 position = { x * size * 1.f, y * size * 1.f };
     if (id == 0) { // ground tile
