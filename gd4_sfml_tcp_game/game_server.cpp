@@ -42,23 +42,29 @@ void GameServer::ExecutionThread() {
 
         // Use a short selector timeout so we service sockets frequently (e.g. 5ms)
         if (selector_.wait(sf::milliseconds(5))) {
-            if (allow_player_join_) {
-                // accept new clients and service ready sockets
-                if (selector_.isReady(listener_socket_)) {
-                    auto client = std::make_unique<sf::TcpSocket>();
-                    if (listener_socket_.accept(*client) == sf::Socket::Status::Done) {
-
-                        sf::Packet new_id = Utility::CreatePacket(Server::PacketType::kWhatIsMyID);
-                        new_id << static_cast<uint8_t>(next_id_++);
-                        client->send(new_id);
-
-                        std::cout << "[Server]: Register client with id of: " << next_id_ - 1 << std::endl;
-
-                        client->setBlocking(false);
-                        selector_.add(*client);
-                        clients_.push_back(std::move(client));
-
+            if (selector_.isReady(listener_socket_)) {
+                auto client = std::make_unique<sf::TcpSocket>();
+                if (listener_socket_.accept(*client) == sf::Socket::Status::Done) {
+                    // Darren Meidl - D00255479 - If joining disabled: explicitly send a rejection packet & close socket
+                    if (!allow_player_join_) {
+                        std::cout << "[Server]: Incoming connection while game started: rejecting player." << std::endl;
+                        sf::Packet reject = Utility::CreatePacket(Server::PacketType::kNameTaken);
+                        uint8_t error_code = 2; // 2 == game already started
+                        reject << error_code;
+                        client->send(reject);
+                        continue;
                     }
+
+                    sf::Packet new_id = Utility::CreatePacket(Server::PacketType::kWhatIsMyID);
+                    new_id << static_cast<uint8_t>(next_id_++);
+                    client->send(new_id);
+
+                    std::cout << "[Server]: Register client with id of: " << next_id_ - 1 << std::endl;
+
+                    client->setBlocking(false);
+                    selector_.add(*client);
+                    clients_.push_back(std::move(client));
+
                 }
             }
 
@@ -226,13 +232,13 @@ void GameServer::HandlePlayerJoin(sf::Packet& data, sf::TcpSocket* client_socket
 
     // Darren Meidl - D00255479 - Check for duplicate name among already-registered clients
     for (const auto& kv : client_names_) {
-		std::cout << "[Server]: Checking existing client name '" << kv.second << "' against new client '" << name << "'." << std::endl;
+        std::cout << "[Server]: Checking existing client name '" << kv.second << "' against new client '" << name << "'." << std::endl;
         if (kv.second == name) {
             std::cout << "[Server]: Name '" << name << "' already taken. Rejecting client." << std::endl;
             // Send a NameTaken packet back to the joining client so they return to the title screen
             sf::Packet reject = Utility::CreatePacket(Server::PacketType::kNameTaken);
-			uint8_t error_code = -1; // use error code to specify reason for rejection
-			reject << error_code;
+			uint8_t error_code = 1; // 1 == name already taken
+            reject << error_code;
             if (client_socket)
                 sf::Socket::Status s = client_socket->send(reject);
             return;

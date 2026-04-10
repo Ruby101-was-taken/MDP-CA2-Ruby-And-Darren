@@ -216,27 +216,26 @@ void MultiplayerWorld::HandlePacketType(Server::PacketType type, sf::Packet& dat
 		}
 		break;
 		// Darren Meidl - D00255479
-	case Server::PacketType::kPlayerInputEvent: {
+	case Server::PacketType::kPlayerInputEvent:
 		HandlePlayerInputEvent(data);
 		break;
-	}
-											  // Darren Meidl - D00255479
-	case Server::PacketType::kPlayerStateUpdate: {
+	// Darren Meidl - D00255479
+	case Server::PacketType::kPlayerStateUpdate:
 		HandlePlayerStateUpdate(data);
-		break;
-	}
-											   // Darren Meidl - D00255479
-	case Server::PacketType::kNameTaken: {
+		break;											   
+	// Darren Meidl - D00255479
+	case Server::PacketType::kNameTaken: 
 		uint8_t error_type;
 		data >> error_type;
-		if (error_type == (uint8_t)-1)
+		if (error_type == (uint8_t)1)
 			std::cout << "[MultiplayerWorld]: Join rejected by server: Username already taken." << std::endl;
+		else if (error_type == (uint8_t)2)
+			std::cout << "[MultiplayerWorld]: Join rejected by server: Game already started." << std::endl;
 		else
 			std::cout << "[MultiplayerWorld]: Join rejected by server (no reason provided)." << std::endl;
 		is_connected_ = false; // Mark not connected so GameState will return us to the title screen
 		socket_.disconnect(); // cleanly disconnect the socket
 		break;
-	}
 
 	default:
 		std::cout << "[MultiplayerWorld]: unknown type" << std::endl;
