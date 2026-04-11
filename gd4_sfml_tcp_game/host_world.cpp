@@ -10,5 +10,5 @@ void HostWorld::Start() {
 	GetState()->ShowNewName(PlayerInfo(state_->GetNames().size(), Utility::GetUserNameFromFile(), GetContext()->fonts->Get(Font::kMain), Utility::GetUserColourFromFile()));
 	GetState()->SetIsHost(true);
 	GetState()->GetContext().music->Play(MusicThemes::kLobbyTheme);
-	GetState()->SetLobbyTitle("Lobby - Waiting for players to join...\n\nPress enter to start the game once everyone has joined!");
+	GetState()->SetLobbyTitle("Lobby - Waiting for players to join...\n\nPress 'Start Game' once everyone has joined!");
 }
