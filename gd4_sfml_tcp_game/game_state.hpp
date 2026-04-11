@@ -114,6 +114,10 @@ bool GameState<WorldClass>::Update(sf::Time dt) {
 	world_.Update(dt);
 	CommandQueue& commands = world_.GetCommandQueue();
 
+	if (waiting_) {
+		waiting_ = world_.IsMultiplayer();
+	}
+
 	if (world_.LevelHasEnded()) {
 		SoundEffect sound_to_play = SoundEffect::kVictory;
 		if (world_.GetWinningPlayer() == ReceiverCategories::kPlayerOne)
