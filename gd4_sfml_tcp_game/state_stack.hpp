@@ -23,6 +23,7 @@ public:
 	bool IsEmpty() const;
 
 	void SetIsHost(bool is_host); // Darren Meidl - D00255479
+	void SetIsClient(bool is_client); // Ruby White - D00255322
 
 private:
 	State::Ptr CreateState(StateID state_id);

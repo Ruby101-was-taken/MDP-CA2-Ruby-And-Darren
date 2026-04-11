@@ -33,7 +33,7 @@ PlayerWinState::PlayerWinState(StateStack& stack, Context context, TextureID vic
     , victory_sprite_layer_(context.textures->Get(victory_sprite_layer_2))
     , winner_text_(context.fonts->Get(Font::kMain))
     , instruction_text_(context.fonts->Get(Font::kMain))
-    , use_second_layer_(use_second_layer){
+    , use_second_layer_(use_second_layer) {
     sf::Vector2f view_size = context.window->getView().getSize();
 
     if (use_player_colour)
@@ -56,6 +56,14 @@ PlayerWinState::PlayerWinState(StateStack& stack, Context context, TextureID vic
         RequestStackPush(StateID::kHost);
         });
 
+    auto client_start_button = std::make_shared<gui::Button>(context);
+    client_start_button->setPosition({ 0.5f * view_size.x - 80, 430 });
+    client_start_button->SetText("Try Join New Game");
+    client_start_button->SetCallback([this]() {
+        RequestStackClear();
+        RequestStackPush(StateID::kJoin);
+        });
+
     auto exit_button = std::make_shared<gui::Button>(context);
     exit_button->setPosition({ 0.5f * view_size.x - 80, 500 });
     exit_button->SetText("Return to Menu");
@@ -67,11 +75,15 @@ PlayerWinState::PlayerWinState(StateStack& stack, Context context, TextureID vic
     // make the state's host flag match the incoming context so IsHost() works as expected
     SetIsHost(context.is_host);
 
-    std::cout << "Context says I am host: " << context.is_host << std::endl;
+    std::cout << "[PlayerWinState] Does the context say I am the host: " << context.is_host << std::endl;
+    std::cout << "[PlayerWinState] Does the context say I am a client: " << context.is_client << std::endl;
 
-    
+
     if (context.is_host) {
         gui_container_.Pack(start_button);
+    }
+    else if (context.is_client) {
+        gui_container_.Pack(client_start_button);
     }
     gui_container_.Pack(exit_button);
 
@@ -89,7 +101,7 @@ void PlayerWinState::Draw() {
 
     window.draw(backgroundShape);
     window.draw(victory_sprite_);
-    if(use_second_layer_)
+    if (use_second_layer_)
         window.draw(victory_sprite_layer_);
     window.draw(winner_text_);
     window.draw(instruction_text_);

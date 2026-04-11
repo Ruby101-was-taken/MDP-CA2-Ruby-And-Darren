@@ -108,3 +108,7 @@ void StateStack::SetIsHost(bool is_host)
 {
 	context_.is_host = is_host;
 }
+
+void StateStack::SetIsClient(bool is_client) {
+    context_.is_client = is_client;
+}

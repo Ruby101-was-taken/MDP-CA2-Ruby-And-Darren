@@ -542,10 +542,13 @@
     <ClInclude Include="player_local_win_state.hpp">
       <Filter>Header Files\States</Filter>
     </ClInclude>
-    <ClInclude Include="player_win_state.hpp">
+    <ClInclude Include="player_networked_win_state.hpp">
       <Filter>Header Files\States</Filter>
     </ClInclude>
-    <ClInclude Include="player_networked_win_state.hpp">
+    <ClInclude Include="tile_id.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="player_win_state.hpp">
       <Filter>Header Files\States</Filter>
     </ClInclude>
   </ItemGroup>

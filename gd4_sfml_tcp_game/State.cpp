@@ -4,7 +4,7 @@
 #include <iostream>
 
 State::Context::Context(sf::RenderWindow& window, TextureHolder& textures, FontHolder& fonts, MusicPlayer& music, SoundPlayer& sounds, bool is_host)
-	: window(&window), textures(&textures), fonts(&fonts), music(&music), sounds(&sounds), is_host(is_host)
+	: window(&window), textures(&textures), fonts(&fonts), music(&music), sounds(&sounds), is_host(is_host), is_client(false)
 {
 }
 
@@ -44,6 +44,16 @@ void State::SetIsHost(bool is_host) {
 // Darren Meidl - D00255479
 bool State::IsHost() const {
     return is_host_;
+}
+
+void State::SetIsClient(bool is_client) {
+    context_.is_client = is_client;
+    if (stack_)
+        stack_->SetIsClient(is_client);
+}
+
+bool State::IsClient() const {
+    return context_.is_client;
 }
 
 void State::RequestStackPush(StateID state_id)

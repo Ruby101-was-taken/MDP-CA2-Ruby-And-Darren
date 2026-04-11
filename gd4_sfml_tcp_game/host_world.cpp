@@ -9,6 +9,7 @@ HostWorld::HostWorld(sf::RenderTarget& output_target, FontHolder& font, SoundPla
 void HostWorld::Start() {
 	GetState()->ShowNewName(PlayerInfo(state_->GetNames().size(), Utility::GetUserNameFromFile(), GetContext()->fonts->Get(Font::kMain), Utility::GetUserColourFromFile()));
 	GetState()->SetIsHost(true);
+	GetState()->SetIsClient(false);
 	GetState()->GetContext().music->Play(MusicThemes::kLobbyTheme);
 	GetState()->SetLobbyTitle("Lobby - Waiting for players to join...\n\nPress 'Start Game' once everyone has joined!");
 }

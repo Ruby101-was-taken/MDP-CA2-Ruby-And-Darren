@@ -33,6 +33,7 @@ public:
 		MusicPlayer* music;
 		SoundPlayer* sounds;
 		bool is_host;
+		bool is_client;
 	};
 
 public:
@@ -50,8 +51,10 @@ public:
 
 	virtual std::vector<PlayerInfo> GetNames();
 	virtual void ExitLobbyState();
-	void SetIsHost(bool is_host);
-	bool IsHost() const; // Darren Meidl - D00255479
+	void SetIsHost(bool is_host); // Ruby White - D00255322
+	bool IsHost() const; // Darren Meidl - D00255479;
+	void SetIsClient(bool is_client);  // Ruby White - D00255322
+	bool IsClient() const; // Ruby White - D00255322
 
 	Context GetContext() const;
 protected:
