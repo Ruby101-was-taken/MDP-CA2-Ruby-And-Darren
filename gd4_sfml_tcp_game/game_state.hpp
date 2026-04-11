@@ -7,6 +7,9 @@
 #include <type_traits>
 #include "Utility.hpp"
 #include "game_event.hpp"
+#include "container.hpp"
+#include "menu_options.hpp"
+
 
 template <typename WorldClass>
 class GameState : public State {
@@ -33,11 +36,13 @@ private:
 	std::vector<PlayerInfo> players_;
 	// UI
 	sf::Text lobby_text_;
+	gui::Container gui_container_;
 };
 
 #include "game_state.hpp"
 #include "mission_status.hpp"
 #include "player.hpp"
+#include "button.hpp"
 
 template <typename WorldClass>
 GameState<WorldClass>::GameState(StateStack& stack, Context context) :
@@ -45,8 +50,9 @@ GameState<WorldClass>::GameState(StateStack& stack, Context context) :
 	world_(*context.window, *context.fonts, *context.sounds, &context)
 	, waiting_(true)
 	, lobby_text_(context.fonts->Get(Font::kMain)) 
+	, gui_container_(3)
 {
-	// Darren Meidl - D00255479
+	// Darren Meidl - D00255479 - UI setup
 	sf::Vector2f view_size = context.window->getView().getSize();
 
 	lobby_text_.setCharacterSize(30);
@@ -55,10 +61,30 @@ GameState<WorldClass>::GameState(StateStack& stack, Context context) :
 	
 	world_.SetState(this);
 	world_.Start();
+
+	auto exit_button = std::make_shared<gui::Button>(context);
+	exit_button->setPosition({ 650, 430 });
+	exit_button->SetText("Exit Lobby");
+	exit_button->SetCallback([this]() {
+		RequestStackPop();
+		RequestStackPush(StateID::kMenu);
+		});
+	// Only show the start button if we're the host
+	if (is_host_) {
+		auto start_button = std::make_shared<gui::Button>(context);
+		start_button->setPosition({ 650, 360 });
+		start_button->SetText("Start Game");
+		start_button->SetCallback([this]() {
+				ExitLobbyState();
+			});
+		gui_container_.Pack(start_button);
+	}
+	gui_container_.Pack(exit_button);
 	//context.music->Play(MusicThemes::kLevelTheme); // REMEMBER TO TURN THIS BACK ON THANK YOU :3
 }
 
 // Ruby White - D00255322
+// Darren Meidl - D00255479
 template <typename WorldClass>
 void GameState<WorldClass>::Draw() {
 	world_.RenderLogic();
@@ -77,7 +103,8 @@ void GameState<WorldClass>::Draw() {
 			window.draw(info.lobby_label);
 		}
 
-		window.draw(lobby_text_); // Draw lobby title text
+		window.draw(lobby_text_);
+		window.draw(gui_container_);
 	}
 }
 
@@ -141,7 +168,6 @@ inline void GameState<WorldClass>::ExitLobbyState() {
 // Ruby White - D00255322
 template<typename WorldClass>
 inline void GameState<WorldClass>::ShowNewName(PlayerInfo info, bool is_host) {
-
 	players_.emplace_back(info);
 }
 // Darren Meidl - D00255479
