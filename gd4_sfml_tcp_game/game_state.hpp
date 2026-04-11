@@ -142,9 +142,8 @@ bool GameState<WorldClass>::Update(sf::Time dt) {
 
 template <typename WorldClass>
 bool GameState<WorldClass>::HandleEvent(const sf::Event& event) {
-	gui_container_.HandleEvent(event);
 	if (waiting_)
-		return true;
+		gui_container_.HandleEvent(event);
 	if (const auto* keyPressed = event.getIf<sf::Event::KeyPressed>()) {
 		if (keyPressed->scancode == sf::Keyboard::Scancode::Escape) {
 			if (world_.IsMultiplayer())
@@ -153,7 +152,7 @@ bool GameState<WorldClass>::HandleEvent(const sf::Event& event) {
 				RequestStackPush(StateID::kPause);
 		}
 	}
-	return true;
+	return false;
 }
 
 template<typename WorldClass>
