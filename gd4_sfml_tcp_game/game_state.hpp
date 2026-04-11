@@ -8,7 +8,7 @@
 #include "Utility.hpp"
 #include "game_event.hpp"
 #include "container.hpp"
-#include "menu_options.hpp"
+
 
 
 template <typename WorldClass>
@@ -139,6 +139,8 @@ bool GameState<WorldClass>::Update(sf::Time dt) {
 template <typename WorldClass>
 bool GameState<WorldClass>::HandleEvent(const sf::Event& event) {
 	gui_container_.HandleEvent(event);
+	if (waiting_)
+		return true;
 	if (const auto* keyPressed = event.getIf<sf::Event::KeyPressed>()) {
 		if (keyPressed->scancode == sf::Keyboard::Scancode::Escape) {
 			if (world_.IsMultiplayer())

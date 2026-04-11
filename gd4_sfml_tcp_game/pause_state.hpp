@@ -3,6 +3,7 @@
 #include "State.hpp"
 #include <SFML/Graphics/Sprite.hpp>
 #include <SFML/Graphics/Text.hpp>
+#include "container.hpp"
 
 class PauseState : public State {
 public:
@@ -13,10 +14,11 @@ public:
     virtual bool HandleEvent(const sf::Event& event) override;
 
 private:
+    bool allow_background_updates_;
+    // UI
     sf::Sprite background_sprite_;
     sf::Text paused_text_;
-    sf::Text instruction_text_;
-    bool allow_background_updates_;
+    gui::Container gui_container_;
 };
 
 #include "resource_holder.hpp"
@@ -29,8 +31,8 @@ PauseState::PauseState(StateStack& stack, Context context, bool allowBackgroundU
     :State(stack, context)
     , background_sprite_(context.textures->Get(TextureID::kTitleScreen))
     , paused_text_(context.fonts->Get(Font::kMain))
-    , instruction_text_(context.fonts->Get(Font::kMain))
     , allow_background_updates_(allowBackgroundUpdates)
+	, gui_container_(3)
 {
     //sf::Font& font = context.fonts->Get(Font::kMain);
     sf::Vector2f view_size = context.window->getView().getSize();
@@ -40,14 +42,27 @@ PauseState::PauseState(StateStack& stack, Context context, bool allowBackgroundU
     paused_text_.setCharacterSize(70);
     Utility::CentreOrigin(paused_text_);
     paused_text_.setPosition({ 0.5f * view_size.x, 0.4f * view_size.y });
-
-    //instruction_text_.setFont(font);
-    instruction_text_.setString("Press backspace to return to main menu, esc to game");
-    Utility::CentreOrigin(instruction_text_);
-    instruction_text_.setPosition({ 0.5f * view_size.x, 0.6f * view_size.y });
    
     GetContext().music->SetPaused(true); //Pause the music
     InputManager::SetInputEnabled(false); // Block realtime input
+
+    auto resume_button = std::make_shared<gui::Button>(context);
+    resume_button->setPosition({ 0.5f * view_size.x - 75, 360 });
+    resume_button->SetText("Resume");
+    resume_button->SetCallback([this]() {
+        RequestStackPop();
+        });
+
+    auto quit_button = std::make_shared<gui::Button>(context);
+    quit_button->setPosition({ 0.5f * view_size.x - 75, 430 });
+    quit_button->SetText("Quit Game");
+    quit_button->SetCallback([this]() {
+        RequestStackClear();
+        RequestStackPush(StateID::kMenu);
+        });
+
+    gui_container_.Pack(resume_button);
+    gui_container_.Pack(quit_button);   
 }
 
 // Darren Meidl - D00255479
@@ -61,7 +76,7 @@ void PauseState::Draw() {
 
     window.draw(backgroundShape);
     window.draw(paused_text_);
-    window.draw(instruction_text_);
+    window.draw(gui_container_);
 }
 
 bool PauseState::Update(sf::Time dt) {
@@ -69,18 +84,7 @@ bool PauseState::Update(sf::Time dt) {
 }
 
 bool PauseState::HandleEvent(const sf::Event& event) {
-    const auto* keyPressed = event.getIf<sf::Event::KeyPressed>();
-    if (!keyPressed)
-        return false;
-
-    if (keyPressed->code == sf::Keyboard::Key::Escape)
-        RequestStackPop();
-
-    if (keyPressed->code == sf::Keyboard::Key::Backspace) {
-        RequestStackClear();
-        RequestStackPush(StateID::kMenu);
-    }
-
+    gui_container_.HandleEvent(event);
     return false;
 }
 // Darren Meidl - D00255479
