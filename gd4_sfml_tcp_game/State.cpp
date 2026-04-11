@@ -15,12 +15,16 @@ State::State(StateStack& stack, Context context) : stack_(&stack), context_(cont
 State::~State()
 {
 }
-
+#pragma region UI
 void State::ShowNewName(PlayerInfo info, bool is_host) {
 }
 
 void State::RemoveName(std::string name) {
 }
+
+void State::SetLobbyTitle(const std::string& title) {
+}
+#pragma endregion
 
 std::vector<PlayerInfo> State::GetNames() {
     return std::vector<PlayerInfo>();
