@@ -64,6 +64,14 @@ PlayerWinState::PlayerWinState(StateStack& stack, Context context, TextureID vic
         RequestStackPush(StateID::kJoin);
         });
 
+    auto local_start_button = std::make_shared<gui::Button>(context);
+    local_start_button->setPosition({ 0.5f * view_size.x - 80, 430 });
+    local_start_button->SetText("New Game");
+    local_start_button->SetCallback([this]() {
+        RequestStackClear();
+        RequestStackPush(StateID::kGame);
+        });
+
     auto exit_button = std::make_shared<gui::Button>(context);
     exit_button->setPosition({ 0.5f * view_size.x - 80, 500 });
     exit_button->SetText("Return to Menu");
@@ -84,6 +92,9 @@ PlayerWinState::PlayerWinState(StateStack& stack, Context context, TextureID vic
     }
     else if (context.is_client) {
         gui_container_.Pack(client_start_button);
+    }
+    else { // if is not host or client then must be local game (If Mario, then only Bros!)
+        gui_container_.Pack(local_start_button);
     }
     gui_container_.Pack(exit_button);
 
