@@ -47,14 +47,14 @@ PauseState::PauseState(StateStack& stack, Context context, bool allowBackgroundU
     InputManager::SetInputEnabled(false); // Block realtime input
 
     auto resume_button = std::make_shared<gui::Button>(context);
-    resume_button->setPosition({ 0.5f * view_size.x - 75, 360 });
+    resume_button->setPosition({ 0.5f * view_size.x - 80, 360 });
     resume_button->SetText("Resume");
     resume_button->SetCallback([this]() {
         RequestStackPop();
         });
 
     auto quit_button = std::make_shared<gui::Button>(context);
-    quit_button->setPosition({ 0.5f * view_size.x - 75, 430 });
+    quit_button->setPosition({ 0.5f * view_size.x - 80, 430 });
     quit_button->SetText("Quit Game");
     quit_button->SetCallback([this]() {
         RequestStackClear();

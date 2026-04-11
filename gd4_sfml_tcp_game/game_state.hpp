@@ -63,7 +63,7 @@ GameState<WorldClass>::GameState(StateStack& stack, Context context) :
 	world_.Start();
 
 	auto exit_button = std::make_shared<gui::Button>(context);
-	exit_button->setPosition({ 0.5f * view_size.x - 75, 430 });
+	exit_button->setPosition({ 0.5f * view_size.x - 80, 430 });
 	exit_button->SetText("Exit Lobby");
 	exit_button->SetCallback([this]() {
 		RequestStackPop();
@@ -72,7 +72,7 @@ GameState<WorldClass>::GameState(StateStack& stack, Context context) :
 	// Only show the start button if we're the host
 	if (is_host_) {
 		auto start_button = std::make_shared<gui::Button>(context);
-		start_button->setPosition({ 0.5f * view_size.x - 75, 360 });
+		start_button->setPosition({ 0.5f * view_size.x - 80, 360 });
 		start_button->SetText("Start Game");
 		start_button->SetCallback([this]() {
 				ExitLobbyState();
