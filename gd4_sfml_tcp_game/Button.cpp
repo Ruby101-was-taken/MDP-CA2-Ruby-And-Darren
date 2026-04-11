@@ -121,7 +121,7 @@ void gui::Button::ChangeTexture(ButtonType buttonType)
         else if (buttonType == ButtonType::kSelected)
             textureRect = sf::IntRect({ 0, 50 }, { 160, 70 });
         else
-            textureRect = sf::IntRect({ 0, 100 }, { 160, 50 });
+            textureRect = sf::IntRect({ 0, 120 }, { 160, 50 });
     }
     else {
         if (buttonType == ButtonType::kSmallNormal)

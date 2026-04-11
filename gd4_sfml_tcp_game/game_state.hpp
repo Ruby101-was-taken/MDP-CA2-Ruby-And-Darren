@@ -62,24 +62,82 @@ GameState<WorldClass>::GameState(StateStack& stack, Context context) :
 	world_.SetState(this);
 	world_.Start();
 
-	auto exit_button = std::make_shared<gui::Button>(context);
-	exit_button->setPosition({ 0.5f * view_size.x - 80, 430 });
-	exit_button->SetText("Exit Lobby");
-	exit_button->SetCallback([this]() {
-		RequestStackPop();
-		RequestStackPush(StateID::kMenu);
-		});
-	// Only show the start button if we're the host
+	// Only show the start button and level selectors if we're the host
 	if (is_host_) {
+		// Level selection buttons (toggle behaviour)
+		auto level1_button = std::make_shared<gui::Button>(context);
+		auto level2_button = std::make_shared<gui::Button>(context);
+		auto random_button = std::make_shared<gui::Button>(context);
+
+		
+		level1_button->setPosition({ 0.5f * view_size.x + 80, 360 });
+		level2_button->setPosition({ 0.5f * view_size.x + 80, 430 });
+		random_button->setPosition({ 0.5f * view_size.x + 80, 500 });
+
+		level1_button->SetText("Level 1");
+		level2_button->SetText("Level 2");
+		random_button->SetText("Random");
+
+		level1_button->SetToggle(true);
+		level2_button->SetToggle(true);
+		random_button->SetToggle(true);
+
+		
+		level1_button->SetCallback([this, level2_button, random_button]() {
+			world_.SetLevelId(1);
+			level2_button->Deactivate();
+			random_button->Deactivate();
+		});
+
+		level2_button->SetCallback([this, level1_button, random_button]() {
+			world_.SetLevelId(2);
+			level1_button->Deactivate();
+			random_button->Deactivate();
+		});
+
+		random_button->SetCallback([this, level1_button, level2_button]() {
+			world_.SetRandomLevel();
+			level1_button->Deactivate();
+			level2_button->Deactivate();
+		});
+
+		// pack the level buttons so they are part of the selectable UI
+		gui_container_.Pack(level1_button);
+		gui_container_.Pack(level2_button);
+		gui_container_.Pack(random_button);
+
+		// default to Random selected
+		random_button->Activate();
+		world_.SetRandomLevel();
+
+		// start button (host)
 		auto start_button = std::make_shared<gui::Button>(context);
-		start_button->setPosition({ 0.5f * view_size.x - 80, 360 });
+		start_button->setPosition({ 0.5f * view_size.x - 240, 360 });
 		start_button->SetText("Start Game");
 		start_button->SetCallback([this]() {
 				ExitLobbyState();
 			});
 		gui_container_.Pack(start_button);
 	}
+
+	auto exit_button = std::make_shared<gui::Button>(context);
+	exit_button->setPosition({ 0.5f * view_size.x - 240, 430 });
+	exit_button->SetText("Exit Lobby");
+	exit_button->SetCallback([this]() {
+		RequestStackPop();
+		RequestStackPush(StateID::kMenu);
+		});
+
+	auto verbose_button = std::make_shared<gui::Button>(context);
+	verbose_button->setPosition({ 0.5f * view_size.x - 240, 500 });
+	verbose_button->SetText("Verbosity");
+	verbose_button->SetCallback([this]() {
+		// DO THING YUPPA
+		});
+
 	gui_container_.Pack(exit_button);
+	gui_container_.Pack(verbose_button);
+	
 	//context.music->Play(MusicThemes::kLevelTheme); // REMEMBER TO TURN THIS BACK ON THANK YOU :3
 }
 
@@ -149,7 +207,7 @@ bool GameState<WorldClass>::HandleEvent(const sf::Event& event) {
 			if (world_.IsMultiplayer())
 				RequestStackPush(StateID::kPauseMultiplayer);
 			else
-				RequestStackPush(StateID::kPause);
+			 RequestStackPush(StateID::kPause);
 		}
 	}
 	return false;

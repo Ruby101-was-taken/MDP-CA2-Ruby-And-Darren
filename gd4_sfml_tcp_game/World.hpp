@@ -12,10 +12,10 @@
 #include "bloom_effect.hpp"
 #include "sound_player.hpp"
 #include "state.hpp"
-
 #include "game_event.hpp"
-
 #include <array>
+#include "utility.hpp"
+#include "level.hpp"
 
 class World 
 {
@@ -45,6 +45,11 @@ public:
 
 	void PassGameEvent(GameEvent event);
 	virtual bool IsMultiplayer() const { return false; } // Darren Meidl - D00255479, override in MultiplayerWorld
+
+	// Darren Meidl - D00255479 - level setters so lobby UI can choose a level
+	void SetLevelId(int id) { level_id_ = id; has_level_ = true; }
+	void SetRandomLevel() { level_id_ = Utility::RandomInt(Level::GetMaxLevelID()) + 1; has_level_ = true; }
+
 protected:
 	void SetCameraPosition(sf::Vector2f position);
 	void SetCameraSize(sf::Vector2f position);

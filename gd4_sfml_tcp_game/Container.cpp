@@ -30,18 +30,18 @@ void gui::Container::HandleEvent(const sf::Event& event)
     if (key_pressed)
     {
         sf::Keyboard::Scancode key = key_pressed->scancode;
-        if (key == sf::Keyboard::Scancode::W || key == sf::Keyboard::Scancode::Up) // Darren
+        if (key == sf::Keyboard::Scancode::W || key == sf::Keyboard::Scancode::Up)
         {
             SelectPrevious(1);
         }
         else if (key == sf::Keyboard::Scancode::A || key == sf::Keyboard::Scancode::Left) {
             SelectPrevious(column_height_);
         }
-        else if (key == sf::Keyboard::Scancode::S || key == sf::Keyboard::Scancode::Down) // Darren
+        else if (key == sf::Keyboard::Scancode::S || key == sf::Keyboard::Scancode::Down)
         {
             SelectNext(1);
         }
-        else if (key == sf::Keyboard::Scancode::D || key == sf::Keyboard::Scancode::Right) // Darren
+        else if (key == sf::Keyboard::Scancode::D || key == sf::Keyboard::Scancode::Right)
         {
             SelectNext(column_height_);
         }
