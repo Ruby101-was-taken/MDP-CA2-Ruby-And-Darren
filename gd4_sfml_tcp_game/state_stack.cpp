@@ -75,7 +75,18 @@ void StateStack::ApplyPendingChanges()
         switch (change.action)
         {
             case StackAction::kPush:
-                stack_.emplace_back(CreateState(change.state_id));
+            {
+                // Darren Meidl - D00255479
+                State::Ptr newState = CreateState(change.state_id); // create the new state
+                // if there is an existing state, copy its host flag to the new state
+                if (!stack_.empty()) {
+                    newState->SetIsHost(stack_.back()->IsHost());
+                } 
+                else {
+					newState->SetIsHost(context_.is_host); // ensure the new state sees the stack's stored context host flag
+				}
+                stack_.emplace_back(std::move(newState));
+            }
                 break;
             case StackAction::kPop:
                 stack_.pop_back();
@@ -91,4 +102,9 @@ void StateStack::ApplyPendingChanges()
 StateStack::PendingChange::PendingChange(StackAction action, StateID stateid)
     : action(action), state_id(stateid)
 {
+}
+// Darren Meidl - D00255479 - Update the stack's stored context host flag so future states created by the stack get the updated value.
+void StateStack::SetIsHost(bool is_host)
+{
+	context_.is_host = is_host;
 }

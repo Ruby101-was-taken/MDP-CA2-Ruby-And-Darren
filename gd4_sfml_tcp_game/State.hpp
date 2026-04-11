@@ -26,12 +26,13 @@ public:
 
 	struct Context
 	{
-		Context(sf::RenderWindow& window, TextureHolder& textures, FontHolder& fonts, MusicPlayer& music, SoundPlayer& sounds);
+		Context(sf::RenderWindow& window, TextureHolder& textures, FontHolder& fonts, MusicPlayer& music, SoundPlayer& sounds, bool is_host = false);
 		sf::RenderWindow* window;
 		TextureHolder* textures;
 		FontHolder* fonts;
 		MusicPlayer* music;
 		SoundPlayer* sounds;
+		bool is_host;
 	};
 
 public:
@@ -50,6 +51,7 @@ public:
 	virtual std::vector<PlayerInfo> GetNames();
 	virtual void ExitLobbyState();
 	void SetIsHost(bool is_host);
+	bool IsHost() const; // Darren Meidl - D00255479
 
 	Context GetContext() const;
 protected:
@@ -64,6 +66,5 @@ protected:
 private:
 	StateStack* stack_;
 	Context context_;
-;
 };
 

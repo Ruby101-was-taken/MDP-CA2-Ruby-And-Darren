@@ -3,7 +3,8 @@
 #include "state_stack.hpp"
 #include <iostream>
 
-State::Context::Context(sf::RenderWindow& window, TextureHolder& textures, FontHolder& fonts, MusicPlayer& music, SoundPlayer& sounds) : window(&window), textures(&textures), fonts(&fonts), music(&music), sounds(&sounds)
+State::Context::Context(sf::RenderWindow& window, TextureHolder& textures, FontHolder& fonts, MusicPlayer& music, SoundPlayer& sounds, bool is_host)
+	: window(&window), textures(&textures), fonts(&fonts), music(&music), sounds(&sounds), is_host(is_host)
 {
 }
 
@@ -32,9 +33,17 @@ std::vector<PlayerInfo> State::GetNames() {
 
 void State::ExitLobbyState() {
 }
-
 void State::SetIsHost(bool is_host) {
     is_host_ = is_host;
+	// keep state's stored context flag consistent for this state
+	context_.is_host = is_host;
+	// propagate to stack so future states created by the stack get the updated flag
+	if (stack_)
+		stack_->SetIsHost(is_host);
+}
+// Darren Meidl - D00255479
+bool State::IsHost() const {
+    return is_host_;
 }
 
 void State::RequestStackPush(StateID state_id)

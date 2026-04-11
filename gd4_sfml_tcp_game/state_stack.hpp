@@ -22,6 +22,7 @@ public:
 	void ClearStack();
 	bool IsEmpty() const;
 
+	void SetIsHost(bool is_host); // Darren Meidl - D00255479
 
 private:
 	State::Ptr CreateState(StateID state_id);
