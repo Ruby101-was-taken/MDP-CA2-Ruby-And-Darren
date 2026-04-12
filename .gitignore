@@ -404,3 +404,5 @@ gd4_sfml_tcp_game/username.txt
 gd4_sfml_tcp_game/Data/IP.txt
 gd4_sfml_tcp_game/Data/Username.txt
 gd4_sfml_tcp_game/Data/Colour.txt
+gd4_sfml_tcp_game/Data/LastWinnerUsername.txt
+/gd4_sfml_tcp_game/Data
