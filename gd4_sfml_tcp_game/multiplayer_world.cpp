@@ -353,9 +353,10 @@ void MultiplayerWorld::HandleGameStart(sf::Packet& data) {
 	uint8_t level_id;
 	data >> level_id;
 
-	PlayLevelMusic();
 
 	level_id_ = static_cast<int>(level_id);
+
+	PlayLevelMusic();
 
 	PrepareLevel();
 
