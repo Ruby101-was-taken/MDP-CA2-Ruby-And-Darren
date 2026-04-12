@@ -180,7 +180,6 @@ void MultiplayerWorld::HandlePacketType(Server::PacketType type, sf::Packet& dat
 		HandlePlayerLeave(data);
 		break;
 	case Server::PacketType::kStartGame:
-		PlayLevelMusic();
 		if (!is_host_) {
 			HandleGameStart(data);
 		}
@@ -298,6 +297,8 @@ void MultiplayerWorld::StartGame() {
 		sf::Packet start_packet = Utility::CreatePacket(Server::PacketType::kStartGame);
 		start_packet << static_cast<uint8_t>(level_id_);
 		SendPacket(start_packet);
+
+		PlayLevelMusic();
 	}
 }
 
@@ -352,7 +353,10 @@ void MultiplayerWorld::HandleGameStart(sf::Packet& data) {
 	uint8_t level_id;
 	data >> level_id;
 
+
 	level_id_ = static_cast<int>(level_id);
+
+	PlayLevelMusic();
 
 	PrepareLevel();
 
