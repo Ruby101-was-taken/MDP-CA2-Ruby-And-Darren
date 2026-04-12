@@ -54,8 +54,8 @@ private:
 	void HandlePlayerStateUpdate(sf::Packet& data);
 #pragma endregion
 #pragma region PacketSenders
-	void SendEvent(Action action, bool started);
-	void SendEvent(Action action);
+	void SendInputEvent(Action action, bool started);
+	void SendInputEvent(Action action);
 	void SendStateUpdate();
 #pragma endregion
 

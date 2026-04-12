@@ -10,7 +10,8 @@
 #include "player_movement_behaviour.hpp"
 #include "input_manager.hpp"
 #include "text_node_behaviour.hpp"
-
+// Darren Meidl - D00255479
+// Ruby White - D00255322
 MultiplayerWorld::MultiplayerWorld(sf::RenderTarget& output_target, FontHolder& font, SoundPlayer& sounds, State::Context* context, bool is_host) :
 	GameWorld(output_target, font, sounds, context),
 	game_server_(nullptr),
@@ -136,17 +137,17 @@ void MultiplayerWorld::UpdateCurrent() {
 	if (input_update_clock_.getElapsedTime().asSeconds() >= input_update_interval_) {
 		// Left change
 		if (cur_left != prev_left_) {
-			SendEvent(Action::kMoveLeft, cur_left);
+			SendInputEvent(Action::kMoveLeft, cur_left);
 			prev_left_ = cur_left;
 		}
 		// Right change
 		if (cur_right != prev_right_) {
-			SendEvent(Action::kMoveRight, cur_right);
+			SendInputEvent(Action::kMoveRight, cur_right);
 			prev_right_ = cur_right;
 		}
 		// Jump: treat as a discrete event on press
 		if (cur_jump && !prev_jump_) {
-			SendEvent(Action::kMoveUp);
+			SendInputEvent(Action::kMoveUp);
 		}
 		prev_jump_ = cur_jump;
 
@@ -414,7 +415,7 @@ void MultiplayerWorld::HandleSpawnPlayer(sf::Packet& data) {
 
 	sf::Vector2f spawn(x, y); // Create spawn vector
 	// Local player 
-	if (name == Utility::GetUserNameFromFile()) { //     colour is ignored by non networked players so sure we can still pass it in
+	if (name == Utility::GetUserNameFromFile()) {
 		Player* p = AddPlayer(PlayerType::kOnlineLocalPlayer, spawn, name, colour, is_winner);
 		network_players_[static_cast<int>(id)] = p;
 	} // Other networked player
@@ -532,7 +533,7 @@ void MultiplayerWorld::HandlePlayerStateUpdate(sf::Packet& data) {
 }
 
 // Darren Meidl - D00255479 - Function to send realtime input changes
-void MultiplayerWorld::SendEvent(Action action, bool started) {
+void MultiplayerWorld::SendInputEvent(Action action, bool started) {
 	if (!is_connected_) return;
 	sf::Packet packet = Utility::CreatePacket(Server::PacketType::kPlayerInputEvent); // 1 byte
 	packet << static_cast<uint8_t>(id_); // 1 byte
@@ -541,7 +542,7 @@ void MultiplayerWorld::SendEvent(Action action, bool started) {
 	SendPacket(packet);
 }
 // Darren Meidl - D00255479 - Function to send discrete events (e.g. jump)
-void MultiplayerWorld::SendEvent(Action action) {
+void MultiplayerWorld::SendInputEvent(Action action) {
 	if (!is_connected_) return;
 	sf::Packet packet = Utility::CreatePacket(Server::PacketType::kPlayerInputEvent); // 1 byte
 	packet << static_cast<uint8_t>(id_); // 1 byte
