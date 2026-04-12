@@ -179,7 +179,7 @@ void MultiplayerWorld::HandlePacketType(Server::PacketType type, sf::Packet& dat
 		HandlePlayerLeave(data);
 		break;
 	case Server::PacketType::kStartGame:
-		GetState()->GetContext().music->Play(MusicThemes::kLevelTheme);
+		PlayLevelMusic();
 		if (!is_host_) {
 			HandleGameStart(data);
 		}

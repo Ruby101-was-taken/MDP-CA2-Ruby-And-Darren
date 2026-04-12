@@ -2,6 +2,7 @@
 enum class MusicThemes
 {
 	kMenuTheme,
-	kLevelTheme,
+	kSandLevelTheme,
+	kGrassLevelTheme,
 	kLobbyTheme
 };

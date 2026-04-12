@@ -19,6 +19,8 @@ public:
 private:
 	sf::Sprite background_sprite_;
 	gui::Container gui_container_;
+
+    sf::Text name_text_;
 };
 
 #include "menu_state.hpp"
@@ -32,6 +34,7 @@ MenuState<WorldClass>::MenuState(StateStack& stack, Context context)
     :State(stack, context)
     , background_sprite_(context.textures->Get(TextureID::kTitleScreen)),
     gui_container_(3)
+    , name_text_(context.fonts->Get(Font::kMain))
 {
     //sf::Texture& texture = context.textures->Get(TextureID::kTitleScreen);
 
@@ -99,6 +102,11 @@ MenuState<WorldClass>::MenuState(StateStack& stack, Context context)
 
     //Play the music
     context.music->Play(MusicThemes::kMenuTheme);
+
+
+    name_text_.setString(Utility::GetUserNameFromFile());
+    name_text_.setFillColor(Utility::GetUserColourFromFile());
+    name_text_.setPosition({ 0, 0 });
 }
 
 template <typename WorldClass>
@@ -108,6 +116,8 @@ void MenuState<WorldClass>::Draw()
     window.setView(window.getDefaultView());
     window.draw(background_sprite_);
     window.draw(gui_container_);
+
+    window.draw(name_text_);
 }
 
 template <typename WorldClass>

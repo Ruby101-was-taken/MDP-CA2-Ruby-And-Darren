@@ -152,6 +152,21 @@ Player* GameWorld::AddPlayer(PlayerType type, sf::Vector2f spawn, std::string na
     return player_ptr;
 }
 
+void GameWorld::PlayLevelMusic() {
+    std::cout << level_id_ << std::endl;
+    switch (level_id_) {
+    case 1:
+        GetState()->GetContext().music->Play(MusicThemes::kSandLevelTheme);
+        break;
+    case 2:
+        GetState()->GetContext().music->Play(MusicThemes::kGrassLevelTheme);
+        break;
+    default:
+        GetState()->GetContext().music->Play(MusicThemes::kSandLevelTheme);
+        break;
+    }
+}
+
 void GameWorld::RandomiseLevel() {
     level_id_ = Utility::RandomInt(Level::GetMaxLevelID())+1;
 }

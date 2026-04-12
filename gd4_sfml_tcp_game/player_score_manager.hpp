@@ -19,6 +19,6 @@ private:
 	
 private:
 	unsigned int score_;
-	unsigned int score_to_win_ = 1;
+	unsigned int score_to_win_ = 10;
 };
 

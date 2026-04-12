@@ -62,7 +62,7 @@ SettingsState<WorldClass>::SettingsState(StateStack& stack, Context context)
 
     // Ruby White - D00255322
     sfx_volume_.setPosition({ 450, 450 });
-    sfx_volume_.setString("SFX: 100");
+    sfx_volume_.setString("SFX: " + std::to_string((int)context.sounds->GetVolume() / 1));
     sfx_volume_.setFillColor(sf::Color::Black);
 
     // Darren - D00255479
@@ -88,7 +88,7 @@ SettingsState<WorldClass>::SettingsState(StateStack& stack, Context context)
 
     // Ruby White - D00255322
     music_volume_.setPosition({ 800, 450 });
-    music_volume_.setString("Music: 100");
+    music_volume_.setString("Music: " + std::to_string((int)context.music->GetVolume()));
     music_volume_.setFillColor(sf::Color::Black);
 
     // Ruby White - D00255322

@@ -19,6 +19,8 @@ private:
 
 protected:
 
+    void PlayLevelMusic();
+
     void RandomiseLevel();
 
     void MakeBaseScene();

@@ -8,7 +8,7 @@ LocalGameWorld::LocalGameWorld(sf::RenderTarget& output_target, FontHolder& font
 }
 
 void LocalGameWorld::Start() {
-    GetState()->GetContext().music->Play(MusicThemes::kLevelTheme);
+    PlayLevelMusic();
     GetState()->SetIsHost(false);
     GetState()->SetIsClient(false);
 }
