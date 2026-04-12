@@ -30,6 +30,7 @@ class Utility
 		static std::string GetUserNameFromFile();
 		static sf::Color GetUserColourFromFile();
 		static sf::IpAddress GetAddressFromFile();
+		static unsigned short GetPortFromFile();
 		static sf::Packet CreatePacket(Server::PacketType type);
 
 		static void PrintStatusError(sf::Socket::Status status, std::string name, bool print_successes = false);

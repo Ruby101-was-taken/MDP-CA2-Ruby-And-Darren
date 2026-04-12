@@ -77,6 +77,7 @@ Application::Application() :
 	Utility::GetAddressFromFile();
 	Utility::GetUserNameFromFile();
 	Utility::GetUserColourFromFile();
+	Utility::GetPortFromFile();
 }
 
 void Application::Run()

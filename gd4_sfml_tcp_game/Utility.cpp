@@ -299,6 +299,21 @@ sf::IpAddress Utility::GetAddressFromFile() {
 	return local_address;
 }
 
+unsigned short Utility::GetPortFromFile() {
+	//Try to open existing file
+	std::ifstream input_file("Data/Port.txt");
+	std::string port;
+	if (input_file >> port) {
+		return std::stoi(port);
+	}
+
+	//If the open/read failed, create a new file and a random colour
+	std::ofstream output_file("Data/Port.txt");
+	int new_port = SERVER_PORT;
+	output_file << new_port;
+	return new_port;
+}
+
 sf::Packet Utility::CreatePacket(Server::PacketType type) {
 	sf::Packet packet;
 	packet << static_cast<uint8_t>(type);

@@ -49,7 +49,7 @@ void MultiplayerWorld::BuildScene() {
 	}
 
 	if (ip) {
-		auto status = socket_.connect(*ip, SERVER_PORT, sf::seconds(5.f));
+		auto status = socket_.connect(*ip, Utility::GetPortFromFile(), sf::seconds(5.f));
 
 		if (status == sf::Socket::Status::Done) {
 			is_connected_ = true;
