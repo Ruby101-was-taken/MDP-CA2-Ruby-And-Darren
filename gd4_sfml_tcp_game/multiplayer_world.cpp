@@ -19,7 +19,8 @@ MultiplayerWorld::MultiplayerWorld(sf::RenderTarget& output_target, FontHolder& 
 	prev_left_(false),
 	prev_right_(false),
 	prev_jump_(false),
-	state_update_interval_(1.f / 20.f) // 20 updates per second for periodic state updates
+	input_update_interval_(1.f / 20.f), // match server tick-rate for input polling
+	state_update_interval_(1.f / 5.f) // 10 updates per second for periodic state updates
 {
 	StartBuildScene();
 }
@@ -132,7 +133,7 @@ void MultiplayerWorld::UpdateCurrent() {
 	bool cur_right = InputManager::InputIsPressed(InputTypes::kPlayerOneRight);
 	bool cur_jump = InputManager::InputIsPressed(InputTypes::kPlayerOneUp);
 
-	if (state_update_clock_.getElapsedTime().asSeconds() >= state_update_interval_) {
+	if (input_update_clock_.getElapsedTime().asSeconds() >= input_update_interval_) {
 		// Left change
 		if (cur_left != prev_left_) {
 			SendEvent(Action::kMoveLeft, cur_left);
@@ -150,9 +151,10 @@ void MultiplayerWorld::UpdateCurrent() {
 		prev_jump_ = cur_jump;
 
 		// Periodic state update to ensure correct position on clients
-	
-		SendStateUpdate();
-		state_update_clock_.restart();
+		if (state_update_clock_.getElapsedTime().asSeconds() >= state_update_interval_) {
+			SendStateUpdate();
+			state_update_clock_.restart();
+		}
 	}
 }
 

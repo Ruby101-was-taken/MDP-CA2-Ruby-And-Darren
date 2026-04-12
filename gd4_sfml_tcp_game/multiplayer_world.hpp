@@ -82,7 +82,10 @@ protected:
 	bool prev_left_ = false;
 	bool prev_right_ = false;
 	bool prev_jump_ = false;
-	// periodic state updates
+	
+	// Tick-rate for input & state updates
+	sf::Clock input_update_clock_;
+	float input_update_interval_ = 1.f / 20.f;
 	sf::Clock state_update_clock_;
-	float state_update_interval_ = 1.f / 20.f; // 20 hz
+	float state_update_interval_ = 1.f / 10.f;
 };
