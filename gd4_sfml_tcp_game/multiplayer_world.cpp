@@ -478,34 +478,37 @@ void MultiplayerWorld::HandlePlayerInputEvent(sf::Packet& data) {
 }
 
 void MultiplayerWorld::HandlePlayerStateUpdate(sf::Packet& data) {
-
+	// read id
 	uint8_t id;
-	float x, y;
-	// read position
 	data >> id;
-	data >> x;
-	data >> y;
-	// Read velocity
-	float vx = 0.f, vy = 0.f;
-	if (!(data >> vx)) { vx = 0.f; }
-	if (!(data >> vy)) { vy = 0.f; }
-
 	// Ignore updates for local player
 	if (static_cast<int>(id) == id_)
 		return;
+	// read position
+	int16_t x, y;
+	int8_t vy = 0;
+	data >> x;
+	data >> y;
+	// read velocity
+	if (!(data >> vy))
+		vy = 0;
+	// convert back to floats
+	float pos_x = x / 10.f;
+	float pos_y = y / 10.f; 
+	float vel_y = vy / 10.f; 
 
 	Player* p = GetPlayerByID(static_cast<int>(id));
 	if (p) {
 		// Apply a small smoothing to reduce jitter on clients (lerp rather than teleport)
 		const float lerp_factor = 0.6f; // tune between 0 (no move) and 1 (teleport)
 		sf::Vector2f current = p->getPosition();
-		sf::Vector2f target(x, y);
+		sf::Vector2f target(pos_x, pos_y);
 		sf::Vector2f newpos = current + (target - current) * lerp_factor;
 		p->setPosition(newpos); // apply smoothed position
 
 		// Apply velocity to the PlayerMovementBehaviour so animation (jump/fall) can react
 		if (auto pm = p->FindAttachable<PlayerMovementBehaviour>()) {
-			pm->GetVelocity() = { vx, vy };
+			pm->GetVelocity().y = vel_y;
 		}
 	}
 }
@@ -513,18 +516,18 @@ void MultiplayerWorld::HandlePlayerStateUpdate(sf::Packet& data) {
 // Darren Meidl - D00255479 - Function to send realtime input changes
 void MultiplayerWorld::SendEvent(Action action, bool started) {
 	if (!is_connected_) return;
-	sf::Packet packet = Utility::CreatePacket(Server::PacketType::kPlayerInputEvent);
-	packet << static_cast<uint8_t>(id_);
-	packet << static_cast<uint8_t>(action);
-	packet << static_cast<uint8_t>(started ? 1 : 0);
+	sf::Packet packet = Utility::CreatePacket(Server::PacketType::kPlayerInputEvent); // 1 byte
+	packet << static_cast<uint8_t>(id_); // 1 byte
+	packet << static_cast<uint8_t>(action); // 1 byte
+	packet << static_cast<uint8_t>(started ? 1 : 0); // 1 byte
 	SendPacket(packet);
 }
 // Darren Meidl - D00255479 - Function to send discrete events (e.g. jump)
 void MultiplayerWorld::SendEvent(Action action) {
 	if (!is_connected_) return;
-	sf::Packet packet = Utility::CreatePacket(Server::PacketType::kPlayerInputEvent);
-	packet << static_cast<uint8_t>(id_);
-	packet << static_cast<uint8_t>(action);
+	sf::Packet packet = Utility::CreatePacket(Server::PacketType::kPlayerInputEvent); // 1 byte
+	packet << static_cast<uint8_t>(id_); // 1 byte
+	packet << static_cast<uint8_t>(action); // 1 byte
 	SendPacket(packet);
 }
 // Darren Meidl - D00255479 - Function to send periodic state updates to server
@@ -540,12 +543,12 @@ void MultiplayerWorld::SendStateUpdate() {
 		vel = pm->GetVelocity();
 	}
 	// create packet with type state update
-	sf::Packet packet = Utility::CreatePacket(Server::PacketType::kPlayerStateUpdate);
-	packet << static_cast<uint8_t>(id_);
-	packet << pos.x;
-	packet << pos.y;
-	packet << vel.x;
-	packet << vel.y;
+	sf::Packet packet = Utility::CreatePacket(Server::PacketType::kPlayerStateUpdate); // 1 byte
+	packet << static_cast<uint8_t>(id_); // 1 byte
+	packet << static_cast<int16_t>(pos.x * 10); // 2 byte
+	packet << static_cast<int16_t>(pos.y * 10); // 2 byte
+	packet << static_cast<int8_t>(vel.y * 10); // 1 byte
+	//std::cout << "[MultiplayerWorld]: Sending state update. Position: " << pos.x << ", " << pos.y << " Velocity: " << vel.x << ", " << vel.y << std::endl;
 	if (SendPacket(packet) == sf::Socket::Status::Disconnected and not is_host_) { // disconnect clients when they lose connection
 		is_connected_ = false;
 	}
