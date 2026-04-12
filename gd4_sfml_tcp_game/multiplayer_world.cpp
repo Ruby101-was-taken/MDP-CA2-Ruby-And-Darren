@@ -19,7 +19,7 @@ MultiplayerWorld::MultiplayerWorld(sf::RenderTarget& output_target, FontHolder& 
 	prev_left_(false),
 	prev_right_(false),
 	prev_jump_(false),
-	state_update_interval_(1.f / 10.f) // 10 updates per second for periodic state updates
+	state_update_interval_(1.f / 20.f) // 20 updates per second for periodic state updates
 {
 	StartBuildScene();
 }
@@ -132,24 +132,25 @@ void MultiplayerWorld::UpdateCurrent() {
 	bool cur_right = InputManager::InputIsPressed(InputTypes::kPlayerOneRight);
 	bool cur_jump = InputManager::InputIsPressed(InputTypes::kPlayerOneUp);
 
-	// Left change
-	if (cur_left != prev_left_) {
-		SendEvent(Action::kMoveLeft, cur_left);
-		prev_left_ = cur_left;
-	}
-	// Right change
-	if (cur_right != prev_right_) {
-		SendEvent(Action::kMoveRight, cur_right);
-		prev_right_ = cur_right;
-	}
-	// Jump: treat as a discrete event on press
-	if (cur_jump && !prev_jump_) {
-		SendEvent(Action::kMoveUp);
-	}
-	prev_jump_ = cur_jump;
-
-	// Periodic state update to ensure correct position on clients
 	if (state_update_clock_.getElapsedTime().asSeconds() >= state_update_interval_) {
+		// Left change
+		if (cur_left != prev_left_) {
+			SendEvent(Action::kMoveLeft, cur_left);
+			prev_left_ = cur_left;
+		}
+		// Right change
+		if (cur_right != prev_right_) {
+			SendEvent(Action::kMoveRight, cur_right);
+			prev_right_ = cur_right;
+		}
+		// Jump: treat as a discrete event on press
+		if (cur_jump && !prev_jump_) {
+			SendEvent(Action::kMoveUp);
+		}
+		prev_jump_ = cur_jump;
+
+		// Periodic state update to ensure correct position on clients
+	
 		SendStateUpdate();
 		state_update_clock_.restart();
 	}
