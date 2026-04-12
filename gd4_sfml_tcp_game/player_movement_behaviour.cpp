@@ -122,8 +122,12 @@ void PlayerMovementBehaviour::OnCollision(SceneNode* other) {
 void PlayerMovementBehaviour::BouncePlayer(bool spawn_star) {
     velocity_.y = -velocity_.y - (GRAVITY * Utility::sign(velocity_.y, 10));
     if (spawn_star) {
-        node_->GetWorld()->GetCommandQueue().Push(lose_score_);
+        TryLoseStar();
     }
+}
+
+void PlayerMovementBehaviour::TryLoseStar() {
+    node_->GetWorld()->GetCommandQueue().Push(lose_score_);
 }
 
 

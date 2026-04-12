@@ -41,6 +41,7 @@ private:
 private:
     static std::vector<sf::FloatRect> level_tiles_;
     static std::vector<sf::FloatRect> bounce_tiles_;
+    static std::vector<sf::FloatRect> spike_tiles_;
     static std::vector<sf::Vector2f> star_spawn_spots_;
 
     static sf::Vector2f player_one_spawn_;

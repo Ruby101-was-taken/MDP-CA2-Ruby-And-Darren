@@ -62,49 +62,63 @@ GameState<WorldClass>::GameState(StateStack& stack, Context context) :
 	world_.SetState(this);
 	world_.Start();
 
+	auto random_button = std::make_shared<gui::Button>(context);
 	// Only show the start button and level selectors if we're the host
 	if (is_host_) {
 		// Level selection buttons (toggle behaviour)
 		auto level1_button = std::make_shared<gui::Button>(context);
 		auto level2_button = std::make_shared<gui::Button>(context);
-		auto random_button = std::make_shared<gui::Button>(context);
+		auto level3_button = std::make_shared<gui::Button>(context);
 
 		
 		level1_button->setPosition({ 0.5f * view_size.x + 80, 360 });
 		level2_button->setPosition({ 0.5f * view_size.x + 80, 430 });
-		random_button->setPosition({ 0.5f * view_size.x + 80, 500 });
+		level3_button->setPosition({ 0.5f * view_size.x + 80, 500 });
+		random_button->setPosition({ 0.5f * view_size.x - 240, 500 });
 
 		level1_button->SetText("Level 1");
 		level2_button->SetText("Level 2");
+		level3_button->SetText("Level 3");
 		random_button->SetText("Random");
 
 		level1_button->SetToggle(true);
 		level2_button->SetToggle(true);
+		level3_button->SetToggle(true);
 		random_button->SetToggle(true);
 
 		
-		level1_button->SetCallback([this, level2_button, random_button]() {
+		level1_button->SetCallback([this, level2_button, level3_button, random_button]() {
 			world_.SetLevelId(1);
 			level2_button->Deactivate();
+			level3_button->Deactivate();
 			random_button->Deactivate();
 		});
 
-		level2_button->SetCallback([this, level1_button, random_button]() {
+		level2_button->SetCallback([this, level1_button, level3_button, random_button]() {
 			world_.SetLevelId(2);
 			level1_button->Deactivate();
+			level3_button->Deactivate();
 			random_button->Deactivate();
 		});
 
-		random_button->SetCallback([this, level1_button, level2_button]() {
+		level3_button->SetCallback([this, level1_button, level2_button, random_button]() {
+			world_.SetLevelId(3);
+			level1_button->Deactivate();
+			level2_button->Deactivate();
+			random_button->Deactivate();
+			});
+
+		random_button->SetCallback([this, level1_button, level2_button, level3_button]() {
 			world_.SetRandomLevel();
 			level1_button->Deactivate();
 			level2_button->Deactivate();
+			level3_button->Deactivate();
 		});
 
 		// pack the level buttons so they are part of the selectable UI
 		gui_container_.Pack(level1_button);
 		gui_container_.Pack(level2_button);
-		gui_container_.Pack(random_button);
+		gui_container_.Pack(level3_button);
 
 		// default to Random selected
 		random_button->Activate();
@@ -136,7 +150,10 @@ GameState<WorldClass>::GameState(StateStack& stack, Context context) :
 		});
 
 	gui_container_.Pack(exit_button);
-	gui_container_.Pack(verbose_button);
+	//gui_container_.Pack(verbose_button);
+
+	if(is_host_)
+		gui_container_.Pack(random_button);
 	
 	//context.music->Play(MusicThemes::kLevelTheme); // REMEMBER TO TURN THIS BACK ON THANK YOU :3
 }

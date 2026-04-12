@@ -2,7 +2,8 @@
 enum class TileID {
 	kSand,
 	kGrass,
+	kBrick,
 
-
-	kSlime
+	kSlime,
+	kSpike
 };

@@ -161,6 +161,9 @@ void GameWorld::PlayLevelMusic() {
     case 2:
         GetState()->GetContext().music->Play(MusicThemes::kGrassLevelTheme);
         break;
+    case 3:
+        GetState()->GetContext().music->Play(MusicThemes::kBrickLevelTheme);
+        break;
     default:
         GetState()->GetContext().music->Play(MusicThemes::kSandLevelTheme);
         break;

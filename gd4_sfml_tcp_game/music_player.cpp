@@ -6,6 +6,7 @@ MusicPlayer::MusicPlayer()
 	filenames_[MusicThemes::kMenuTheme] = "Media/Music/Menu/MenuTheme.mp3";
 	filenames_[MusicThemes::kSandLevelTheme] = "Media/Music/Game/1.mp3";
 	filenames_[MusicThemes::kGrassLevelTheme] = "Media/Music/Game/2.mp3";
+	filenames_[MusicThemes::kBrickLevelTheme] = "Media/Music/Game/3.mp3";
 	filenames_[MusicThemes::kLobbyTheme] = "Media/Music/Menu/LobbyTheme.wav";
 }
 

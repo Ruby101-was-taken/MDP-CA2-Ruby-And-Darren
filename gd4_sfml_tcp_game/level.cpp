@@ -13,6 +13,7 @@
 
 std::vector<sf::FloatRect> Level::level_tiles_;
 std::vector<sf::FloatRect> Level::bounce_tiles_;
+std::vector<sf::FloatRect> Level::spike_tiles_;
 std::vector<sf::Vector2f> Level::star_spawn_spots_;
 sf::RenderTexture Level::level_texture_;
 
@@ -34,10 +35,14 @@ void Level::LoadTileSheets() {
     // which level use this tileset
     level_tile_types_[2] = TileID::kGrass;
 
+    // load brick
+    tile_sheets_.Load(TileID::kBrick, "Media/Textures/Level/TileSheets/Brick.png");
+    // which level use this tileset
+    level_tile_types_[3] = TileID::kBrick;
 
 
-    // load grass
     tile_sheets_.Load(TileID::kSlime, "Media/Textures/Level/TileSheets/Slime.png");
+    tile_sheets_.Load(TileID::kSpike, "Media/Textures/Level/TileSheets/Spike.png");
 }
 
 void Level::LoadLevel(const int& level_id) {
@@ -86,6 +91,7 @@ void Level::LoadLevel(const int& level_id) {
 
     level_tiles_.clear();
     bounce_tiles_.clear();
+    spike_tiles_.clear();
     network_spawn_points_.clear();
     star_spawn_spots_.clear();
 
@@ -267,6 +273,12 @@ void Level::AddTile(int x, int y, int size, int id, sf::Sprite& tile, std::vecto
         RenderAndEmplaceTile(bounce_tiles_, position, x, y, size, neighbour_ids, tile, data);
         tile.setTexture(tile_sheets_.Get(base_tile_type));
     }
+    if (id == 7) { // spike tile
+        std::vector<int> neighbour_ids = { 0, 7 };
+        tile.setTexture(tile_sheets_.Get(TileID::kSpike));
+        RenderAndEmplaceTile(spike_tiles_, position, x, y, size, neighbour_ids, tile, data);
+        tile.setTexture(tile_sheets_.Get(base_tile_type));
+    }
 }
 
 
@@ -293,6 +305,20 @@ bool Level::CheckGimmickCollisions(BoxColliderBehaviour* collider) {
             if (player_movement) {
                 player_movement->GetVelocity().y = -10;
                 player_movement->RemoveCoyoteTime(); // prevents players from jumping after bounce
+            }
+            return true;
+        }
+    }
+
+    for (const sf::FloatRect& rect : spike_tiles_) {
+        auto intersection = rect.findIntersection(collider->GetWorldBounds());
+        if (intersection) {
+            PlayerMovementBehaviour* player_movement = static_cast<Player*>(collider->GetNode())->FindAttachable<PlayerMovementBehaviour>();
+            if (player_movement) {
+                if (player_movement->CanBeHit()) {
+                    player_movement->TryLoseStar();
+                    player_movement->MakeInvincible(2.f);
+                }
             }
             return true;
         }
