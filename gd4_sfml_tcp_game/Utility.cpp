@@ -4,6 +4,9 @@
 #include <fstream>
 #include <iostream>
 
+
+std::string Utility::last_winner_;
+
 namespace
 {
 	std::default_random_engine CreateRandomEngine()
@@ -264,6 +267,33 @@ std::string Utility::GetUserNameFromFile() {
 	std::string new_name = player + std::to_string(rand()); // makes it so each random name is set to be Player{random numbers}
 	output_file << new_name;
 	return new_name;
+}
+
+std::string Utility::GetLastWinnerUserName() {
+
+	if (last_winner_.length() > 0)
+		return last_winner_;
+
+	//Try to open existing file
+	std::ifstream input_file("Data/LastWinnerUsername.txt");
+	std::string name;
+	if (input_file >> name) {
+		if (name.length() > 0)
+			return name;
+	}
+
+	//If the open/read failed or name too short, create a new file
+	SetLastWinnerUserName("");
+
+	return "";
+}
+
+void Utility::SetLastWinnerUserName(std::string name) {
+	std::ofstream output_file("Data/LastWinnerUsername.txt");
+	std::string player = name;
+	output_file << player;
+
+	last_winner_ = name;
 }
 
 sf::Color Utility::GetUserColourFromFile() {

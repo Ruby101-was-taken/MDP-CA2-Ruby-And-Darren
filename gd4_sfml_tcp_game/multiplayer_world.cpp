@@ -217,6 +217,11 @@ void MultiplayerWorld::HandlePacketType(Server::PacketType type, sf::Packet& dat
 		if (id != id_) {
 			SetWinningPlayer(ReceiverCategories::kOnlineNetworkedPlayer);
 		}
+		if (is_host_) {
+			std::string winner;
+			data >> winner;
+			Utility::SetLastWinnerUserName(winner);
+		}
 		break;
 		// Darren Meidl - D00255479
 	case Server::PacketType::kPlayerInputEvent:
@@ -256,6 +261,7 @@ void MultiplayerWorld::PrepareLevel() {
 }
 
 void MultiplayerWorld::StartGame() {
+	std::string winner = Utility::GetLastWinnerUserName();
 	if (is_host_) {
 
 		PrepareLevel();
@@ -264,7 +270,11 @@ void MultiplayerWorld::StartGame() {
 		for (PlayerInfo info : GetState()->GetNames()) {
 			sf::Vector2f spawn = Level::GetNextNetworkPlayerSpawnPosition();
 
-			Player* newPlayer = AddPlayer((username_ != info.username) ? PlayerType::kOnlineNetworkedPlayer : PlayerType::kOnlineLocalPlayer, spawn, info.username, info.colour);
+			bool is_winner = info.username == winner;
+
+			std::cout << "[MultiplayerWorld]" << info.username << "==" << winner << " = " << is_winner << std::endl;
+
+			Player* newPlayer = AddPlayer((username_ != info.username) ? PlayerType::kOnlineNetworkedPlayer : PlayerType::kOnlineLocalPlayer, spawn, info.username, info.colour, is_winner);
 
 			network_players_[info.id] = newPlayer; // keep mapping (host only)
 
@@ -278,6 +288,8 @@ void MultiplayerWorld::StartGame() {
 			new_player_packet << static_cast<uint8_t>(info.colour.r);
 			new_player_packet << static_cast<uint8_t>(info.colour.g);
 			new_player_packet << static_cast<uint8_t>(info.colour.b);
+
+			new_player_packet << is_winner;
 
 			SendPacket(new_player_packet);
 		}
@@ -328,7 +340,11 @@ void MultiplayerWorld::TellHostIGotStar() {
 void MultiplayerWorld::IWon() {
 	sf::Packet win = Utility::CreatePacket(Server::PacketType::kIWon);
 	win << static_cast<uint8_t>(id_);
+	win << username_;
 	SendPacket(win);
+
+	if(is_host_)
+		Utility::SetLastWinnerUserName(username_);
 }
 
 void MultiplayerWorld::HandleGameStart(sf::Packet& data) {
@@ -393,15 +409,17 @@ void MultiplayerWorld::HandleSpawnPlayer(sf::Packet& data) {
 		colour.g = static_cast<uint8_t>(g);
 		colour.b = static_cast<uint8_t>(b);
 	}
+	bool is_winner;
+	data >> is_winner;
 
 	sf::Vector2f spawn(x, y); // Create spawn vector
 	// Local player 
-	if (name == Utility::GetUserNameFromFile()) {
-		Player* p = AddPlayer(PlayerType::kOnlineLocalPlayer, spawn, name);
+	if (name == Utility::GetUserNameFromFile()) { //     colour is ignored by non networked players so sure we can still pass it in
+		Player* p = AddPlayer(PlayerType::kOnlineLocalPlayer, spawn, name, colour, is_winner);
 		network_players_[static_cast<int>(id)] = p;
 	} // Other networked player
 	else {
-		Player* p = AddPlayer(PlayerType::kOnlineNetworkedPlayer, spawn, name, colour);
+		Player* p = AddPlayer(PlayerType::kOnlineNetworkedPlayer, spawn, name, colour, is_winner);
 		network_players_[static_cast<int>(id)] = p;
 	}
 }

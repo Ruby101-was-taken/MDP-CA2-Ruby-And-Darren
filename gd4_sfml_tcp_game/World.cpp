@@ -139,6 +139,8 @@ void World::SetCameraSize(sf::Vector2f position) {
 
 void World::LoadTextures()
 {
+	textures_.Load(TextureID::kPlayerCrown, "Media/Textures/Player/Crown/Crown_Sheet.png");
+
 	textures_.Load(TextureID::kPlayerOne, "Media/Textures/Player/One/Idle.png");
 	textures_.Load(TextureID::kPlayerOneSheet, "Media/Textures/Player/One/Sheet.png");
 

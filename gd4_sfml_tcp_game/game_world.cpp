@@ -130,7 +130,7 @@ Player* GameWorld::AddPlayer(PlayerType type, sf::Vector2f spawn, std::string na
     return player_ptr;
 }
 
-Player* GameWorld::AddPlayer(PlayerType type, sf::Vector2f spawn, std::string name, sf::Color colour) {
+Player* GameWorld::AddPlayer(PlayerType type, sf::Vector2f spawn, std::string name, sf::Color colour, bool is_winner) {
     auto player = std::make_unique<Player>( // Make player
         textures_,
         fonts_,
@@ -138,7 +138,8 @@ Player* GameWorld::AddPlayer(PlayerType type, sf::Vector2f spawn, std::string na
         spawn.y,
         type,
         name,
-        colour
+        colour,
+        is_winner
     );
     Player* player_ptr = player.get(); // Assign player pointer
     // Handle local player types

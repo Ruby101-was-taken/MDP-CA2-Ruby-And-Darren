@@ -7,7 +7,7 @@
 
 class Player: public SceneNode {
 public:
-	Player(const TextureHolder& textures, const FontHolder& fonts, float x = 0.f, float y = 0.f, PlayerType type = PlayerType::kPlayerOne, std::string name = "", sf::Color colour = sf::Color::White);
+	Player(const TextureHolder& textures, const FontHolder& fonts, float x = 0.f, float y = 0.f, PlayerType type = PlayerType::kPlayerOne, std::string name = "", sf::Color colour = sf::Color::White, bool is_winner = false);
 
 	void UpdateCurrent(sf::Time dt, CommandQueue& commands) override;
 

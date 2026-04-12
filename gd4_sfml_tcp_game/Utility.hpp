@@ -28,6 +28,8 @@ class Utility
 		static std::string RGBToHex(sf::Color& colour);
 		static uint8_t HexToInt(std::string hex);
 		static std::string GetUserNameFromFile();
+		static std::string GetLastWinnerUserName();
+		static void SetLastWinnerUserName(std::string name);
 		static sf::Color GetUserColourFromFile();
 		static sf::IpAddress GetAddressFromFile();
 		static unsigned short GetPortFromFile();
@@ -36,5 +38,9 @@ class Utility
 		static void PrintStatusError(sf::Socket::Status status, std::string name, bool print_successes = false);
 
 		static bool CheckIfFolderExists(const char* dir);
+
+private:
+
+	static std::string last_winner_;
 };
 

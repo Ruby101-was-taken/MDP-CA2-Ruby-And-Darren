@@ -18,6 +18,9 @@ enum class TextureID
 	kOnlinePlayerLocalVictoryLayer2,
 	kOnlinePlayerNetworkedVictoryLayer2,
 
+
+	kPlayerCrown,
+
 	kTitleScreen,
 
 	kLevelBackdrop,
