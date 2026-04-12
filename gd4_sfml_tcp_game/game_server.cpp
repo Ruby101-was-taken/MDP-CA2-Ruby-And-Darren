@@ -25,7 +25,7 @@ GameServer::~GameServer() {
 void GameServer::ExecutionThread() {
         
    
-    sf::Time tick_rate = sf::seconds(1.f / 20.f); // Old: 20.f
+    sf::Time tick_rate = sf::seconds(1.f / 20.f);
     sf::Time tick_time = sf::Time::Zero;
     sf::Clock tick_clock;
 
