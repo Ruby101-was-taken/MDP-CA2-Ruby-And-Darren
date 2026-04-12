@@ -20,7 +20,7 @@ MultiplayerWorld::MultiplayerWorld(sf::RenderTarget& output_target, FontHolder& 
 	prev_right_(false),
 	prev_jump_(false),
 	input_update_interval_(1.f / 20.f), // match server tick-rate for input polling
-	state_update_interval_(1.f / 20.f) // 10 updates per second for periodic state updates
+	state_update_interval_(1.f / 5.f) // 10 updates per second for periodic state updates
 {
 	StartBuildScene();
 }

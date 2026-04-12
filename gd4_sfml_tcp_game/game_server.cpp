@@ -41,7 +41,7 @@ void GameServer::ExecutionThread() {
         }
 
         // Use a short selector timeout so we service sockets frequently (e.g. 5ms)
-        if (selector_.wait(sf::milliseconds(5))) {
+        if (selector_.wait(sf::milliseconds(0))) {
             if (selector_.isReady(listener_socket_)) {
                 auto client = std::make_unique<sf::TcpSocket>();
                 if (listener_socket_.accept(*client) == sf::Socket::Status::Done) {
