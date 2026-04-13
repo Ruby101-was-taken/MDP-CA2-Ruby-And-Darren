@@ -530,11 +530,11 @@ void MultiplayerWorld::HandlePlayerStateUpdate(sf::Packet& data) {
 	Player* p = GetPlayerByID(static_cast<int>(id));
 	if (p) {
 		// Apply a small smoothing to reduce jitter on clients (lerp rather than teleport)
-		const float lerp_factor = 0.6f; // tune between 0 (no move) and 1 (teleport)
+		//const float lerp_factor = 0.6f; // tune between 0 (no move) and 1 (teleport)
 		sf::Vector2f current = p->getPosition();
 		sf::Vector2f target(pos_x, pos_y);
-		sf::Vector2f newpos = current + (target - current) * lerp_factor;
-		p->setPosition(newpos); // apply smoothed position
+		//sf::Vector2f newpos = current + (target - current) * lerp_factor;
+		p->setPosition(target); // apply smoothed position
 
 		// Apply velocity to the PlayerMovementBehaviour so animation (jump/fall) can react
 		if (auto pm = p->FindAttachable<PlayerMovementBehaviour>()) {
