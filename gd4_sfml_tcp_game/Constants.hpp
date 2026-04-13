@@ -10,7 +10,7 @@ constexpr unsigned int WINDOW_HEIGHT = 720;
 // found here: https://stackoverflow.com/questions/27123306/is-it-possible-to-use-stdstring-in-a-constant-expression [24/01/2026]
 constexpr std::string_view WINDOW_TITLE = "YES!!!! YOU GUESSED IT... TODAY IS THAT DAY!!! 2";
 
-const std::string GAME_VERSION = "VER 1.0";
+const std::string GAME_VERSION = "VER 1.1";
 #pragma endregion
 
 #pragma region Player Start Positions

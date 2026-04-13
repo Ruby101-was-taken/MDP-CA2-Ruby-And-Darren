@@ -41,30 +41,33 @@ void GameServer::ExecutionThread() {
         }
 
         
-        if (selector_.wait(sf::milliseconds(0))) {
-            if (selector_.isReady(listener_socket_)) {
-                auto client = std::make_unique<sf::TcpSocket>();
-                if (listener_socket_.accept(*client) == sf::Socket::Status::Done) {
-                    // Darren Meidl - D00255479 - If joining disabled: explicitly send a rejection packet & close socket
-                    if (!allow_player_join_) {
-                        std::cout << "[Server]: Incoming connection while game started: rejecting player." << std::endl;
-                        sf::Packet reject = Utility::CreatePacket(Server::PacketType::kNameTaken);
-                        uint8_t error_code = 2; // 2 == game already started
-                        reject << error_code;
-                        client->send(reject);
-                        continue;
+            if (allow_player_join_) {
+                if(selector_.wait(sf::microseconds(0))){
+                    if (selector_.isReady(listener_socket_)) {
+                        auto client = std::make_unique<sf::TcpSocket>();
+                        if (listener_socket_.accept(*client) == sf::Socket::Status::Done) {
+                            // Darren Meidl - D00255479 - If joining disabled: explicitly send a rejection packet & close socket
+                            if (!allow_player_join_) {
+                                std::cout << "[Server]: Incoming connection while game started: rejecting player." << std::endl;
+                                sf::Packet reject = Utility::CreatePacket(Server::PacketType::kNameTaken);
+                                uint8_t error_code = 2; // 2 == game already started
+                                reject << error_code;
+                                client->send(reject);
+                                continue;
+                            }
+
+                            sf::Packet new_id = Utility::CreatePacket(Server::PacketType::kWhatIsMyID);
+                            new_id << static_cast<uint8_t>(next_id_++);
+                            client->send(new_id);
+
+                            std::cout << "[Server]: Register client with id of: " << next_id_ - 1 << std::endl;
+
+                            client->setBlocking(false);
+                            selector_.add(*client);
+                            clients_.push_back(std::move(client));
+
+                        }
                     }
-
-                    sf::Packet new_id = Utility::CreatePacket(Server::PacketType::kWhatIsMyID);
-                    new_id << static_cast<uint8_t>(next_id_++);
-                    client->send(new_id);
-
-                    std::cout << "[Server]: Register client with id of: " << next_id_ - 1 << std::endl;
-
-                    client->setBlocking(false);
-                    selector_.add(*client);
-                    clients_.push_back(std::move(client));
-
                 }
             }
 
@@ -74,7 +77,6 @@ void GameServer::ExecutionThread() {
                 sf::TcpSocket* client = clientPtr.get();
                 if (!client) continue;
 
-                if (selector_.isReady(*client)) {
                     sf::Packet data;
                     sf::Socket::Status recvStatus = client->receive(data);
 
@@ -116,7 +118,7 @@ void GameServer::ExecutionThread() {
                         default:
                             break;
                     }
-                }
+                
             }
             // remove disconnected client entries from clients_ (safe to modify now)
             if (!disconnected.empty()) {
@@ -127,10 +129,6 @@ void GameServer::ExecutionThread() {
                         }),
                     clients_.end());
             }
-        }
-        else {
-            // timeout reached, nothing was received...
-        }
     }
 }
 
