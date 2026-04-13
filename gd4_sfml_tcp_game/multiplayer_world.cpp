@@ -20,8 +20,8 @@ MultiplayerWorld::MultiplayerWorld(sf::RenderTarget& output_target, FontHolder& 
 	prev_left_(false),
 	prev_right_(false),
 	prev_jump_(false),
-	input_update_interval_(1.f / 20.f), // match server tick-rate for input polling
-	state_update_interval_(1.f / 5.f) // 10 updates per second for periodic state updates
+	input_update_interval_(1.f / 60.f), // match server tick-rate for input polling
+	state_update_interval_(1.f / 60.f) // 10 updates per second for periodic state updates
 {
 	StartBuildScene();
 }
@@ -135,7 +135,7 @@ void MultiplayerWorld::UpdateCurrent() {
 	bool cur_jump = InputManager::InputIsPressed(InputTypes::kPlayerOneUp);
 
 	if (input_update_clock_.getElapsedTime().asSeconds() >= input_update_interval_) {
-		SendStateUpdate(); // TODO: Only send upon position or velocity change
+		//SendStateUpdate(); // TODO: Only send upon position or velocity change
 		//// Periodic state update to ensure correct position on clients
 		if (state_update_clock_.getElapsedTime().asSeconds() >= state_update_interval_) {
 			SendStateUpdate();
@@ -483,25 +483,30 @@ void MultiplayerWorld::HandleOtherPlayerGetStar(sf::Packet& data) {
 }
 
 void MultiplayerWorld::HandlePlayerInputEvent(sf::Packet& data) {
-	uint8_t id;
-	uint8_t action_u;
-	uint8_t started_u;
+	//amount of state changes
+	uint8_t count;
+	data >> count;
+	for (uint8_t i = 0; i < count; i++) {
+		uint8_t id;
+		uint8_t action_u;
+		uint8_t started_u;
 
-	data >> id;
-	data >> action_u;
+		data >> id;
+		data >> action_u;
 
-	Action action = static_cast<Action>(action_u); // create action from packet data
+		Action action = static_cast<Action>(action_u); // create action from packet data
 
-	Player* p = GetPlayerByID(static_cast<int>(id));
-	if (p) {
-		auto pm = p->FindAttachable<PlayerMovementBehaviour>();
-		if (pm) {
-			if (data >> started_u) {
-				bool started = static_cast<bool>(started_u); // create started bool from packet data
-				pm->ApplyRemoteEvent(action, started);
+		Player* p = GetPlayerByID(static_cast<int>(id));
+		if (p) {
+			auto pm = p->FindAttachable<PlayerMovementBehaviour>();
+			if (pm) {
+				if (data >> started_u) {
+					bool started = static_cast<bool>(started_u); // create started bool from packet data
+					pm->ApplyRemoteEvent(action, started);
+				}
+				else
+					pm->ApplyRemoteEvent(action);
 			}
-			else
-				pm->ApplyRemoteEvent(action);
 		}
 	}
 }
@@ -568,6 +573,7 @@ void MultiplayerWorld::SendInputEvent(Action action) {
 	sf::Packet packet = Utility::CreatePacket(Server::PacketType::kPlayerInputEvent); // 1 byte
 	packet << static_cast<uint8_t>(id_); // 1 byte
 	packet << static_cast<uint8_t>(action); // 1 byte
+	packet << static_cast<uint8_t>(1); // 1 byte
 	SendPacket(packet);
 }
 // Darren Meidl - D00255479 - Function to send periodic state updates to server

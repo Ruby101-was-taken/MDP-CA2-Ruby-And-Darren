@@ -11,6 +11,7 @@
 #include <cstdint>
 #include <map>
 #include <unordered_map>
+#include <vector>
 
 class GameServer {
 public:
@@ -34,15 +35,22 @@ private:
 	void HandleSpawnPlayer(sf::Packet& data);
 	void HandleRemovePlayer(sf::Packet& data); // Darren Meidl - D00255479
 	void HandlePlayerState(sf::Packet& data);
+	void HandlePlayerInput(sf::Packet& data);
 #pragma endregion
 
 	void SendStateUpdateToClients();
+
+	void SendInputToClients();
 
 private:
 	struct PlayerState {
 		uint8_t id;
 		int16_t x, y;
 		int8_t vx, vy;
+	};
+	struct PlayerInput {
+		uint8_t id;
+		uint8_t action, started;
 	};
 
 private:
@@ -64,5 +72,6 @@ private:
 	int next_id_ = 0; 
 
 	std::unordered_map<uint8_t, PlayerState> all_states_;
+	std::vector<PlayerInput> all_inputs_;
 };
 

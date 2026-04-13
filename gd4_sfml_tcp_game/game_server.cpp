@@ -134,6 +134,7 @@ void GameServer::ExecutionThread() {
 
 void GameServer::Tick() {
     SendStateUpdateToClients();
+    SendInputToClients();
 }
 
 // Broadcast to all clients, optionally excluding one socket (e.g. the original sender)
@@ -188,7 +189,7 @@ void GameServer::HandlePacketType(Server::PacketType type, sf::Packet& data, sf:
         SendPacketToAll(data);
         break;
     case Server::PacketType::kPlayerInputEvent:
-        SendPacketToAll(data, client_socket);
+        HandlePlayerInput(data);
         break;
     case Server::PacketType::kPlayerStateUpdate:
         HandlePlayerState(data);
@@ -304,6 +305,19 @@ void GameServer::HandlePlayerState(sf::Packet& data) {
     PlayerState new_state = { id, x, y, vx, vy };
     all_states_[id]=new_state;
 }
+void GameServer::HandlePlayerInput(sf::Packet& data) {
+    uint8_t id;
+    uint8_t action_u;
+    uint8_t started_u;
+
+    data >> id;
+    data >> action_u;
+    data >> started_u;
+
+    PlayerInput new_input = { id, action_u, started_u };
+    all_inputs_.emplace_back(new_input);
+
+}
 void GameServer::SendStateUpdateToClients() {
     if (all_states_.empty())
         return;
@@ -312,7 +326,7 @@ void GameServer::SendStateUpdateToClients() {
 
     // number of players
     packet << static_cast<uint8_t>(all_states_.size());
-    std::cout << all_states_.size() << " size" << std::endl;
+
     for (const auto& [id, state] : all_states_) {
         packet << state.id;
         packet << state.x;
@@ -324,5 +338,24 @@ void GameServer::SendStateUpdateToClients() {
     SendPacketToAll(packet);
 
     all_states_.clear();
+}
+void GameServer::SendInputToClients() {
+    if (all_inputs_.empty())
+        return;
+
+    sf::Packet packet = Utility::CreatePacket(Server::PacketType::kPlayerInputEvent);
+
+    // number of players
+    packet << static_cast<uint8_t>(all_inputs_.size());
+    std::cout << all_inputs_.size() << " size" << std::endl;
+    for (const auto& state : all_inputs_) {
+        packet << state.id;
+        packet << state.action;
+        packet << state.started;
+    }
+
+    SendPacketToAll(packet);
+
+    all_inputs_.clear();
 }
 #pragma endregion
