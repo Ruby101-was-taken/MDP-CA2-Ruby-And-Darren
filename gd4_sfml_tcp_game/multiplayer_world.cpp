@@ -136,7 +136,6 @@ void MultiplayerWorld::UpdateCurrent() {
 
 	if (input_update_clock_.getElapsedTime().asSeconds() >= input_update_interval_) {
 
-		std::printf("[MultiplayerWorld]: Send input");
 		// Left change
 		if (cur_left != prev_left_) {
 			SendInputEvent(Action::kMoveLeft, cur_left);
