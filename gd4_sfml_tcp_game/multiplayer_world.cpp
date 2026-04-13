@@ -137,28 +137,27 @@ void MultiplayerWorld::UpdateCurrent() {
 	if (input_update_clock_.getElapsedTime().asSeconds() >= input_update_interval_) {
 		SendStateUpdate(); // TODO: Only send upon position or velocity change
 		//// Periodic state update to ensure correct position on clients
-		//if (state_update_clock_.getElapsedTime().asSeconds() >= state_update_interval_) {
-		//	SendStateUpdate();
-		//	state_update_clock_.restart();
-		//	return;
-		//}
-		//
-		//std::printf("[MultiplayerWorld]: Send input");
-		//// Left change
-		//if (cur_left != prev_left_) {
-		//	SendInputEvent(Action::kMoveLeft, cur_left);
-		//	prev_left_ = cur_left;
-		//}
-		//// Right change
-		//else if (cur_right != prev_right_) {
-		//	SendInputEvent(Action::kMoveRight, cur_right);
-		//	prev_right_ = cur_right;
-		//}
-		//// Jump: treat as a discrete event on press
-		//else if (cur_jump && !prev_jump_) {
-		//	SendInputEvent(Action::kMoveUp);
-		//}
-		//prev_jump_ = cur_jump;
+		if (state_update_clock_.getElapsedTime().asSeconds() >= state_update_interval_) {
+			SendStateUpdate();
+			state_update_clock_.restart();
+			return;
+		}
+		
+		// Left change
+		if (cur_left != prev_left_) {
+			SendInputEvent(Action::kMoveLeft, cur_left);
+			prev_left_ = cur_left;
+		}
+		// Right change
+		else if (cur_right != prev_right_) {
+			SendInputEvent(Action::kMoveRight, cur_right);
+			prev_right_ = cur_right;
+		}
+		// Jump: treat as a discrete event on press
+		else if (cur_jump && !prev_jump_) {
+			SendInputEvent(Action::kMoveUp);
+		}
+		prev_jump_ = cur_jump;
 
 		
 
@@ -508,37 +507,48 @@ void MultiplayerWorld::HandlePlayerInputEvent(sf::Packet& data) {
 }
 
 void MultiplayerWorld::HandlePlayerStateUpdate(sf::Packet& data) {
-	// read id
-	uint8_t id;
-	data >> id;
-	// Ignore updates for local player
-	if (static_cast<int>(id) == id_)
-		return;
-	// read position
-	int16_t x, y;
-	int8_t vy = 0;
-	data >> x;
-	data >> y;
-	// read velocity
-	if (!(data >> vy))
-		vy = 0;
-	// convert back to floats
-	float pos_x = x / 10.f;
-	float pos_y = y / 10.f; 
-	float vel_y = vy / 10.f; 
+	//amount of state changes
+	uint8_t count;
+	data >> count;
+	std::cout << static_cast<int>(count) << std::endl;
+	for (uint8_t i = 0; i < count; i++) {
+		// read id
+		uint8_t id;
+		data >> id;
+		// read position
+		int16_t x, y;
+		int8_t vx, vy = 0;
+		data >> x;
+		data >> y;
+		// read velocity
+		if (!(data >> vx)) vx = 0;
+		if (!(data >> vy)) vy = 0;
 
-	Player* p = GetPlayerByID(static_cast<int>(id));
-	if (p) {
-		// Apply a small smoothing to reduce jitter on clients (lerp rather than teleport)
-		//const float lerp_factor = 0.6f; // tune between 0 (no move) and 1 (teleport)
-		sf::Vector2f current = p->getPosition();
-		sf::Vector2f target(pos_x, pos_y);
-		//sf::Vector2f newpos = current + (target - current) * lerp_factor;
-		p->setPosition(target); // apply smoothed position
 
-		// Apply velocity to the PlayerMovementBehaviour so animation (jump/fall) can react
-		if (auto pm = p->FindAttachable<PlayerMovementBehaviour>()) {
-			pm->GetVelocity().y = vel_y;
+		// Ignore updates for local player
+		if (static_cast<int>(id) == id_)
+			return;
+
+		// convert back to floats
+		float pos_x = x / 10.f;
+		float pos_y = y / 10.f;
+		float vel_x = vx / 10.f;
+		float vel_y = vy / 10.f;
+
+		Player* p = GetPlayerByID(static_cast<int>(id));
+		if (p) {
+			// Apply a small smoothing to reduce jitter on clients (lerp rather than teleport)
+			//const float lerp_factor = 0.6f; // tune between 0 (no move) and 1 (teleport)
+			sf::Vector2f current = p->getPosition();
+			sf::Vector2f target(pos_x, pos_y);
+			//sf::Vector2f newpos = current + (target - current) * lerp_factor;
+			p->setPosition(target); // apply smoothed position
+
+			// Apply velocity to the PlayerMovementBehaviour so animation (jump/fall) can react
+			if (auto pm = p->FindAttachable<PlayerMovementBehaviour>()) {
+				pm->GetVelocity().x = vel_x;
+				pm->GetVelocity().y = vel_y;
+			}
 		}
 	}
 }
@@ -577,6 +587,7 @@ void MultiplayerWorld::SendStateUpdate() {
 	packet << static_cast<uint8_t>(id_); // 1 byte
 	packet << static_cast<int16_t>(pos.x * 10); // 2 byte
 	packet << static_cast<int16_t>(pos.y * 10); // 2 byte
+	packet << static_cast<int8_t>(vel.x * 10); // 1 byte
 	packet << static_cast<int8_t>(vel.y * 10); // 1 byte
 	//std::cout << "[MultiplayerWorld]: Sending state update. Position: " << pos.x << ", " << pos.y << " Velocity: " << vel.x << ", " << vel.y << std::endl;
 	if (SendPacket(packet) == sf::Socket::Status::Disconnected and not is_host_) { // disconnect clients when they lose connection

@@ -3,12 +3,14 @@
 #include <SFML/Network/TcpSocket.hpp>
 #include <SFML/Network/TcpListener.hpp>
 #include <SFML/Network/SocketSelector.hpp>
+#include <SFML/Network/Packet.hpp>
 #include <SFML/System/Clock.hpp>
 #include <SFML/Graphics/Rect.hpp>
 #include "network_protocol.hpp"
 #include <thread>
 #include <cstdint>
 #include <map>
+#include <unordered_map>
 
 class GameServer {
 public:
@@ -31,7 +33,17 @@ private:
 	void HandlePlayerLeave(sf::Packet& data, sf::TcpSocket* client_socket); // Darren Meidl - D00255479
 	void HandleSpawnPlayer(sf::Packet& data);
 	void HandleRemovePlayer(sf::Packet& data); // Darren Meidl - D00255479
+	void HandlePlayerState(sf::Packet& data);
 #pragma endregion
+
+	void SendStateUpdateToClients();
+
+private:
+	struct PlayerState {
+		uint8_t id;
+		int16_t x, y;
+		int8_t vx, vy;
+	};
 
 private:
 	std::thread thread_;
@@ -50,5 +62,7 @@ private:
 	bool allow_player_join_;
 
 	int next_id_ = 0; 
+
+	std::unordered_map<uint8_t, PlayerState> all_states_;
 };
 

@@ -25,7 +25,7 @@ GameServer::~GameServer() {
 void GameServer::ExecutionThread() {
         
    
-    sf::Time tick_rate = sf::seconds(1.f / 20.f);
+    sf::Time tick_rate = sf::seconds(1.f / 60.f);
     sf::Time tick_time = sf::Time::Zero;
     sf::Clock tick_clock;
 
@@ -41,98 +41,99 @@ void GameServer::ExecutionThread() {
         }
 
         
-            if (allow_player_join_) {
-                if(selector_.wait(sf::microseconds(0))){
-                    if (selector_.isReady(listener_socket_)) {
-                        auto client = std::make_unique<sf::TcpSocket>();
-                        if (listener_socket_.accept(*client) == sf::Socket::Status::Done) {
-                            // Darren Meidl - D00255479 - If joining disabled: explicitly send a rejection packet & close socket
-                            if (!allow_player_join_) {
-                                std::cout << "[Server]: Incoming connection while game started: rejecting player." << std::endl;
-                                sf::Packet reject = Utility::CreatePacket(Server::PacketType::kNameTaken);
-                                uint8_t error_code = 2; // 2 == game already started
-                                reject << error_code;
-                                client->send(reject);
-                                continue;
-                            }
-
-                            sf::Packet new_id = Utility::CreatePacket(Server::PacketType::kWhatIsMyID);
-                            new_id << static_cast<uint8_t>(next_id_++);
-                            client->send(new_id);
-
-                            std::cout << "[Server]: Register client with id of: " << next_id_ - 1 << std::endl;
-
-                            client->setBlocking(false);
-                            selector_.add(*client);
-                            clients_.push_back(std::move(client));
-
+        if (allow_player_join_) {
+            if(selector_.wait(sf::microseconds(0))){
+                if (selector_.isReady(listener_socket_)) {
+                    auto client = std::make_unique<sf::TcpSocket>();
+                    if (listener_socket_.accept(*client) == sf::Socket::Status::Done) {
+                        // Darren Meidl - D00255479 - If joining disabled: explicitly send a rejection packet & close socket
+                        if (!allow_player_join_) {
+                            std::cout << "[Server]: Incoming connection while game started: rejecting player." << std::endl;
+                            sf::Packet reject = Utility::CreatePacket(Server::PacketType::kNameTaken);
+                            uint8_t error_code = 2; // 2 == game already started
+                            reject << error_code;
+                            client->send(reject);
+                            continue;
                         }
+
+                        sf::Packet new_id = Utility::CreatePacket(Server::PacketType::kWhatIsMyID);
+                        new_id << static_cast<uint8_t>(next_id_++);
+                        client->send(new_id);
+
+                        std::cout << "[Server]: Register client with id of: " << next_id_ - 1 << std::endl;
+
+                        client->setBlocking(false);
+                        selector_.add(*client);
+                        clients_.push_back(std::move(client));
+
                     }
                 }
             }
+        }
 
-            // service client sockets; collect disconnected sockets & remove them after iterating
-            std::vector<sf::TcpSocket*> disconnected;
-            for (auto& clientPtr : clients_) {
-                sf::TcpSocket* client = clientPtr.get();
-                if (!client) continue;
+        // service client sockets; collect disconnected sockets & remove them after iterating
+        std::vector<sf::TcpSocket*> disconnected;
+        for (auto& clientPtr : clients_) {
+            sf::TcpSocket* client = clientPtr.get();
+            if (!client) continue;
 
-                    sf::Packet data;
-                    sf::Socket::Status recvStatus = client->receive(data);
+                sf::Packet data;
+                sf::Socket::Status recvStatus = client->receive(data);
 
-                    switch (recvStatus) {
-                        case sf::Socket::Status::Done: { // Ruby White - D00255322
-                            uint8_t type;
-                            data >> type;
-                            HandlePacketType(static_cast<Server::PacketType>(type), data, client);
-                            // move to next client
-                            continue;
-                        }
-						case sf::Socket::Status::Disconnected: { // Darren Meidl - D00255479
-							std::cout << "[Server]: Socket disconnected." << std::endl;
-							auto nameIt = client_names_.find(client); // find the name associated with this socket, if we have it
-                            if (nameIt != client_names_.end()) {
-								std::cout << "[Server]: Client '" << nameIt->second << "' disconnected." << std::endl;
-                                const std::string& name = nameIt->second;
-
-                                // notify host (lobby) so it can remove the name
-                                sf::Packet leave_lobby = Utility::CreatePacket(Server::PacketType::kPlayerLeave);
-                                leave_lobby << name;
-                                SendPacketToHost(leave_lobby);
-                                // notify all clients to remove any in-game player
-                                sf::Packet remove_player = Utility::CreatePacket(Server::PacketType::kRemovePlayer);
-                                remove_player << name;
-                                SendPacketToAll(remove_player);
-
-                                client_names_.erase(nameIt);
-                            }
-                            // remove from selector and mark for deletion from clients_
-                            selector_.remove(*client);
-                            disconnected.push_back(client);
-                            // move to next client
-                            continue;
-                        }
-                        case sf::Socket::Status::NotReady:
-                        case sf::Socket::Status::Partial:
-                        case sf::Socket::Status::Error:
-                        default:
-                            break;
+                switch (recvStatus) {
+                    case sf::Socket::Status::Done: { // Ruby White - D00255322
+                        uint8_t type;
+                        data >> type;
+                        HandlePacketType(static_cast<Server::PacketType>(type), data, client);
+                        // move to next client
+                        continue;
                     }
+					case sf::Socket::Status::Disconnected: { // Darren Meidl - D00255479
+						std::cout << "[Server]: Socket disconnected." << std::endl;
+						auto nameIt = client_names_.find(client); // find the name associated with this socket, if we have it
+                        if (nameIt != client_names_.end()) {
+							std::cout << "[Server]: Client '" << nameIt->second << "' disconnected." << std::endl;
+                            const std::string& name = nameIt->second;
+
+                            // notify host (lobby) so it can remove the name
+                            sf::Packet leave_lobby = Utility::CreatePacket(Server::PacketType::kPlayerLeave);
+                            leave_lobby << name;
+                            SendPacketToHost(leave_lobby);
+                            // notify all clients to remove any in-game player
+                            sf::Packet remove_player = Utility::CreatePacket(Server::PacketType::kRemovePlayer);
+                            remove_player << name;
+                            SendPacketToAll(remove_player);
+
+                            client_names_.erase(nameIt);
+                        }
+                        // remove from selector and mark for deletion from clients_
+                        selector_.remove(*client);
+                        disconnected.push_back(client);
+                        // move to next client
+                        continue;
+                    }
+                    case sf::Socket::Status::NotReady:
+                    case sf::Socket::Status::Partial:
+                    case sf::Socket::Status::Error:
+                    default:
+                        break;
+                }
                 
-            }
-            // remove disconnected client entries from clients_ (safe to modify now)
-            if (!disconnected.empty()) {
-                clients_.erase(
-                    std::remove_if(clients_.begin(), clients_.end(),
-                        [&disconnected](const std::unique_ptr<sf::TcpSocket>& ptr) {
-                            return std::find(disconnected.begin(), disconnected.end(), ptr.get()) != disconnected.end();
-                        }),
-                    clients_.end());
-            }
+        }
+        // remove disconnected client entries from clients_ (safe to modify now)
+        if (!disconnected.empty()) {
+            clients_.erase(
+                std::remove_if(clients_.begin(), clients_.end(),
+                    [&disconnected](const std::unique_ptr<sf::TcpSocket>& ptr) {
+                        return std::find(disconnected.begin(), disconnected.end(), ptr.get()) != disconnected.end();
+                    }),
+                clients_.end());
+        }
     }
 }
 
 void GameServer::Tick() {
+    SendStateUpdateToClients();
 }
 
 // Broadcast to all clients, optionally excluding one socket (e.g. the original sender)
@@ -190,7 +191,7 @@ void GameServer::HandlePacketType(Server::PacketType type, sf::Packet& data, sf:
         SendPacketToAll(data, client_socket);
         break;
     case Server::PacketType::kPlayerStateUpdate:
-        SendPacketToAll(data, client_socket);
+        HandlePlayerState(data);
         break;
     case Server::PacketType::kIWon:
         SendPacketToAll(data, client_socket);
@@ -286,5 +287,42 @@ void GameServer::HandleSpawnPlayer(sf::Packet& data) {
 }
 void GameServer::HandleRemovePlayer(sf::Packet& data) {
     SendPacketToAll(data);
+}
+void GameServer::HandlePlayerState(sf::Packet& data) {
+    // read id
+    uint8_t id;
+    data >> id;
+    // read position
+    int16_t x, y;
+    int8_t vx, vy = 0;
+    data >> x;
+    data >> y;
+    // read velocity
+    data >> vx;
+    data >> vy;
+
+    PlayerState new_state = { id, x, y, vx, vy };
+    all_states_[id]=new_state;
+}
+void GameServer::SendStateUpdateToClients() {
+    if (all_states_.empty())
+        return;
+
+    sf::Packet packet = Utility::CreatePacket(Server::PacketType::kPlayerStateUpdate);
+
+    // number of players
+    packet << static_cast<uint8_t>(all_states_.size());
+    std::cout << all_states_.size() << " size" << std::endl;
+    for (const auto& [id, state] : all_states_) {
+        packet << state.id;
+        packet << state.x;
+        packet << state.y;
+        packet << state.vx;
+        packet << state.vy;
+    }
+
+    SendPacketToAll(packet);
+
+    all_states_.clear();
 }
 #pragma endregion
