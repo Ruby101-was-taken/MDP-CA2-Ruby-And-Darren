@@ -135,28 +135,32 @@ void MultiplayerWorld::UpdateCurrent() {
 	bool cur_jump = InputManager::InputIsPressed(InputTypes::kPlayerOneUp);
 
 	if (input_update_clock_.getElapsedTime().asSeconds() >= input_update_interval_) {
+		SendStateUpdate(); // TODO: Only send upon position or velocity change
+		//// Periodic state update to ensure correct position on clients
+		//if (state_update_clock_.getElapsedTime().asSeconds() >= state_update_interval_) {
+		//	SendStateUpdate();
+		//	state_update_clock_.restart();
+		//	return;
+		//}
+		//
+		//std::printf("[MultiplayerWorld]: Send input");
+		//// Left change
+		//if (cur_left != prev_left_) {
+		//	SendInputEvent(Action::kMoveLeft, cur_left);
+		//	prev_left_ = cur_left;
+		//}
+		//// Right change
+		//else if (cur_right != prev_right_) {
+		//	SendInputEvent(Action::kMoveRight, cur_right);
+		//	prev_right_ = cur_right;
+		//}
+		//// Jump: treat as a discrete event on press
+		//else if (cur_jump && !prev_jump_) {
+		//	SendInputEvent(Action::kMoveUp);
+		//}
+		//prev_jump_ = cur_jump;
 
-		// Left change
-		if (cur_left != prev_left_) {
-			SendInputEvent(Action::kMoveLeft, cur_left);
-			prev_left_ = cur_left;
-		}
-		// Right change
-		if (cur_right != prev_right_) {
-			SendInputEvent(Action::kMoveRight, cur_right);
-			prev_right_ = cur_right;
-		}
-		// Jump: treat as a discrete event on press
-		if (cur_jump && !prev_jump_) {
-			SendInputEvent(Action::kMoveUp);
-		}
-		prev_jump_ = cur_jump;
-
-		// Periodic state update to ensure correct position on clients
-		if (state_update_clock_.getElapsedTime().asSeconds() >= state_update_interval_) {
-			SendStateUpdate();
-			state_update_clock_.restart();
-		}
+		
 
 		input_update_clock_.restart();
 	}
