@@ -47,6 +47,12 @@ void PlayerMovementBehaviour::Start() {
         score_manager->DecrementScore();
         player.GetWorld()->PassGameEvent(GameEvent::kStarCountChange);
         });
+    if (node_->GetCategoryEnum() == ReceiverCategories::kOnlineNetworkedPlayer) {
+        deceleration_speed_ = 0;
+		ground_deceleration_speed_ = 0;
+		air_deceleration_speed_ = 0;
+    }
+        
 }
 // D00255479 - Darren Meidl
 void PlayerMovementBehaviour::ApplyRemoteEvent(Action action, bool started) {
