@@ -35,6 +35,8 @@ void GameServer::ExecutionThread() {
         tick_time += tick_clock.getElapsedTime();
         tick_clock.restart();
 
+        std::cout << "[GameServer]: data_sent_: " << data_sent_ << "\n";
+        data_sent_ = 0;
         while (tick_time >= tick_rate) {
             Tick();
             tick_time -= tick_rate;
@@ -135,6 +137,7 @@ void GameServer::ExecutionThread() {
 void GameServer::Tick() {
     SendStateUpdateToClients();
     SendInputToClients();
+    std::cout << "[GameServer]: TICK\n";
 }
 
 // Broadcast to all clients, optionally excluding one socket (e.g. the original sender)
@@ -145,6 +148,7 @@ void GameServer::SendPacketToAll(sf::Packet& data, sf::TcpSocket* exclude) {
             continue;
 
         sf::Socket::Status status = client->send(data);
+        data_sent_ += sizeof(data);
         //error message D:
         Utility::PrintStatusError(status, "Server");
     }
@@ -153,6 +157,7 @@ void GameServer::SendPacketToAll(sf::Packet& data, sf::TcpSocket* exclude) {
 void GameServer::SendPacketToHost(sf::Packet& data) {
     if (!host_socket_) return;
     sf::Socket::Status status = host_socket_->send(data);
+    data_sent_ += sizeof(data);
     //error message D:
     Utility::PrintStatusError(status, "Server");
 }

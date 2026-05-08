@@ -71,6 +71,8 @@ private:
 
 	int next_id_ = 0; 
 
+	int data_sent_ = 0;
+
 	std::unordered_map<uint8_t, PlayerState> all_states_;
 	std::vector<PlayerInput> all_inputs_;
 };
